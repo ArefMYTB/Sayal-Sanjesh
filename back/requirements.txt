@@ -1,0 +1,13 @@
+Django==4.1
+psycopg2-binary
+PyJWT
+django-cors-headers
+requests
+paho-mqtt<2.0.0
+termcolor
+django-jalali-date
+persiantools
+pytz
+openpyxl
+gunicorn
+python-decouple

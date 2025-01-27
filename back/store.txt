@@ -1,0 +1,79 @@
+import jwt
+from datetime import datetime, timedelta
+
+JWT_SECRET = "This is my secret key in this project."
+JWT_ALGORITHM = "HS256"
+JWT_ACCESS_EXP_DELTA_MINUTES = 15
+JWT_REFRESH_EXP_DELTA_DAYS = 30
+
+def generate_access_token(user_id, activation, token_level="User"):
+    now_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    token_version = 1.0
+    payload = {
+        'activation': activation,
+        'user_id': user_id,
+        'identifier': now_datetime,
+        'token_version': token_version,
+        'token_creator': "System",
+        'token_level': token_level,
+        'token_owner': "Rojcast",
+        'exp': datetime.utcnow() + timedelta(minutes=JWT_ACCESS_EXP_DELTA_MINUTES)
+    }
+    access_token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
+    return access_token
+
+def generate_refresh_token(user_id):
+    now_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    payload = {
+        'user_id': user_id,
+        'identifier': now_datetime,
+        'exp': datetime.utcnow() + timedelta(days=JWT_REFRESH_EXP_DELTA_DAYS)
+    }
+    refresh_token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
+    return refresh_token
+
+def token_to_user_id(token):
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    except Exception as e:
+        return result_sender(401, "توکن نامعتبر است.", "wrong token.")
+    return result_sender(0, data=payload)
+
+def result_sender(code, farsi_message="", english_message="", data=None):
+    if code == 0:
+        status = "OK"
+    else:
+        status = "failure"
+    result = {
+        "status": status,
+        "code": code,
+        "farsi_message": farsi_message,
+        "english_message": english_message,
+        "data": data
+    }
+    return result
+
+
+
+
+
+
+def refresh_access_token(refresh_token):
+    try:
+        payload = jwt.decode(refresh_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        user_id = payload.get('user_id')
+        if user_id:
+            return generate_access_token(user_id, activation="refresh_token", token_level="User")
+        else:
+            return result_sender(401, "کاربر معتبر نیست.", "Invalid user.")
+    except jwt.ExpiredSignatureError:
+        return result_sender(401, "توکن منقضی شده است.", "Token expired.")
+    except jwt.InvalidTokenError:
+        return result_sender(401, "توکن نامعتبر است.", "Invalid token.")
+
+# Example usage
+refresh_token = "your_refresh_token_here"
+new_access_token = refresh_access_token(refresh_token)
+print(new_access_token)
+
+

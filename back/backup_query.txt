@@ -1,0 +1,15 @@
+# this command use for restore backup file from .sql file in windows .
+
+psql -U username -d dbname -f path/to/backup.sql
+
+# example : psql -U postgres -d sayalsanjesh3 -f sayalsanjesh.sql
+
+
+#count all bill that created from project .
+select count(*) from "SayalSanjesh_bills" where bill_water_meter_id in (select water_meter_serial from "SayalSanjesh_watermeters" where water_meter_project_id = '1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1')
+
+#delete all bill that created from project .
+delete from "SayalSanjesh_bills" where bill_water_meter_id in (select water_meter_serial from "SayalSanjesh_watermeters" where water_meter_project_id = '1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1')
+
+#update bill_created field on consumption table.
+update "SayalSanjesh_watermetersconsumptions" set bill_created = False where water_meters_id = 'SWMM-02311117'

@@ -1,0 +1,6745 @@
+{
+	"info": {
+		"_postman_id": "338ad87d-b409-4caf-ae02-26608464de3d",
+		"name": "AutomationSayalSanjesh",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16235564"
+	},
+	"item": [
+		{
+			"name": "App",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "data",
+											"value": "{\n    \"app_version_code\":27,\n    \"app_version_name\":\"23.2\"\n}",
+											"type": "default"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/pc/Documents/ArduinoTest/DeviceTypesManager.py"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}Apps/admin/add/app",
+									"host": [
+										"{{Hoshmand_server}}Apps"
+									],
+									"path": [
+										"admin",
+										"add",
+										"app"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"app_version_code\":27\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}Apps/admin/delete/app",
+									"host": [
+										"{{Hoshmand_server}}Apps"
+									],
+									"path": [
+										"admin",
+										"delete",
+										"app"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetLink",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}Apps/admin/get/app",
+									"host": [
+										"{{Hoshmand_server}}Apps"
+									],
+									"path": [
+										"admin",
+										"get",
+										"app"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "getLink",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}Apps/user/get/app",
+									"host": [
+										"{{Hoshmand_server}}Apps"
+									],
+									"path": [
+										"user",
+										"get",
+										"app"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "Add",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									},
+									{
+										"key": "file",
+										"value": "application/x-www-form-urlencoded",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/pc/Documents/download.png",
+											"disabled": true
+										},
+										{
+											"key": "data",
+											"value": "{\n    \"admin_name\" : \"Saed\",\n    \"admin_phone\" :\"09010722480\",\n    \"admin_lastname\":\"Ansari\",\n    \"admin_password\":\"1234\",\n    \"admin_permissions\":[\"Self\",\n            \"Admin\",\n            \"Category\",\n            \"Notice\",\n            \"Consumption\",\n            \"User\",\n            \"WaterMeterProject\",\n            \"WaterMeterType\",\n            \"WaterMeterModule\",\n            \"Base\"],\n    \"other_information\":{}\n}",
+											"contentType": "application/json",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}admins/admin/add",
+									"host": [
+										"{{Hoshmand_server}}admins"
+									],
+									"path": [
+										"admin",
+										"add"
+									],
+									"query": [
+										{
+											"key": "f",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "data",
+											"value": "{\n    \"other_admin_id\":\"33c9a002-4bc1-442b-a65c-ed389931baba\",\n    \"admin_name\":\"حسین\",\n    \"admin_lastname\":\"امینی\",\n    \"admin_permissions\":[\"Self\",\"User\",\n                \"Category\",\n                \"Notice\",\n                \"WaterMeterProject\",\n                \"WaterMeterType\",\n                \"Consumption\",\n                \"Admin\",\n                \"Middle\"],\n    \"other_information\":{\"info\":\"admin\"}\n}",
+											"type": "default"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/pc/Documents/TavizPlak.png",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}admins/admin/edit",
+									"host": [
+										"{{Hoshmand_server}}admins"
+									],
+									"path": [
+										"admin",
+										"edit"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"other_admin_id\":\"6beafef1-31e8-4319-8553-9594c8d1c9e1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}admins/admin/remove",
+									"host": [
+										"{{Hoshmand_server}}admins"
+									],
+									"path": [
+										"admin",
+										"remove"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAll",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"admin_name\":\"\",\r\n    \"admin_phone\":\"\",\r\n    \"admin_lastname\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}admins/admin/getAll",
+									"host": [
+										"{{Hoshmand_server}}admins"
+									],
+									"path": [
+										"admin",
+										"getAll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetOne",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"other_admin_id\":\"78732b63-f7b0-46ad-90da-85e26f20c36e\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}admins/admin/getOne",
+									"host": [
+										"{{Hoshmand_server}}admins"
+									],
+									"path": [
+										"admin",
+										"getOne"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetProfile",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}admins/admin/getProfile",
+									"host": [
+										"{{Hoshmand_server}}admins"
+									],
+									"path": [
+										"admin",
+										"getProfile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SetProfile",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "data",
+											"value": "{\n    \"admin_name\" : \"mahziar\",\n    \"admin_lastname\": \"ahf\" ,\n    \"other_information\" :{\"key\":1},\n    \"admin_password\":null\n}",
+											"type": "default"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/pc/Pictures/TUGS_hero_1400x400px.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}admins/admin/setProfile",
+									"host": [
+										"{{Hoshmand_server}}admins"
+									],
+									"path": [
+										"admin",
+										"setProfile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"admin_phone\":\"09356165600\",\r\n    \"admin_password\" : \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/login",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LogOut",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/logout",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CheangePassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"admin_password\":\"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/changePassword",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"changePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SetCategoryPermission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"admin_id\":\"c1727cda-b10a-4c84-beb2-28acd932c101\",\r\n    \"permission_category_id\":\"c795e842-5fb5-43b8-a4ea-84ed4df00843\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/set/categoty/permissions",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"set",
+								"categoty",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SetPermission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"admin_id\":\"b149512e-b41c-496c-bbc4-7de7edc1b0c8\",\r\n    \"permission_english_name_list\":[\"SuperAdmin\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/set/permissions",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"set",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllFiles",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"other_admin_id\":\"31493bb7-bc46-4ab3-bedc-9f345b235421\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/getAll/files",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"getAll",
+								"files"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteFile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"other_admin_id\":\"31493bb7-bc46-4ab3-bedc-9f345b235421\",\r\n   \"file_name\":\"download.png\"\r\n   \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/delete/file",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"delete",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CheckPhoneNumberValidation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_User}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\":\"09356165600\",\r\n    \"send_sms\":1,\r\n    \"sms_code\":null,\r\n    \"password\":null,\r\n    \"hash_code\":\"AFBAOLBF\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/checkValidation",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"checkValidation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAppLink",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Hoshmand_server}}admins/admin/get/app",
+							"host": [
+								"{{Hoshmand_server}}admins"
+							],
+							"path": [
+								"admin",
+								"get",
+								"app"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MiddleAdmin",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "AddData",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"middle_admin_id\":\"5b21bbf9-349b-4421-9e73-b3c89de62b2d\",\r\n    \"project_ids\":[\"3219728d-617b-4ad4-8b7b-58841e4d5b5e\"],\r\n    \"water_meter_ids\":[]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}middle/admin/add/data",
+											"host": [
+												"{{Hoshmand_server}}middle"
+											],
+											"path": [
+												"admin",
+												"add",
+												"data"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "EditData",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"middle_admin_id\":\"5fff9a1c-e107-45d5-b88c-1ca18cf66d24\",\r\n    \"project_ids\":[\"1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1\"],\r\n    \"water_meter_ids\":[]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}middle/admin/edit/data",
+											"host": [
+												"{{Hoshmand_server}}middle"
+											],
+											"path": [
+												"admin",
+												"edit",
+												"data"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}middle/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}middle"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"middle_admin_id\":\"33c9a002-4bc1-442b-a65c-ed389931baba\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}middle/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}middle"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAllUser",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}middle/getAll/users",
+											"host": [
+												"{{Hoshmand_server}}middle"
+											],
+											"path": [
+												"getAll",
+												"users"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "CreatUser",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "{\n    \"user_name\":null,\n    \"user_phone\":\"09309890929\",\n    \"user_lastname\":null,\n    \"user_password\":null,\n    \"user_sms_code\":null,\n    \"other_information\":null,\n    \"user_profile\":null\n}",
+													"type": "default"
+												},
+												{
+													"key": "file",
+													"type": "file",
+													"src": "/C:/Users/pc/Documents/download.png",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}users/admin/add",
+											"host": [
+												"{{Hoshmand_server}}users"
+											],
+											"path": [
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"user_id\":\"df9538fa-f7d2-4f91-9a78-1c68a354cc80\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}users/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}users"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"user_name\":\"\",\r\n    \"user_lastname\":\"\",\r\n    \"user_phone\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}users/admin/getAllUsers",
+											"host": [
+												"{{Hoshmand_server}}users"
+											],
+											"path": [
+												"admin",
+												"getAllUsers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"other_user_id\":null,\r\n    \"user_phone\":\"09309890929\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}users/admin/getOneUser",
+											"host": [
+												"{{Hoshmand_server}}users"
+											],
+											"path": [
+												"admin",
+												"getOneUser"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "ChangeUserProfile",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "data",
+											"value": "{\n    \"other_user_id\":\"4dc21f78-0897-4c99-9ae7-868b0a521157\",\n    \"user_name\":\" number edit\",\n    \"user_lastname\":\"\",\n    \"user_password\":\"1234\",\n    \"user_sms_code\":\"6565\",\n    \"user_profile\":{},\n    \"user_phone\":\"09124579000\",\n    \"other_information\":{}\n}",
+											"type": "default"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/pc/Documents/TavizPlak.png",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}users/admin/changeUserProfile",
+									"host": [
+										"{{Hoshmand_server}}users"
+									],
+									"path": [
+										"admin",
+										"changeUserProfile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "EditUser",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											},
+											{
+												"key": "token",
+												"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3RpdmF0aW9uIjp0cnVlLCJ1c2VyX2lkIjoiZDI3MDZiZjktYzU4NC00YTJmLWI4NjYtZDVlMDhiYTRhMDlhIiwiaWRlbnRpZmllciI6IjIwMjItMDgtMDEgMTQ6MDA6NTIiLCJ0b2tlbl92ZXJzaW9uIjoxLjAsInRva2VuX2NyZWF0b3IiOiJTeXN0ZW0iLCJ0b2tlbl9sZXZlbCI6IlVzZXIiLCJ0b2tlbl9vd25lciI6IlJvamNhc3QiLCJleHAiOjE2NTk0MzI2NTJ9.4AAlC_HXYRKb2tqknDdj-EU1okaBjhGPBpCdMh74YaA",
+												"type": "default",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "{\n    \"user_name\":\"mahziar_ee\",\n    \"user_lastname\":\"ahf_e\",\n    \"other_information\":{\"key\":\"mahziar ahf edited\"},\n    \"user_profile\":{\"key\":\"edited\"}\n}",
+													"type": "default"
+												},
+												{
+													"key": "file",
+													"type": "file",
+													"src": "/C:/Users/pc/Pictures/TUGS_hero_1400x400px.jpg"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}users/user/editProfile",
+											"host": [
+												"{{Hoshmand_server}}users"
+											],
+											"path": [
+												"user",
+												"editProfile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetProfile",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}users/user/getProfile",
+											"host": [
+												"{{Hoshmand_server}}users"
+											],
+											"path": [
+												"user",
+												"getProfile"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "LoginUser",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"guest_phone\":\"09360332955\",\r\n    \"guest_password\":\"1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}users/guest/login",
+									"host": [
+										"{{Hoshmand_server}}users"
+									],
+									"path": [
+										"guest",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CheckPhoneNumberValidation",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_phone\":\"09360332955\",\r\n    \"send_sms\":1,\r\n    \"sms_code\":null,\r\n    \"user_password\":null,\r\n    \"hash_code\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}users/user/checkValidation",
+									"host": [
+										"{{Hoshmand_server}}users"
+									],
+									"path": [
+										"user",
+										"checkValidation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "changPass",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_new_password\":\"1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}users/user/changePass",
+									"host": [
+										"{{Hoshmand_server}}users"
+									],
+									"path": [
+										"user",
+										"changePass"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "City",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"city_name\":\"Esfehan\",\r\n    \"city_state\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}city/admin/create",
+											"host": [
+												"{{Hoshmand_server}}city"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"city_id\":\"9fd02056-4168-4724-b555-bb935a65da4a\",\r\n    \"city_name\":\"Tehran Edited\",\r\n    \"city_state\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}city/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}city"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"city_id\":\"1c9bdccc-1605-4ab3-8459-a094b9f8de2a\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}city/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}city"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"city_name\":null,\r\n    \"city_state\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}city/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}city"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"city_id\":\"9fd02056-4168-4724-b555-bb935a65da4a\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}city/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}city"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "WaterMeterProject",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_project_name\":\"T2\",\r\n    \"water_meter_project_title\":\"Tehran\",\r\n    \"water_meter_project_other_information\":{},\r\n    \"water_meter_project_start_date\":null,\r\n    \"water_meter_project_employer_description\":{},\r\n    \"water_meter_project_contract_number\":0,\r\n    \"water_meter_project_images\":[],\r\n    \"water_meter_project_urls\":{\r\n        \"logo\":\"\",\r\n        \"gallery\":[]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/add",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_project_title\":\"fileTest\",\r\n    \"water_meter_project_name\":\"TehranE\",\r\n    \"water_meter_project_id\":\"1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1\",\r\n    \"water_meter_project_other_information\":{},\r\n    \"water_meter_project_start_date\":null,\r\n    \"water_meter_project_employer_description\":{},\r\n    \"water_meter_project_contract_number\":1,\r\n    \"water_meter_project_images\":[]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_project_id\":\"b8c412a1-35f1-48fe-a93c-6cacd4d4d2d5\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":100,\r\n    \"water_meter_project_name\":null,\r\n    \"water_meter_project_create_date\":null,\r\n    \"user_id\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_project_id\":\"526c7265-9c90-47a4-bf1a-8ac28f112b73\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Add Type",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_type_id\":[\"8819c3b0-1233-4a3b-83fd-8d903480b5ab\"],\r\n    \"water_meter_project_id\":\"9568844e-6b26-47bd-92c8-a596a79558bf\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/addType",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterProjectsURL"
+									],
+									"path": [
+										"admin",
+										"addType"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "NumberOfProjectPerCity",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/getAll/city/count",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterProjectsURL"
+									],
+									"path": [
+										"admin",
+										"getAll",
+										"city",
+										"count"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ProjectWithMaxMeter",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/admin/total/statistics",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterProjectsURL"
+									],
+									"path": [
+										"admin",
+										"total",
+										"statistics"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/user/getAll",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"user",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "V2GetAll",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/v2/user/getAll",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"v2",
+												"user",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_project_id\":\"c81e4152-c3f4-4c1f-9433-284d7330b3c8\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/user/getOne",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"user",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "V2GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_project_id\":\"526c7265-9c90-47a4-bf1a-8ac28f112b73\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterProjectsURL/v2/user/getOne",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterProjectsURL"
+											],
+											"path": [
+												"v2",
+												"user",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "WaterMeterTag",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "{\n    \"water_meter_tag_name\":\"FileTag\",\n    \"water_meter_tag_other_information\":{}\n}",
+													"type": "default"
+												},
+												{
+													"key": "file",
+													"type": "file",
+													"src": "/C:/Users/pc/Documents/media/loading4.f68a465d.gif",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTags/admin/add",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTags"
+											],
+											"path": [
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_tag_id\":\"89ef64bf-7923-43f9-a5b6-1697ead40c89\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTags/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTags"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"water_meter_tag_name\":\"\",\r\n    \"water_meter_type_create_date\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTags/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTags"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "NumberOfMeterPerTag",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTags/admin/total/statistcs",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTags"
+									],
+									"path": [
+										"admin",
+										"total",
+										"statistcs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "GetAll",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"water_meter_tag_name\":\"\",\r\n    \"water_meter_type_create_date\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTags/user/getAll",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTags"
+									],
+									"path": [
+										"user",
+										"getAll"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "CalculateUnits",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"water_meter_serial\":\"201030\" ,\r\n   \"calculate_unites\":{\"p\":\"\"}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}calculate/unit/admin/add",
+											"host": [
+												"{{Hoshmand_server}}calculate"
+											],
+											"path": [
+												"unit",
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"calculate_id\":\"e7c71697-c5c8-4eea-bc3b-1ea509c800db\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}calculate/unit/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}calculate"
+											],
+											"path": [
+												"unit",
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}calculate/unit/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}calculate"
+											],
+											"path": [
+												"unit",
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "WaterMeterType",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "{\n    \"water_meter_type_name\":\"لول سنج\",\n    \"water_meter_type_other_information\":{},\n    \"water_meter_tag\":\"3d5fd998-2637-4a61-a469-4bb344417cc5\"\n}",
+													"type": "default"
+												},
+												{
+													"key": "file",
+													"type": "file",
+													"src": "/C:/Users/pc/Documents/media/project.4185b451.jpg",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTypes/admin/add",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTypes"
+											],
+											"path": [
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "{\n    \"water_meter_type_id\":\"5fa47702-b7c0-4d11-a9f3-e7b307e81a81\",\n    \"water_meter_type_new_name\":\"ٌWoltMan\",\n    \"water_meter_tag_id\":\"2e656989-5b5c-4fac-80ce-3816b3d7b580\",\n    \"water_meter_type_other_information\":{}\n}",
+													"type": "default"
+												},
+												{
+													"key": "file",
+													"type": "file",
+													"src": "/C:/Users/pc/Documents/media/Vazir-Thin.bd296888.woff"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTypes/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTypes"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_type_id\":\"4313f655-c062-40b4-b1e9-19812ff7875c\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTypes/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTypes"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"water_meter_type_name\":\"\",\r\n    \"water_meter_type_create_date\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTypes/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTypes"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_type_id\":\"5fa47702-b7c0-4d11-a9f3-e7b307e81a81\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterTypes/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterTypes"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "NumberOfActivatePerType",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTypes/admin/getAllValues",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTypes"
+									],
+									"path": [
+										"admin",
+										"getAllValues"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TypeWithMaxCounter",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTypes/admin/total/statistics",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTypes"
+									],
+									"path": [
+										"admin",
+										"total",
+										"statistics"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "GetAll",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTypes/user/getAll",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTypes"
+									],
+									"path": [
+										"user",
+										"getAll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "V2GetAll",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTypes/v2/user/getAll",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTypes"
+									],
+									"path": [
+										"v2",
+										"user",
+										"getAll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetOne",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_type_name\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTypes/user/getOne",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTypes"
+									],
+									"path": [
+										"user",
+										"getOne"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "V2GetOne",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_type_name\":\"مولتی جت هوشمند\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterTypes/v2/user/getOne",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterTypes"
+									],
+									"path": [
+										"v2",
+										"user",
+										"getOne"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "WaterMeterModules",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_module_name\":\"TestModule\",\r\n    \"water_meter_module_code\":\"TM1\",\r\n    \"water_meter_module_other_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterModules/admin/add",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterModules"
+											],
+											"path": [
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":100,\r\n    \"water_meter_module_name\":\"\",\r\n    \"water_meter_module_create_date\":\"\",\r\n    \"mood\":\"modules_without_meter\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterModules/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterModules"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_module_id\":null,\r\n    \"water_meter_module_code\":\"MSWMM-02311118\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterModules/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterModules"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_module_id\":\"af1a09e2-c591-45b7-a545-80e6ac752848\",\r\n    \"water_meter_module_name\":\"SecoundModuleEdited\",\r\n    \"water_meter_module_other_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterModules/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterModules"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_module_id\":\"76cf529d-8881-442c-b302-4f0bd4570155\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterModules/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterModules"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Add Request",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_module_id\":\"1872a749-4015-4014-b9c9-9b69ba69d0bf\",\r\n    \"water_meter_request_id\":\"ec05596e-329d-445b-8167-265fb72eb7a9\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}WaterMeterModules/admin/addRequest",
+									"host": [
+										"{{Hoshmand_server}}WaterMeterModules"
+									],
+									"path": [
+										"admin",
+										"addRequest"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "WaterMeterRequest",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_request_title\":\"Rq2\",\r\n    \"water_meter_request_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterRequests/admin/add",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterRequests"
+											],
+											"path": [
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"water_meter_request_title\":\"\",\r\n    \"water_meter_request_create_date\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterRequests/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterRequests"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_request_id\":\"ec05596e-329d-445b-8167-265fb72eb7a9\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterRequests/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterRequests"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_request_id\":\"ec05596e-329d-445b-8167-265fb72eb7a9\",\r\n    \"water_meter_request_title\":\"Rq1\",\r\n    \"water_meter_request_information\":{\"protocole\":\"Tcp\"}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterRequests/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterRequests"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_request_id\":\"a49fd36b-22f6-476e-a01c-aae9cc6bdecb\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}WaterMeterRequests/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}WaterMeterRequests"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "WaterMeter",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_user_id\":null,\r\n    \"water_meter_name\":\"Ts1\",\r\n    \"water_meter_serial\":\"TWM05\",\r\n    \"water_meter_location\":\"\",\r\n    \"other_information\":{},\r\n    \"water_meter_validation\":1,\r\n    \"water_meter_activation\":1,\r\n    \"water_meter_condition\":0,\r\n    \"water_meter_type\":\"4b2bb05f-8099-4e7d-badd-8fb135b2add5\",\r\n    \"water_meter_project\":null,\r\n    \"water_meter_module\":null,\r\n    \"water_meter_manual_number\":null , \r\n    \"water_meter_order_mode\":\"P\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/create",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_user_id\":\"8d10790d-a462-46de-9571-fb2379ba1617\",\r\n    \"water_meter_name\":\"T5\",\r\n    \"water_meter_serial\":\"TWM05\",\r\n    \"water_meter_location\": \"0.23613136,0.1651\",\r\n    \"other_information\":{\r\n                \"billInfo\": [\r\n                    {\r\n                        \"k\": \"1000\",\r\n                        \"v1\": \"0\",\r\n                        \"v2\": \"1000\"\r\n                    },\r\n                    {\r\n                        \"k\": \"10000\",\r\n                        \"v1\": \"1000\",\r\n                        \"v2\": \"10000\"\r\n                    },\r\n                    {\r\n                        \"k\": \"100000\",\r\n                        \"v1\": \"10000\",\r\n                        \"v2\": \"100000\"\r\n                    }\r\n                ],\r\n                \"description\": \"\"\r\n            },\r\n    \"water_meter_validation\": 1,\r\n    \"water_meter_activation\": 1,\r\n    \"water_meter_condition\": 0,\r\n    \"water_meter_type\":\"4b2bb05f-8099-4e7d-badd-8fb135b2add5\",\r\n    \"water_meter_project_id\":\"1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1\",\r\n    \"water_meter_module_id\":\"2354ad0a-1d32-4fab-abe4-27605b59d646\",\r\n    \"water_meter_manual_number\":null , \r\n    \"water_meter_order_mode\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_serial\":\"TWM05\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/remove",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"remove"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"page\":1,\r\n   \"count\":100,\r\n   \"user_id\":null,\r\n   \"project_id\":null,\r\n   \"water_meter_serial\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "V2GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"page\":1,\r\n   \"count\":100,\r\n   \"user_id\":null,\r\n   \"project_id\":null,\r\n   \"water_meter_serial\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/v2/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"v2",
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_serial\":\"TWM05\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "CountAlll",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\":null,\r\n    \"project\":null,\r\n    \"water_meter_activation\":null,\r\n    \"water_meter_validation\":null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/admin/countAll",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"admin",
+										"countAll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "assignUser",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_phone\":\"09128298960\",\r\n    \"water_meter_list\":[\"test2\",\"test\",\"asdf\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/admin/assign/user",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"admin",
+										"assign",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateCsvFileOverall",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_project\":\"ae01a22c-7b20-43bc-be4b-eba7f6bbb3ba\",\r\n    \"water_meter_tag_id\":\"07d00e58-a3a4-4963-9f25-d22d4a5befbd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/admin/create/csv/overall",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"admin",
+										"create",
+										"csv",
+										"overall"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateCsvFileSingle",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_project\":\"ae01a22c-7b20-43bc-be4b-eba7f6bbb3ba\",\r\n    \"water_meter_tag_id\":\"07d00e58-a3a4-4963-9f25-d22d4a5befbd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/admin/create/csv/single",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"admin",
+										"create",
+										"csv",
+										"single"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetOneCSV",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_serial\":\"SWMM-02311103\",\r\n    \"start_time\":null,\r\n    \"end_time\":null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/admin/getOne/csv",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"admin",
+										"getOne",
+										"csv"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateCsvFileAll",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"water_meter_project\":\"ae01a22c-7b20-43bc-be4b-eba7f6bbb3ba\",\r\n    \"water_meter_tag_id\":\"07d00e58-a3a4-4963-9f25-d22d4a5befbd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/admin/create/csv/all",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"admin",
+										"create",
+										"csv",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CountAllByFilter",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n    \"water_meter_serial\":\"TWM01\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/admin/countAll/filter",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"admin",
+										"countAll",
+										"filter"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"water_meter_serial\":\"123456789\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/getOne",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "V2GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"water_meter_serial\":\"SWMM-02311112\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/v2/user/getOne",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"v2",
+												"user",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"page\":1,\r\n   \"count\":1000,\r\n   \"water_meter_tag_id\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/getAll",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "V2GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"page\":1,\r\n   \"count\":1000,\r\n   \"water_meter_tag_id\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/v2/user/getAll",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"v2",
+												"user",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "COUNT",
+							"item": [
+								{
+									"name": "CountAlll",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/countAll",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"countAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CountAllByFilter",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \r\n    \"water_meter_serial\":\"SWMM-02311112\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/countAll/filter",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"countAll",
+												"filter"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Consumption",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"consumption_id\":\"027692bd-cb0d-433d-a8a4-2f24edda98b7\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/getOne/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"getOne",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":20,\r\n    \"start_time\":null,\r\n    \"end_time\":null,\r\n    \"water_meters\":\"TWM04\",\r\n    \"water_meter_user\":null,\r\n    \"water_meter_project\":null,\r\n    \"water_meter_type\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/getAll/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"getAll",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"mode\":\"all\",\r\n    \"time\":null,\r\n    \"consumption_id\":null,\r\n    \"water_meter_serial\":\"TWM04\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/delete/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"delete",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"consumption_id\":\"67fff5b9-281e-48e3-a842-076b0c630c40\",\r\n    \"value\":\"14.54\",\r\n    \"information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/edit/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"edit",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "UpdateSumValue",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"meter_list\":[\"SWMM-02311109\"]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/update/sumValue",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"update",
+												"sumValue"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetLast",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"water_meter_serial\":\"WLV-1\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/getLast/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"getLast",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "GetSumConsumption",
+							"item": [
+								{
+									"name": "Cumulative",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":20,\r\n    \"user_id\":null,\r\n    \"project_id\":\"bfce9060-83fa-4138-aec3-172b5df8291a\",\r\n    \"water_meter_serial\":null,\r\n    \"water_meter_tag\":\"07d00e58-a3a4-4963-9f25-d22d4a5befbd\",\r\n    \"sort_value\":\"consumption_create_time\",\r\n    \"reverse\":true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/cumulative/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"cumulative",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "V2Cumulative",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":1000,\r\n    \"user_id\":null,\r\n    \"project_id\":\"bfce9060-83fa-4138-aec3-172b5df8291a\",\r\n    \"water_meter_serial\":null,\r\n    \"water_meter_tag\":\"07d00e58-a3a4-4963-9f25-d22d4a5befbd\",\r\n    \"sort_value\":\"month\",\r\n    \"reverse\":false\r\n\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/v2/admin/cumulative/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"v2",
+												"admin",
+												"cumulative",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CumulativeTagPerDay",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\r\n    \"user_id\":null,\r\n    \"project_id\":\"ae01a22c-7b20-43bc-be4b-eba7f6bbb3ba\",\r\n    \"water_meter_serial\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/cumulative/consumption/tag",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"cumulative",
+												"consumption",
+												"tag"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SumAllRecords",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/countAll/consumptionValues",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"countAll",
+												"consumptionValues"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SumConsumptionPerDay",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":1000,\r\n    \"water_meters\":\"SEMK-02311101\",\r\n    \"user_id\":null,\r\n    \"project_id\":null,\r\n    \"type_id\":null,\r\n    \"tag_id\":null,\r\n    \"start_time\":\"2023-10-14\",\r\n    \"end_time\":\"2023-10-23\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/getAll/consumption/date",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"getAll",
+												"consumption",
+												"date"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SumConsumptionPerDayApp",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"water_meters\":\"TWM05\",\r\n    \"user_id\":null,\r\n    \"project_id\":null,\r\n    \"type_id\":null,\r\n    \"tag_id\":null,\r\n    \"start_time\":null,\r\n    \"end_time\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/getAll/consumption/date/app",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"getAll",
+												"consumption",
+												"date",
+												"app"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TotalPerTag",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/admin/consumption/total/statistics",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"admin",
+												"consumption",
+												"total",
+												"statistics"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":1000,\r\n    \"water_meters\":null,\r\n    \"water_meter_project\":null,\r\n    \"water_meter_type\":null,\r\n    \"start_time\":null,\r\n    \"end_time\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/getAll/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"getAll",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"consumption_id\":\"e080f25d-b65d-4dcd-a4f0-a830c0ad8ad5\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/getOne/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"getOne",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetLast",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"water_meter_serial\":\"101010\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/getLast/consumption",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"getLast",
+												"consumption"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "GetSumConsumption",
+							"item": [
+								{
+									"name": "SumConsumptionPerDay",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"water_meters\":\"TWM05\",\r\n    \"project_id\":null,\r\n    \"type_id\":null,\r\n    \"tag_id\":null,\r\n    \"start_time\":null,\r\n    \"end_time\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}watermeters/user/getAll/consumption/date",
+											"host": [
+												"{{Hoshmand_server}}watermeters"
+											],
+											"path": [
+												"user",
+												"getAll",
+												"consumption",
+												"date"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "AddConsumption",
+					"item": [
+						{
+							"name": "Add",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{StatickToken}}",
+										"type": "default"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"value\": 10.5,\r\n    \"water_meters\": \"TWM05\",\r\n    \"information\": {},\r\n    \"module_code\": \"MTWM05\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/add/consumption",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"add",
+										"consumption"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "V1",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{StatickToken}}",
+										"type": "default"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"value\": 22.00,\r\n    \"water_meters\": \"TWM05\",\r\n    \"information\": {},\r\n    \"module_code\": \"MTWM05\",\r\n    \"cumulative_value\":22.00\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/v1/add/consumption",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"v1",
+										"add",
+										"consumption"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LevelGauge",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{StatickToken}}",
+										"type": "default"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"value\": 10.0,\r\n    \"water_meters\": \"SLV-1\",\r\n    \"information\": {},\r\n    \"module_code\": \"lv-1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/add/levelGauge/consumption",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"add",
+										"levelGauge",
+										"consumption"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "V2",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{StatickToken}}",
+										"type": "default"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"value\":22.00,\r\n    \"water_meters\": \"TWM05\",\r\n    \"information\": {},\r\n    \"module_code\": \"MT05\",\r\n    \"from_previous_record\":null,\r\n    \"to_current_record\":null,\r\n    \"create_time\":null,\r\n    \"cumulative_value\":52.00\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}watermeters/v2/add/consumption",
+									"host": [
+										"{{Hoshmand_server}}watermeters"
+									],
+									"path": [
+										"v2",
+										"add",
+										"consumption"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "NoticeCategories",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"category_name\" :\"Category_2\",\r\n    \"category_index\" : 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}categories/admin/add",
+											"host": [
+												"{{Hoshmand_server}}categories"
+											],
+											"path": [
+												"admin",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"category_id\":\"6e0614c8-1d05-441b-90c9-d2439769ffdc\",\r\n    \"category_name\" :\"category_1__Edited\",\r\n    \"category_index\" : 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}categories/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}categories"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"category_id\":\"829a2490-05d3-4a08-a03a-5c26c90001ef\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}categories/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}categories"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"category_name\" :\"\",\r\n    \"category_index\" : \"\",\r\n    \"create_date\" :\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}categories/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}categories"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"category_name\":\"\",\r\n    \"category_index\":\"\"\r\n    }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}categories/user/getAll",
+											"host": [
+												"{{Hoshmand_server}}categories"
+											],
+											"path": [
+												"user",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"category_id\" :\"86e1b712-82a8-4e01-8497-367f3fe94e64\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}categories/user/getOne",
+											"host": [
+												"{{Hoshmand_server}}categories"
+											],
+											"path": [
+												"user",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Notice",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"notice_id\" :\"b71ce324-53df-4607-99cc-2fc0f2407ae3\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}notice/admin/getone",
+											"host": [
+												"{{Hoshmand_server}}notice"
+											],
+											"path": [
+												"admin",
+												"getone"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\" :10,\r\n    \"title\":\"\",\r\n    \"message\":\"\",\r\n    \"create_date\":\"\",\r\n    \"attachment\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}notice/admin/getall",
+											"host": [
+												"{{Hoshmand_server}}notice"
+											],
+											"path": [
+												"admin",
+												"getall"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetSelves",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}notice/admin/getSelves",
+											"host": [
+												"{{Hoshmand_server}}notice"
+											],
+											"path": [
+												"admin",
+												"getSelves"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Replay",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"message\":\"Admin message for replay on user notice.\",\r\n    \"notice\":\"b71ce324-53df-4607-99cc-2fc0f2407ae3\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}notice/admin/replay",
+									"host": [
+										"{{Hoshmand_server}}notice"
+									],
+									"path": [
+										"admin",
+										"replay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "{\n    \"notice_category\":\"6e0614c8-1d05-441b-90c9-d2439769ffdc\",\n    \"title\":\"Notice One\",\n    \"message\":\"message for notice one ......\",\n    \"attachment\":{\"fiel\":\"\"}\n}",
+													"type": "default"
+												},
+												{
+													"key": "file",
+													"type": "file",
+													"src": "/C:/Users/pc/Desktop/Api's Changed.pdf"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}notice/user/create",
+											"host": [
+												"{{Hoshmand_server}}notice"
+											],
+											"path": [
+												"user",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetSelves",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											},
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "{{Hoshmand_server}}notice/user/getSelves",
+											"host": [
+												"{{Hoshmand_server}}notice"
+											],
+											"path": [
+												"user",
+												"getSelves"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											},
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"notice_id\":\"fea85316-9e05-4479-8a9e-9b3319be9e77\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}notice/user/getOne",
+											"host": [
+												"{{Hoshmand_server}}notice"
+											],
+											"path": [
+												"user",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "text"
+											},
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\" :10,\r\n    \"title\":\"\",\r\n    \"message\":\"\",\r\n    \"create_date\":\"\",\r\n    \"attachment\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}notice/user/getAll",
+											"host": [
+												"{{Hoshmand_server}}notice"
+											],
+											"path": [
+												"user",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Replay",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"message\":\"User Replay on Notice One \",\r\n  \"notice\":\"b71ce324-53df-4607-99cc-2fc0f2407ae3\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}notice/user/replay",
+									"host": [
+										"{{Hoshmand_server}}notice"
+									],
+									"path": [
+										"user",
+										"replay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Bill's",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Creat",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_serial\":\"1234567891234\",\r\n    \"payment_dead_line\":\"2006-12-25\",\r\n    \"other_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/admin/createBill",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"admin",
+												"createBill"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CreatV1",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"water_meter_serial\":\"SEMK-02311101\",\r\n    \"payment_dead_line\":\"2006-12-25\",\r\n    \"start_time\":\"2023-04-09 05:30:00\",\r\n    \"end_time\":\"2023-04-15 14:30:00\",\r\n    \"other_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/admin/createBill/v1",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"admin",
+												"createBill",
+												"v1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CreatList",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"meter_serial_list\":[\"SWMM-02311118\",\"SWMM-02311119\",\"SWMM-02311120\",\"A2457823\",\"SWMM-02311117\",\"SWMU-02311101\"],\r\n    \"calculate_method\":\"from_project\",\r\n    \"project_id\":\"1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1\",\r\n    \"tag_id\":\"07d00e58-a3a4-4963-9f25-d22d4a5befbd\",\r\n    \"payment_dead_line\":\"2006-12-25\",\r\n    \"start_time\":\"2023-04-09\",\r\n    \"end_time\":\"2023-04-15\",\r\n    \"other_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/admin/createBill/list",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"admin",
+												"createBill",
+												"list"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"water_meter_serial\":null,\r\n    \"bill_serial\":null,\r\n    \"bill_start_date\":null,\r\n    \"user_id\":null,\r\n    \"user_phone_number\":null,\r\n    \"project_id\":null,\r\n    \"bill_end_date\":null,\r\n    \"payment_dead_line\":null,\r\n    \"bill_create_date\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"bill_id\":\"0e5b5ac1-a251-41e8-8fa2-05dcdfb193a6\",\r\n    \"bill_serial\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"bill_id\":\"d3cbe628-2969-49ab-bc7c-1b3e5faad24f\",\r\n    \"payment_dead_line\":\"2022-10-6\",\r\n    \"other_information\":{\"message\":\"this test edited\"}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/admin/editBill",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"admin",
+												"editBill"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"bill_id\":\"2ee64fe9-d9a1-43c8-b80d-5a5203c5821c\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/admin/removeBill",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"admin",
+												"removeBill"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "CreateExcelFile",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"project_id\":\"ae01a22c-7b20-43bc-be4b-eba7f6bbb3ba\",\r\n    \"all_meter_serials\":[],\r\n    \"base_price\":310000,\r\n    \"meter_tag_id\":\"07d00e58-a3a4-4963-9f25-d22d4a5befbd\",\r\n    \"start_persian_time\":\"1402-01-01\",\r\n    \"end_persian_time\":\"1402-01-31\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}bills/admin/createbill/excel",
+									"host": [
+										"{{Hoshmand_server}}bills"
+									],
+									"path": [
+										"admin",
+										"createbill",
+										"excel"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreatePowerExcelFile",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tag_id\":\"ac32c39a-c371-4936-a802-37ead17f8301\",\r\n    \"project_id\":\"ae01a22c-7b20-43bc-be4b-eba7f6bbb3ba\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}bills/admin/create/power/excel",
+									"host": [
+										"{{Hoshmand_server}}bills"
+									],
+									"path": [
+										"admin",
+										"create",
+										"power",
+										"excel"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"bill_serial\":\"4865486615\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/user/getOne",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"user",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_User}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"bill_start_date\":null,\r\n    \"bill_end_data\":null,\r\n    \"payment_dead_line\":null,\r\n    \"water_meter_serial\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}bills/user/getAll",
+											"host": [
+												"{{Hoshmand_server}}bills"
+											],
+											"path": [
+												"user",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "CreateLink",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"bill_id\":\"0e5b5ac1-a251-41e8-8fa2-05dcdfb193a6\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}bills/user/creatLink",
+									"host": [
+										"{{Hoshmand_server}}bills"
+									],
+									"path": [
+										"user",
+										"creatLink"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetLink",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_User}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"bill_id\":\"cc4c4c45-129d-4a4e-93b2-37a5687a0fb0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}bills/user/getLink",
+									"host": [
+										"{{Hoshmand_server}}bills"
+									],
+									"path": [
+										"user",
+										"getLink"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetOne",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bill_id\":null,\r\n    \"bill_serial\":\"5805342623\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}bills/admin/getOne",
+							"host": [
+								"{{Hoshmand_server}}bills"
+							],
+							"path": [
+								"admin",
+								"getOne"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EventType",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Creat",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"event_type_keyword\":\"اعلان های مجاز سیال سنجش \",\r\n    \"event_type_importance\":\"L\",\r\n    \"evnet_type_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}EventType/admin/create",
+											"host": [
+												"{{Hoshmand_server}}EventType"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"event_type_id\":\"a12756fb-17e0-4c1e-9c90-a18f1a789b38\",\r\n    \"event_type_dashboard_view\":false,\r\n    \"event_type_importance\":null,\r\n    \"evnet_type_information\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}EventType/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}EventType"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"event_type_id\":\"899beb9c-d64d-471c-9a98-e207ae4a65ed\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}EventType/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}EventType"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"event_type_id\":null,\r\n   \"event_type_code\":\"123456\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}EventType/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}EventType"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}EventType/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}EventType"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Event",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Creat",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{StatickToken}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"event_type_code\":\"001\",\r\n   \"event_module_code\":\"MTWM01\",\r\n   \"event_value\":0,\r\n   \"event_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Event/admin/create",
+											"host": [
+												"{{Hoshmand_server}}Event"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CreatEventView",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"event_id_list\":[\"1fdeee5f-f7d3-410c-8a86-c1c342762e88\"]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Event/admin/create/eventView",
+											"host": [
+												"{{Hoshmand_server}}Event"
+											],
+											"path": [
+												"admin",
+												"create",
+												"eventView"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"event_id\":\"cf067172-8796-4265-a945-83144921ac7d\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Event/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}Event"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"module_id\":null,\r\n    \"module_code\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Event/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}Event"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"event_id\":\"9f85d1c3-051b-4a93-be1b-2ecaaf8aa67a\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Event/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}Event"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Patternm",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Creat",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"pattern_tag\":\"ac32c39a-c371-4936-a802-37ead17f8301\",\r\n    \"pattern_project\":\"526c7265-9c90-47a4-bf1a-8ac28f112b73\",\r\n    \"pattern_list\":[\r\n        {\r\n                    \"k\": \"4548\",\r\n                    \"v1\": \"0\",\r\n                    \"v2\": \"10000000000\"\r\n                }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Pattern/admin/create",
+											"host": [
+												"{{Hoshmand_server}}Pattern"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{StatickToken}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"pattern_id\":\"\",\r\n    \"pattern_tag\":\"\",\r\n    \"pattern_project\":\"\",\r\n    \"pattern_list\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Pattern/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}Pattern"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"pattern_id\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Pattern/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}Pattern"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"project_id\":null,\r\n    \"tag_id\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Pattern/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}Pattern"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"pattern_id\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Pattern/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}Pattern"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "OrderType",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Creat",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"order_type_name\":\"newType\",\r\n    \"order_type_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}OrderType/admin/create",
+											"host": [
+												"{{Hoshmand_server}}OrderType"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"order_type_id\":\"f356f57c-eef9-4b5a-9d03-4d73ea74f109\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}OrderType/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}OrderType"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"order_type_id\":\"f356f57c-eef9-4b5a-9d03-4d73ea74f109\",\r\n   \"order_type_code\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}OrderType/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}OrderType"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}OrderType/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}OrderType"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Creat",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"order_type_id_list\":[\"6550e81f-8a04-4935-b500-66005af0c221\",\"5b08628f-e81d-4d0d-85c4-4278d9867207\"],\r\n   \"water_meter_serial\":\"TWM06\",\r\n   \"order_information\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Order/admin/create",
+											"host": [
+												"{{Hoshmand_server}}Order"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"order_id\":\"2415c852-188b-4525-bb9f-c928027006e8\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Order/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}Order"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"order_meter\":null,\r\n    \"order_type_id\":null,\r\n    \"order_type_code\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Order/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}Order"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetOne",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"order_id\":\"2415c852-188b-4525-bb9f-c928027006e8\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Order/admin/getOne",
+											"host": [
+												"{{Hoshmand_server}}Order"
+											],
+											"path": [
+												"admin",
+												"getOne"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "StaticToken",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Add",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{SayalSanjesh_Admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"token_name\":\"TestConsumption-02\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Hoshmand_server}}statictoken/admin/add",
+									"host": [
+										"{{Hoshmand_server}}statictoken"
+									],
+									"path": [
+										"admin",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "UploadFile",
+			"item": [
+				{
+					"name": "Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/pc/PycharmProjects/SayalSanjesh/requirements.txt"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}Updload/admin",
+							"host": [
+								"{{Hoshmand_server}}Updload"
+							],
+							"path": [
+								"admin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SendData",
+			"item": [
+				{
+					"name": "Send",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{SayalSanjesh_Admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data_message\":\"^MC:MSWMM-02311118,SN:SWMM-02311118,EVS:E4_2E6_1$\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Hoshmand_server}}Data/admin/send",
+							"host": [
+								"{{Hoshmand_server}}Data"
+							],
+							"path": [
+								"admin",
+								"send"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"permission_english_name\":\"LogList\",\r\n    \"permission_persian_name\":\"\",\r\n    \"permission_description\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Permissions/admin/create",
+											"host": [
+												"{{Hoshmand_server}}Permissions"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    // Any field that is not null is changed\r\n    \"permission_id\":\"9629f71f-3831-4b67-88af-522504f56f56\",\r\n    \"permission_description\":null,\r\n    \"permission_english_name\":null,\r\n    \"permission_persian_name\":null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Permissions/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}Permissions"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"permission_english_name\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Permissions/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}Permissions"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"permission_id\":\"aff1d586-0d56-4105-8c52-d34ba41e7996\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}Permissions/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}Permissions"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PermissionCategories",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "CRUD",
+							"item": [
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n \"permission_category_persian_name\":null,\r\n \"permission_category_english_name\":\"SuperAdmin\",\r\n \"permission_category_description\":null,\r\n \"permissions\":[\"93f19e6c-9f78-4fa6-bd33-6b1b87160a14\",\"0cf798fd-4a3e-40cb-a66f-5d7503c73a6c\"]\r\n}\r\n    ",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}PermissionCategory/admin/create",
+											"host": [
+												"{{Hoshmand_server}}PermissionCategory"
+											],
+											"path": [
+												"admin",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"permission_category_id\":\"7e6a193e-364e-4e7b-9156-841bf8228345\",\r\n    \"permission_category_description\":null,\r\n    \"permission_category_english_name\":null,\r\n    \"permission_category_persian_name\":null,\r\n    \"permissions\":[\"93f19e6c-9f78-4fa6-bd33-6b1b87160a14\"]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}PermissionCategory/admin/edit",
+											"host": [
+												"{{Hoshmand_server}}PermissionCategory"
+											],
+											"path": [
+												"admin",
+												"edit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAll",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"permission_category_english_name\":\"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}PermissionCategory/admin/getAll",
+											"host": [
+												"{{Hoshmand_server}}PermissionCategory"
+											],
+											"path": [
+												"admin",
+												"getAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{SayalSanjesh_Admin}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"permission_category_id\":\"7e6a193e-364e-4e7b-9156-841bf8228345\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Hoshmand_server}}PermissionCategory/admin/delete",
+											"host": [
+												"{{Hoshmand_server}}PermissionCategory"
+											],
+											"path": [
+												"admin",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Log",
+			"item": [
+				{
+					"name": "MqttLoger",
+					"item": [
+						{
+							"name": "Admin",
+							"item": [
+								{
+									"name": "CRUD",
+									"item": [
+										{
+											"name": "GetAll",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{SayalSanjesh_Admin}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"page\":1,\r\n    \"count\":10,\r\n    \"permission_english_name\":\"\"\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{Hoshmand_server}}Log/admin/mqttLog/getAll",
+													"host": [
+														"{{Hoshmand_server}}Log"
+													],
+													"path": [
+														"admin",
+														"mqttLog",
+														"getAll"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "SystemLoger",
+					"item": [
+						{
+							"name": "Admin",
+							"item": [
+								{
+									"name": "CRUD",
+									"item": [
+										{
+											"name": "GetAll",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{SayalSanjesh_Admin}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"page\":1,\r\n    \"count\":10\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{Hoshmand_server}}Log/admin/sysetem/log/getAll",
+													"host": [
+														"{{Hoshmand_server}}Log"
+													],
+													"path": [
+														"admin",
+														"sysetem",
+														"log",
+														"getAll"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

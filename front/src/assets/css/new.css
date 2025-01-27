@@ -1,0 +1,120 @@
+@font-face {
+    font-family: 'newVazir';
+    src: url('../fonts/vazir/woff2/Vazir.woff2') format('woff2'),
+         url('../fonts/vazir/woff/Vazir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  /* .bill-info {
+    font-family: 'newVazir', sans-serif;
+  } */
+  /* .bill-info#report{font-family: 'newVazir' !important;} */
+  
+  /* .bill-header, .bill-body, .bill-footer {
+    font-family: 'newVazir', sans-serif;
+  } */
+  .bill-info{
+    font-family: 'newVazir' !important;
+    /* margin:12px; */
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 8px;
+    letter-spacing: normal !important;
+    font-size: 15px;
+    text-align: right !important;
+
+}
+.bill-info th,.bill-info td{
+  /* display: flex; */
+  /* align-items: center; */
+}
+.bill-info .header-info{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.bill-info .counter-info{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin:6px 0;
+    padding: 6px;
+    border: 1px solid #000;
+}  
+
+.dark .bill-info .counter-info{
+  border: 1px solid #fff;
+}
+.dark .bill-info{
+  border: 1px solid #fff;
+}
+.apexcharts-menu-icon{
+  width:32px !important;
+}
+.dark .apexcharts-menu{
+  background-color: #002C5C;
+  color:white;
+  font-family:'newVazir' !important ;
+}
+.apexcharts-menu .apexcharts-menu-item:hover{
+  background-color: #a7a7aa;
+}
+.dark .apexcharts-menu .apexcharts-menu-item:hover{
+  background-color: #0052AC;
+}
+.pick-location .leaflet-container::after{
+  content: "";
+  position: absolute;
+  z-index: 1000;
+  height: 2px;
+  width: 100%;
+  bottom: calc(50% - 2px);
+  right: 0;
+  left: 0;
+  border-top: 2px dotted red;
+}
+.pick-location .leaflet-container::before{
+  content: "";
+  position: absolute;
+  z-index: 1000;
+  width: 2px;
+  height: 100%;
+  left: calc(50% - 2px);
+  top: 0px;
+  border-right: 2px dotted red;
+}
+.location-pin {
+  right: calc(50% - 14px);
+  top: calc(50% - 28px);
+  z-index: 1100;
+}
+.apexcharts-theme-dark svg{
+  background: none !important;
+}
+.apexcharts-toolbar{
+  z-index: 0 !important;
+}
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+ transition: all 0.4s ease;
+}
+.dark .leaflet-layer,
+.dark .leaflet-control-zoom-in,
+.dark .leaflet-control-zoom-out,
+.dark .leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(85%); 
+  transition: all 0.4s ease;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+.dark .calendarContainer.jalaali{
+/* background: #002C5C; */
+background: #0052AC;
+color: #fff;
+}
+.select__menu{
+  z-index: 1100 !important;
+}

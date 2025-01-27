@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+
+@font-face {
+	font-family: Vazir;
+	src: url('./assets/fonts/vazir/eot/Vazir.eot');
+	src: url('./assets/fonts/vazir/eot/Vazir.eot?#iefix') format('embedded-opentype'),
+		url('./assets/fonts/vazir/woff2/Vazir.woff2') format('woff2'),
+		url('./assets/fonts/vazir/woff/Vazir.woff') format('woff'),
+		url('./assets/fonts/vazir/ttf/Vazir.ttf') format('truetype');
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: Vazir;
+	src: url('./assets/fonts/vazir/eot/Vazir-Bold.eot');
+	src: url('./assets/fonts/vazir/eot/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
+		url('./assets/fonts/vazir/woff2/Vazir-Bold.woff2') format('woff2'),
+		url('./assets/fonts/vazir/woff/Vazir-Bold.woff') format('woff'),
+		url('./assets/fonts/vazir/ttf/Vazir-Bold.ttf') format('truetype');
+	font-weight: bold;
+}
+
+body {
+	font-family: Vazir !important;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+	img {
+	  @apply inline-block;
+	}
+  }
+
+@layer base {
+	html {
+		/* font-family: 'DM Sans', sans-serif !important; */
+			font-family: Vazir !important;
+		font-feature-settings: 'kern' !important;
+		-webkit-font-smoothing: antialiased;
+		letter-spacing: -0.5px;
+	}
+}
+
+input.defaultCheckbox::before {
+	content: url(../src/assets/svg/checked.svg); 
+	color: white;
+	opacity: 0; 
+	height: 16px; 
+	width: 16px;
+	position: absolute; 
+	left: 50%;
+	transform: translate(-50%, 0px);
+} 
+
+input:checked.defaultCheckbox::before { 
+	opacity: 1;
+}
+.chakra-modal__content-container{
+	height: 100% !important;
+}
+.datepicker-input,
+.basic-single .select__control{
+	margin-top: 8px;
+	padding: 12px;
+	min-height: 48px;
+	width:100%;
+    border-radius: 12px;
+	background-color: rgb(255 255 255 / 0);
+    border: 1px solid;
+	border-color: rgba(233, 236, 239, 1)
+}
+.basic-single .select__control{
+	padding: 0 !important;
+}
+.datepicker-input:focus-visible,
+.basic-single .select__control{
+
+	border-color: rgba(233, 236, 239, 1)
+}
+.dark .datepicker-input,
+.dark .datepicker-input:focus-visible,
+.dark .basic-single .select__control,
+.dark .basic-single .select__control:focus-visible{
+	color: white ;
+	border-color: rgba(255, 255, 255, 0.182)
+
+}
+.calendarContainer .heading .prev,
+.calendarContainer .heading .next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.custom-tab-panel .chakra-tabs__tab-panel{
+	padding: 0 !important;
+}
+.chakra-modal__content{
+	background: none !important;
+	box-shadow: none !important;
+}
+.chakra-modal__body{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+.dark .select__menu{
+	background-color: rgb(17 28 68 / var(--tw-bg-opacity)) !important;
+}
+.dark .select__single-value{
+	color:white !important;
+}
+.dark .select--is-disabled .select__single-value{
+	color: hsl(0, 0%, 60%) !important;
+}
+/* .dark .select__input:hover{
+	color: black !important;
+} */
+.bill-info {
+	margin: 12px;
+	padding: 10px;
+	border: 1px solid #000;
+	border-radius: 8px;
+}
+
+.bill-info .header-info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.bill-info .counter-info {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin: 6px 0;
+	padding: 6px;
+	border: 1px solid #000;
+}
+.apexcharts-legend{
+    text-align: start;
+    /* font-weight: 600;
+    font-size: 16px; */
+}
+.apexcharts-legend-series span{
+	font-family: Vazir !important;
+    /* font-size: 16px; */
+    margin-left: 6px;
+    font-weight: 600;
+    /* margin-right: 5px; */
+}
+.dark .apexcharts-legend-series span{
+color:white!important;
+}
+.count-select{
+	height: 50px !important;
+	margin-bottom: -10px;
+}
+.dark .apexcharts-xaxis-label{
+	color: white!important;
+}
+.chart-chart{
+	margin-top: 20px !important;
+}
+/* scrollbar styles */
+::-webkit-scrollbar {
+	width: 20px !important;
+  }
+  ::-webkit-scrollbar-track {
+	background-color: transparent !important;
+  }
+  ::-webkit-scrollbar-thumb {
+	background-color: #d6dee1 !important;
+	border-radius: 20px !important;
+	border: 6px solid transparent !important;
+	background-clip: content-box !important;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+	background-color: #a8bbbf;
+  }

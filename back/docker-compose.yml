@@ -1,0 +1,48 @@
+services:
+#  postgres:
+#    build: Dockerfiles/postgres
+#    container_name: postgres
+#    shm_size: 512mb
+#    expose:
+#      - 5432
+#    ports:
+#      - '5432:5432'
+#    volumes:
+#      - ./data/db:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 2515263
+#      POSTGRES_DB: sayalsanjesh
+##      PGDATA: /data/postgres
+#    networks:
+#      - BackendNetwork
+#    restart: unless-stopped
+  backend:
+    build: .
+    command: gunicorn AutomationSayalSanjesh.wsgi:application --bind 0.0.0.0:4001
+    expose:
+      - 4001
+    environment:
+      - DEBUG= False
+      - SECRET_KEY= d0ea4c30460a43e3-8f02^^f3d53cacbdQEWA*SDFSD65469!fc
+      - DJANGO_ALLOWED_HOSTS=*,
+    volumes:
+      - .:/code
+#    depends_on:
+#      - postgres
+    restart: always
+    scale: 3
+    networks:
+      - BackendNetwork
+  nginx:
+    build: Dockerfiles/nginx
+    ports:
+      - 6565:80
+    depends_on:
+      - backend
+    networks:
+      - BackendNetwork
+
+networks:
+  BackendNetwork:
+    name: BackendNetwork
