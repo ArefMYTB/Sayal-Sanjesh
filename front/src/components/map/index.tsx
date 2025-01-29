@@ -98,9 +98,9 @@ const CustomMap = () => {
       {!locationsLoading && locationsStatus === "success" ? (
         <MapContainer
           center={center}
-          zoom={6}
+          zoom={5}
           style={{
-            height: "60vh",
+            height: "80vh",
             width: "100%",
             padding: "10px",
             margin: "0 auto",

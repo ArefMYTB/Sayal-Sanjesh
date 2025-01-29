@@ -229,7 +229,7 @@ const Dashboard = () => {
   };
   return (
     <div>
-      <div className="xl:grid-col-4 mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-6">
+      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3  2xl:grid-cols-4 3xl:grid-cols-6">
         {!dashboardDataIsLoading && dashboardDataStatus === "success" ? (
           <>
             <Widget
@@ -272,29 +272,110 @@ const Dashboard = () => {
       !devicesIsLoading &&
       devicesStatus === "success" ? (
         <>
-          <div className=" grid grid-cols-1 gap-4 py-4 xl:grid-cols-6">
-            <div className=" map-wrapper xl:col-span-4">
-              <CustomMap />
+          <div className="grid grid-cols-1 gap-4 py-4 xl:grid-cols-7">
+            
+            <div className="xl:col-span-4 grid">
+              <div className="border-4 border-gray-500 chart-container mx-auto h-[45vh] w-full min-w-[95%]">
+                <MixChart
+                  chartData={renderComplexChartData(
+                    consumptionsDatesData.data,
+                    fromDate,
+                    tillDate
+                  )}
+                  chartOptions={renderComplexChartOptions(
+                    // consumptionsDatesData.data,
+                    fromDate,
+                    tillDate
+                  )}
+                  chartTag={tag}
+                />
+              </div>
+
+              <div className="flex gap-2">
+                  <div className="border-4 border-gray-500 round-charts grid grid-cols-1 gap-2">
+                    {/* <div className="donat h-[29vh]">
+                      <div className=" text-lg font-semibold dark:text-white">
+                        تفکیک دستگاه ها
+                      </div>
+                      <DonutChart
+                        chartOptions={renderDonutOptions(devicesData.data)}
+                        chartData={renderDonutData(devicesData.data)}
+                      />
+                    </div> */}
+                    <div className="pie h-[29vh]">
+                      <div className="text-lg font-semibold dark:text-white">
+                        پروژه به تفکیک شهر
+                      </div>
+                      <PieChart
+                        chartOptions={renderChartOptions(citiesData.data)}
+                        chartData={renderChartData(citiesData.data)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="border rounded-lg p-1 max-w-md mx-auto shadow-md">
+                    {/* Header */}
+                    <div className="bg-gray-200 text-center font-bold py-2 rounded-t-lg">
+                      اطلاعات مصرف
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-4 space-y-3 text-right">
+                      <div className="flex justify-between">
+                        <span className="text-sm">مصرف کل (مترمکعب):</span>
+                        <span className="font-bold text-sm">۲۶/۵۵۳/۵۲۶</span>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <span className="text-sm">میانگین مصرف سالانه (مترمکعب):</span>
+                        <span className="font-bold text-sm">۳۵۶/۲۸۵</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">میانگین مصرف ماهانه (مترمکعب):</span>
+                        <span className="font-bold text-sm">۱۱/۳۶۱</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">میانگین مصرف روزانه (مترمکعب):</span>
+                        <span className="font-bold text-sm">۳۵/۶</span>
+                      </div>
+                    </div>
+
+                  </div>
+                  
+                  <div className="border rounded-lg p-1 max-w-md mx-auto shadow-md">
+                    {/* Header */}
+                    <div className="bg-gray-200 text-center font-bold py-2 rounded-t-lg">
+                      رخدادهای مهم
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-4 space-y-3 text-right">
+                      <div className="flex justify-between">
+                        <span className="text-sm">عدم پوشش شبکه:</span>
+                        <span className="font-bold text-sm">8</span>
+                      </div>
+                      <div className="flex justify-between gap-10">
+                        <span className="text-sm">کاهش ولتاژ باطری:</span>
+                        <span className="font-bold text-sm">10</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">باز شدن درب کنتور</span>
+                        <span className="font-bold text-sm">5</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">سایر:</span>
+                        <span className="font-bold text-sm">20</span>
+                      </div>
+                    </div>
+
+                  </div>
+
+              </div>
+
             </div>
-            <div className="round-charts grid grid-cols-1 gap-2 xl:col-span-2 ">
-              <div className="donat h-[29vh]">
-                <div className=" text-lg font-semibold dark:text-white">
-                  تفکیک دستگاه ها
-                </div>
-                <DonutChart
-                  chartOptions={renderDonutOptions(devicesData.data)}
-                  chartData={renderDonutData(devicesData.data)}
-                />
-              </div>
-              <div className="pie h-[29vh]">
-                <div className="text-lg font-semibold dark:text-white">
-                  پروژه به تفکیک شهر
-                </div>
-                <PieChart
-                  chartOptions={renderChartOptions(citiesData.data)}
-                  chartData={renderChartData(citiesData.data)}
-                />
-              </div>
+            
+            
+            <div className="border-4 border-gray-500 rounded-lg xl:col-span-3">
+              <CustomMap />
             </div>
           </div>
         </>
