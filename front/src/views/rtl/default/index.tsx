@@ -27,6 +27,7 @@ import {
   renderComplexChartOptions,
 } from "utils/globalUtils";
 import { renderSelectData } from "utils/CommonFunctions";
+import SimpleCard from "components/SimpleCard";
 
 const Dashboard = () => {
   const [tag, setTag] = useState<DynamicOption>(counterTagSelect[0]);
@@ -307,7 +308,6 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 gap-4 py-4 xl:grid-cols-7">
             <div className="grid xl:col-span-4">
               {/* Consumption Chart */}
-              {/* <div className="chart-container mx-auto h-[45vh] w-full min-w-[95%] border-4 border-gray-500"> */}
               <div className="mx-auto h-[40vh] w-full min-w-[95%] rounded-lg border p-1 shadow-md">
                 {/* Header */}
                 <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
@@ -338,98 +338,73 @@ const Dashboard = () => {
 
               <div className="mt-2 flex gap-1">
                 {/* Announcements */}
-                <div className="mx-auto max-w-md rounded-lg border p-1 shadow-md">
-                  {/* Header */}
-                  <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
-                    رخدادهای مهم
+                <SimpleCard title="رخدادهای مهم">
+                  <div className="space-y-3 text-right">
+                    {[
+                      { label: "کاهش ولتاژ باطری اصلی:", value: "۲۶" },
+                      { label: "کاهش ولتاژ باطری بکاپ:", value: "۶" },
+                      { label: "باز شدن درب کنتور:", value: "۵" },
+                      { label: "صدور دستور قطع:", value: "۵۲" },
+                      {
+                        label: "برداشت آب در هنگام اعمال دستور قطع:",
+                        value: "۵۶",
+                      },
+                      { label: "درخواست پشتیبانی:", value: "۲" },
+                      { label: "سایر:", value: "۵۲۶" },
+                    ].map((item, index) => (
+                      <div key={index} className="flex justify-between gap-2">
+                        <span className="text-sm">{item.label}</span>
+                        <span className="text-sm font-bold">{item.value}</span>
+                      </div>
+                    ))}
                   </div>
-
-                  {/* Content */}
-                  <div className="space-y-3 p-4 text-right">
-                    <div className="flex justify-between">
-                      <span className="text-sm">کاهش ولتاژ باطری اصلی:</span>
-                      <span className="text-sm font-bold">۲۶</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">کاهش ولتاژ باطری بکاپ:</span>
-                      <span className="text-sm font-bold">۶</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">باز شدن درب کنتور:</span>
-                      <span className="text-sm font-bold">۵</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">صدور دستور قطع:</span>
-                      <span className="text-sm font-bold">۵۲</span>
-                    </div>
-                    <div className="flex justify-between gap-5">
-                      <span className="text-sm">
-                        برداشت آب در هنگام اعمال دستور قطع:
-                      </span>
-                      <span className="text-sm font-bold">۵۶</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">درخواست پشتیبانی:</span>
-                      <span className="text-sm font-bold">۲</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">سایر:</span>
-                      <span className="text-sm font-bold">۵۲۶</span>
-                    </div>
-                  </div>
-                </div>
+                </SimpleCard>
 
                 {/* Consumption Info */}
-                <div className="mx-auto max-w-md rounded-lg border p-1 shadow-md">
-                  {/* Header */}
-                  <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
-                    اطلاعات مصرف
+                <SimpleCard title="اطلاعات مصرف">
+                  <div className="space-y-3 text-right">
+                    {[
+                      { label: "مصرف کل (مترمکعب):", value: "۲۶/۵۵۳/۵۲۶" },
+                      {
+                        label: "بیشینه مصرف سالانه (مترمکعب):",
+                        value: "۳۵۶/۲۸۵",
+                        style: "text-red-500",
+                      },
+                      {
+                        label: "کمینه مصرف سالانه (مترمکعب):",
+                        value: "۳۵۶/۲۸۵",
+                        style: "text-blue-500",
+                      },
+                      {
+                        label: "بیشینه مصرف ماهانه (مترمکعب):",
+                        value: "۱۱/۳۶۱",
+                        style: "text-red-500",
+                      },
+                      {
+                        label: "کمینه مصرف ماهانه (مترمکعب):",
+                        value: "۱۱/۳۶۱",
+                        style: "text-blue-500",
+                      },
+                      {
+                        label: "بیشینه مصرف روزانه (مترمکعب):",
+                        value: "۳۵/۶",
+                        style: "text-red-500",
+                      },
+                      {
+                        label: "کمینه مصرف روزانه (مترمکعب):",
+                        value: "۳۵/۶",
+                        style: "text-blue-500",
+                      },
+                    ].map((item, index) => (
+                      <div key={index} className="flex justify-between gap-2">
+                        <span className={`text-sm ${item.style || ""}`}>
+                          {item.label}
+                        </span>
+                        <span className="text-sm font-bold">{item.value}</span>
+                      </div>
+                    ))}
                   </div>
-
-                  {/* Content */}
-                  <div className="space-y-3 p-4 text-right">
-                    <div className="flex justify-between">
-                      <span className="text-sm">مصرف کل (مترمکعب):</span>
-                      <span className="text-sm font-bold">۲۶/۵۵۳/۵۲۶</span>
-                    </div>
-                    <div className="flex justify-between gap-2">
-                      <span className="text-sm text-red-500">
-                        بیشینه مصرف سالانه (مترمکعب):
-                      </span>
-                      <span className="text-sm font-bold">۳۵۶/۲۸۵</span>
-                    </div>
-                    <div className="flex justify-between gap-2">
-                      <span className="text-sm text-blue-500">
-                        کمینه مصرف سالانه (مترمکعب):
-                      </span>
-                      <span className="text-sm font-bold">۳۵۶/۲۸۵</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-red-500">
-                        بیشینه مصرف ماهانه (مترمکعب):
-                      </span>
-                      <span className="text-sm font-bold">۱۱/۳۶۱</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-blue-500">
-                        کمینه مصرف ماهانه (مترمکعب):
-                      </span>
-                      <span className="text-sm font-bold">۱۱/۳۶۱</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-red-500">
-                        بیشینه مصرف روزانه (مترمکعب):
-                      </span>
-                      <span className="text-sm font-bold">۳۵/۶</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-blue-500">
-                        کمینه مصرف روزانه (مترمکعب):
-                      </span>
-                      <span className="text-sm font-bold">۳۵/۶</span>
-                    </div>
-                  </div>
-                </div>
+                </SimpleCard>
 
                 {/* PieCharts */}
                 <div className="mx-auto max-w-md rounded-lg border p-1 shadow-md">
