@@ -12,6 +12,7 @@ import { DeviceObj } from "views/counters";
 import { ProjectObject } from "views/projects";
 import { TypeObject } from "views/settings/DeviceTypesTable";
 import { ChartOptions } from "views/systemReports/ProjecsReport";
+import SimpleCard from "components/SimpleCard";
 
 interface ProjectAbstractProps {
   projectData: [ProjectObject];
@@ -171,7 +172,24 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
   };
   return (
     <>
-      {projectInfo.water_meters_with_this_id.All_water_meter_with_this_id !==
+      <div className="grid grid-cols-1 gap-4 py-4 xl:grid-cols-4">
+        <div className="grid xl:col-span-1">
+          <SimpleCard title="رخدادها">
+            <></>
+          </SimpleCard>
+        </div>
+        <div className="grid xl:col-span-1">
+          <SimpleCard title="تعداد و انواع کنتورهای هوشمند">
+            <></>
+          </SimpleCard>
+        </div>
+        <div className="grid xl:col-span-2">
+          <SimpleCard title="نمودار مصرف آب در ماه جاری">
+            <></>
+          </SimpleCard>
+        </div>
+      </div>
+      {/* {projectInfo.water_meters_with_this_id.All_water_meter_with_this_id !==
       "1000" ? (
         <div className="projects-abstract pt-4">
           <div className=" py-4 text-center text-xl font-bold text-navy-700 dark:text-white">
@@ -209,8 +227,8 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
         </div>
       ) : (
         <div>دستگاهی در این پروژه موجود نیست</div>
-      )}
-      {!typesIsLoading && typesStatus === "success" ? (
+      )} */}
+      {/* {!typesIsLoading && typesStatus === "success" ? (
         <div className="">
           <div className="py-2 text-start text-xl font-bold text-navy-700 dark:text-white">
             انواع دستگاه پروژه
@@ -244,7 +262,7 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
         </div>
       ) : (
         <div>type is loading</div>
-      )}
+      )} */}
     </>
   );
 };
