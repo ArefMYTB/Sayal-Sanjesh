@@ -267,33 +267,179 @@ const Dashboard = () => {
           <Loading />
         )}
       </div>
+
+      {!usersIsLoading &&
+      usersStatus === "success" &&
+      !projectsIsLoading &&
+      projectsStatus === "success" &&
+      !typesIsLoading &&
+      typesStatus === "success" ? (
+        <div className="chart-statistics py-2">
+          <ConsumptionChartFilter
+            tagSelect={counterTagSelect}
+            tag={tag}
+            setTag={setTag}
+            userSelect={renderSelectData(usersData.data, "user")}
+            user={user}
+            setUser={setUser}
+            projectSelect={renderSelectData(projectsData.data, "project")}
+            project={project}
+            setProject={setProject}
+            typeSelect={renderTypeSelect(typesData.data)}
+            type={type}
+            setType={setType}
+            // fromDate={fromDate}
+            // setFromDate={setFromDate}
+            // tillDate={tillDate}
+            // setTillDate={setTillDate}
+            // update={consumptionDatesRefetch}
+          />
+        </div>
+      ) : (
+        <Loading />
+      )}
+
       {!citiesIsLoading &&
       citiesStatus &&
       !devicesIsLoading &&
       devicesStatus === "success" ? (
         <>
           <div className="grid grid-cols-1 gap-4 py-4 xl:grid-cols-7">
-            
-            <div className="xl:col-span-4 grid">
-              <div className="border-4 border-gray-500 chart-container mx-auto h-[45vh] w-full min-w-[95%]">
-                <MixChart
-                  chartData={renderComplexChartData(
-                    consumptionsDatesData.data,
-                    fromDate,
-                    tillDate
-                  )}
-                  chartOptions={renderComplexChartOptions(
-                    // consumptionsDatesData.data,
-                    fromDate,
-                    tillDate
-                  )}
-                  chartTag={tag}
-                />
+            <div className="grid xl:col-span-4">
+              {/* Consumption Chart */}
+              {/* <div className="chart-container mx-auto h-[45vh] w-full min-w-[95%] border-4 border-gray-500"> */}
+              <div className="mx-auto h-[40vh] w-full min-w-[95%] rounded-lg border p-1 shadow-md">
+                {/* Header */}
+                <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
+                  نمودار مصرف
+                </div>
+
+                {/* Content */}
+                {!consumptionsDatesIsLoading &&
+                consumptionsDatesStatus === "success" ? (
+                  <MixChart
+                    chartData={renderComplexChartData(
+                      consumptionsDatesData.data,
+                      fromDate,
+                      tillDate
+                    )}
+                    chartOptions={renderComplexChartOptions(
+                      // consumptionsDatesData.data,
+                      fromDate,
+                      tillDate
+                    )}
+                    chartTag={tag}
+                  />
+                ) : (
+                  // <div>chart is loading</div>
+                  <Loading />
+                )}
               </div>
 
-              <div className="flex gap-2">
-                  <div className="border-4 border-gray-500 round-charts grid grid-cols-1 gap-2">
-                    {/* <div className="donat h-[29vh]">
+              <div className="mt-2 flex gap-1">
+                {/* Announcements */}
+                <div className="mx-auto max-w-md rounded-lg border p-1 shadow-md">
+                  {/* Header */}
+                  <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
+                    رخدادهای مهم
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-3 p-4 text-right">
+                    <div className="flex justify-between">
+                      <span className="text-sm">کاهش ولتاژ باطری اصلی:</span>
+                      <span className="text-sm font-bold">۲۶</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">کاهش ولتاژ باطری بکاپ:</span>
+                      <span className="text-sm font-bold">۶</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">باز شدن درب کنتور:</span>
+                      <span className="text-sm font-bold">۵</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">صدور دستور قطع:</span>
+                      <span className="text-sm font-bold">۵۲</span>
+                    </div>
+                    <div className="flex justify-between gap-5">
+                      <span className="text-sm">
+                        برداشت آب در هنگام اعمال دستور قطع:
+                      </span>
+                      <span className="text-sm font-bold">۵۶</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">درخواست پشتیبانی:</span>
+                      <span className="text-sm font-bold">۲</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">سایر:</span>
+                      <span className="text-sm font-bold">۵۲۶</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Consumption Info */}
+                <div className="mx-auto max-w-md rounded-lg border p-1 shadow-md">
+                  {/* Header */}
+                  <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
+                    اطلاعات مصرف
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-3 p-4 text-right">
+                    <div className="flex justify-between">
+                      <span className="text-sm">مصرف کل (مترمکعب):</span>
+                      <span className="text-sm font-bold">۲۶/۵۵۳/۵۲۶</span>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                      <span className="text-sm text-red-500">
+                        بیشینه مصرف سالانه (مترمکعب):
+                      </span>
+                      <span className="text-sm font-bold">۳۵۶/۲۸۵</span>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                      <span className="text-sm text-blue-500">
+                        کمینه مصرف سالانه (مترمکعب):
+                      </span>
+                      <span className="text-sm font-bold">۳۵۶/۲۸۵</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-red-500">
+                        بیشینه مصرف ماهانه (مترمکعب):
+                      </span>
+                      <span className="text-sm font-bold">۱۱/۳۶۱</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-blue-500">
+                        کمینه مصرف ماهانه (مترمکعب):
+                      </span>
+                      <span className="text-sm font-bold">۱۱/۳۶۱</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-red-500">
+                        بیشینه مصرف روزانه (مترمکعب):
+                      </span>
+                      <span className="text-sm font-bold">۳۵/۶</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-blue-500">
+                        کمینه مصرف روزانه (مترمکعب):
+                      </span>
+                      <span className="text-sm font-bold">۳۵/۶</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* PieCharts */}
+                <div className="mx-auto max-w-md rounded-lg border p-1 shadow-md">
+                  {/* Header */}
+                  <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
+                    وضعیت پروژه ها
+                  </div>
+                  {/* Content */}
+                  <div className="pie py-2">
+                    {/* <div className="donat h-[20vh]">
                       <div className=" text-lg font-semibold dark:text-white">
                         تفکیک دستگاه ها
                       </div>
@@ -301,80 +447,20 @@ const Dashboard = () => {
                         chartOptions={renderDonutOptions(devicesData.data)}
                         chartData={renderDonutData(devicesData.data)}
                       />
+                    </div>
+                    <div className="text-lg font-semibold dark:text-white">
+                      پروژه به تفکیک شهر
                     </div> */}
-                    <div className="pie h-[29vh]">
-                      <div className="text-lg font-semibold dark:text-white">
-                        پروژه به تفکیک شهر
-                      </div>
-                      <PieChart
-                        chartOptions={renderChartOptions(citiesData.data)}
-                        chartData={renderChartData(citiesData.data)}
-                      />
-                    </div>
+                    <PieChart
+                      chartOptions={renderChartOptions(citiesData.data)}
+                      chartData={renderChartData(citiesData.data)}
+                    />
                   </div>
-
-                  <div className="border rounded-lg p-1 max-w-md mx-auto shadow-md">
-                    {/* Header */}
-                    <div className="bg-gray-200 text-center font-bold py-2 rounded-t-lg">
-                      اطلاعات مصرف
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-4 space-y-3 text-right">
-                      <div className="flex justify-between">
-                        <span className="text-sm">مصرف کل (مترمکعب):</span>
-                        <span className="font-bold text-sm">۲۶/۵۵۳/۵۲۶</span>
-                      </div>
-                      <div className="flex justify-between gap-2">
-                        <span className="text-sm">میانگین مصرف سالانه (مترمکعب):</span>
-                        <span className="font-bold text-sm">۳۵۶/۲۸۵</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">میانگین مصرف ماهانه (مترمکعب):</span>
-                        <span className="font-bold text-sm">۱۱/۳۶۱</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">میانگین مصرف روزانه (مترمکعب):</span>
-                        <span className="font-bold text-sm">۳۵/۶</span>
-                      </div>
-                    </div>
-
-                  </div>
-                  
-                  <div className="border rounded-lg p-1 max-w-md mx-auto shadow-md">
-                    {/* Header */}
-                    <div className="bg-gray-200 text-center font-bold py-2 rounded-t-lg">
-                      رخدادهای مهم
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-4 space-y-3 text-right">
-                      <div className="flex justify-between">
-                        <span className="text-sm">عدم پوشش شبکه:</span>
-                        <span className="font-bold text-sm">8</span>
-                      </div>
-                      <div className="flex justify-between gap-10">
-                        <span className="text-sm">کاهش ولتاژ باطری:</span>
-                        <span className="font-bold text-sm">10</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">باز شدن درب کنتور</span>
-                        <span className="font-bold text-sm">5</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">سایر:</span>
-                        <span className="font-bold text-sm">20</span>
-                      </div>
-                    </div>
-
-                  </div>
-
+                </div>
               </div>
-
             </div>
-            
-            
-            <div className="border-4 border-gray-500 rounded-lg xl:col-span-3">
+            {/* Geography Map */}
+            <div className="rounded-lg border p-1 shadow-md xl:col-span-3">
               <CustomMap />
             </div>
           </div>
@@ -382,7 +468,7 @@ const Dashboard = () => {
       ) : (
         <Loading />
       )}
-      <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
+      {/* <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
         مصرف ماه اخیر
       </div>
       {!usersIsLoading &&
@@ -456,7 +542,7 @@ const Dashboard = () => {
         </>
       ) : (
         <></>
-      )}
+      )} */}
     </div>
   );
 };

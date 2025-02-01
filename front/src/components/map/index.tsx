@@ -100,7 +100,7 @@ const CustomMap = () => {
           center={center}
           zoom={5}
           style={{
-            height: "80vh",
+            height: "70vh",
             width: "100%",
             padding: "10px",
             margin: "0 auto",
