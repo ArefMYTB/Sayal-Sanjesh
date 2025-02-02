@@ -14,14 +14,20 @@ import {
 } from "utils/globalUtils";
 interface ProjectConsumptionChartProps {
   projectData: [ProjectObject];
+  isDashboard?: boolean; // if true show in the project dashboard
+  tagDefault?: number;
 }
-const ProjectConsumptionChart = (props: ProjectConsumptionChartProps) => {
+const ProjectConsumptionChart = ({
+  projectData,
+  isDashboard = false, // Default value set to false
+  tagDefault = 0, // 0 is default for water
+}: ProjectConsumptionChartProps) => {
   // const id = useId();
   const { projectId } = useParams();
   // const {
   //    projectData
   //    } = props;
-  const [tag, setTag] = useState<DynamicOption>(counterTagSelect[0]);
+  const [tag, setTag] = useState<DynamicOption>(counterTagSelect[tagDefault]);
   const [fromDate, setFromDate] = useState(getToday().subtract(20, "day"));
   const [tillDate, setTillDate] = useState(getToday().add(1, "day"));
   // const [total, setTotal] = useState<number>(0);
@@ -55,24 +61,26 @@ const ProjectConsumptionChart = (props: ProjectConsumptionChartProps) => {
         {/* <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
           نمودار مصرف
         </div> */}
-        <div className="chart-statistics py-2">
-          <ConsumptionChartFilter
-            tagSelect={counterTagSelect}
-            tag={tag}
-            setTag={setTag}
-            fromDate={fromDate}
-            setFromDate={setFromDate}
-            tillDate={tillDate}
-            setTillDate={setTillDate}
-            update={consumptionDatesRefetch}
-            total={
-              consumptionsDatesData?.data
-                ? consumptionsDatesData?.data?.total
-                : 0
-            }
-            tab="chart"
-          />
-        </div>
+        {!isDashboard && (
+          <div className="chart-statistics py-2">
+            <ConsumptionChartFilter
+              tagSelect={counterTagSelect}
+              tag={tag}
+              setTag={setTag}
+              fromDate={fromDate}
+              setFromDate={setFromDate}
+              tillDate={tillDate}
+              setTillDate={setTillDate}
+              update={consumptionDatesRefetch}
+              total={
+                consumptionsDatesData?.data
+                  ? consumptionsDatesData?.data?.total
+                  : 0
+              }
+              tab="chart"
+            />
+          </div>
+        )}
         {!consumptionsDatesIsLoading &&
         consumptionsDatesStatus === "success" ? (
           <div className="chart-container mx-auto h-[450px] w-full min-w-[95%]">

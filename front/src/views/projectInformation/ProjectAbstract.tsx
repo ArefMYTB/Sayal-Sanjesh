@@ -13,6 +13,7 @@ import { ProjectObject } from "views/projects";
 import { TypeObject } from "views/settings/DeviceTypesTable";
 import { ChartOptions } from "views/systemReports/ProjecsReport";
 import SimpleCard from "components/SimpleCard";
+import ProjectConsumptionChart from "./ProjectConsumptionChart";
 
 interface ProjectAbstractProps {
   projectData: [ProjectObject];
@@ -173,20 +174,103 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
   return (
     <>
       <div className="grid grid-cols-1 gap-4 py-4 xl:grid-cols-4">
-        <div className="grid xl:col-span-1">
-          <SimpleCard title="رخدادها">
-            <></>
+        <div className="grid gap-5 xl:col-span-1">
+          <SimpleCard title="رخدادها" extraStyle="w-full min-w-[300px]">
+            <div className="space-y-3 text-right">
+              {[
+                { label: "باز شدن در کنتور هوشمند", value: "۶" },
+                { label: "سر رسید تعویض باطری", value: "۶" },
+                { label: "ضعف سیگنال شبکه", value: "۵" },
+                { label: "رسیدن به آستانه مجاز برداشت", value: "۲" },
+              ].map((item, index) => (
+                <div key={index} className="flex justify-between gap-10">
+                  <span className="text-sm">{item.label}</span>
+                  <span className="text-sm font-bold">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </SimpleCard>
+
+          <SimpleCard
+            title="آخرین قبوض صادر شده"
+            extraStyle="w-full min-w-[300px]"
+          >
+            <div className="space-y-3 text-right">
+              {[
+                { label: "کنتور هوشمند آب", value: "۶" },
+                { label: "قرائتگر هوشمند برق", value: "۵" },
+              ].map((item, index) => (
+                <div key={index} className="flex justify-between gap-10">
+                  <span className="text-sm">{item.label}</span>
+                  <span className="text-sm font-bold">{item.value}</span>
+                </div>
+              ))}
+            </div>
           </SimpleCard>
         </div>
         <div className="grid xl:col-span-1">
           <SimpleCard title="تعداد و انواع کنتورهای هوشمند">
-            <></>
+            {projectInfo.water_meters_with_this_id
+              .All_water_meter_with_this_id !== "1000" ? (
+              <div className="projects-abstract pt-4">
+                <div className="grid gap-5">
+                  <div className="chart-statistics flex flex-col items-center justify-center py-2">
+                    <div className="chart-container h-[180px] w-full">
+                      <PieChart
+                        chartOptions={tagChartOptions}
+                        chartData={tagChartData}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="chart-statistics flex flex-col items-center justify-center py-2 ">
+                    <div className="chart-container h-[180px] w-full">
+                      <DonutChart
+                        chartOptions={typeChartOptions}
+                        chartData={typeChartData}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>دستگاهی در این پروژه موجود نیست</div>
+            )}
+            <div className="space-y-3 text-right">
+              {[
+                { label: "تعداد دستگاه ها", value: "۶" },
+                { label: "تعداد کنتور فعال", value: "۶" },
+                { label: "تعداد کنتور غیر فعال", value: "۵" },
+                { label: "تعداد کنتورهای عدم ارسال", value: "۲" },
+              ].map((item, index) => (
+                <div key={index} className="flex justify-between gap-10">
+                  <span className="text-sm">{item.label}</span>
+                  <span className="text-sm font-bold">{item.value}</span>
+                </div>
+              ))}
+            </div>
           </SimpleCard>
         </div>
-        <div className="grid xl:col-span-2">
-          <SimpleCard title="نمودار مصرف آب در ماه جاری">
-            <></>
-          </SimpleCard>
+        <div className="grid gap-5 xl:col-span-2">
+          {/* <SimpleCard
+            title="نمودار مصرف آب در ماه جاری"
+            extraStyle="w-full min-w-[750px]"
+          > */}
+          <ProjectConsumptionChart
+            projectData={projectData}
+            isDashboard={true}
+          />
+          {/* </SimpleCard> */}
+          {/* <SimpleCard
+            title="نمودار مصرف برق در ماه جاری"
+            extraStyle="w-full min-w-[750px]"
+          > */}
+          <ProjectConsumptionChart
+            projectData={projectData}
+            isDashboard={true}
+            tagDefault={1}
+          />
+          {/* </SimpleCard> */}
         </div>
       </div>
       {/* {projectInfo.water_meters_with_this_id.All_water_meter_with_this_id !==
