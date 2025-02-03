@@ -436,7 +436,7 @@ const Dashboard = () => {
             </div>
             {/* Geography Map */}
             <div className="rounded-lg border p-1 shadow-md xl:col-span-3">
-              <CustomMap />
+              {/* <CustomMap /> */}
             </div>
           </div>
         </>
