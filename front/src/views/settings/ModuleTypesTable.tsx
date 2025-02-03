@@ -83,7 +83,7 @@ const Moduletypes = () => {
   const tableData = () => {
     let tagsTableData: ModuletypesData = [];
     if (!moduleTypesIsLoading && moduleTypesStatus === "success") {
-      moduleTypesData.data.forEach((obj: ModuleTypeObject) =>
+      moduleTypesData.data?.forEach((obj: ModuleTypeObject) =>
         tagsTableData.push({
           moduleTypeName: obj.module_type_name,
           moduleTypeCreateDate: toPersianDate(obj.module_type_create_date),
@@ -122,7 +122,9 @@ const Moduletypes = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`نوع ماژول (${
-              moduleTypesIsLoading ? "loading..." : moduleTypesData?.data.length
+              moduleTypesIsLoading
+                ? "loading..."
+                : moduleTypesData?.data?.length
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">

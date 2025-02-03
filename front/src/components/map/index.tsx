@@ -52,7 +52,7 @@ const CustomMap = () => {
     queryKey: ["counterslocation"],
   });
   const renderPins = (locationsList: counterLocationsInfo[]) => {
-    let validLocations = locationsList.filter(
+    let validLocations = locationsList?.filter(
       (location) =>
         typeof location.water_meter_location !== "string" &&
         Number(location.water_meter_location.lat)
@@ -60,7 +60,7 @@ const CustomMap = () => {
 
     return (
       <>
-        {validLocations.map((loc, idx) => (
+        {validLocations?.map((loc, idx) => (
           <Marker
             position={[
               Number(loc.water_meter_location.lat),

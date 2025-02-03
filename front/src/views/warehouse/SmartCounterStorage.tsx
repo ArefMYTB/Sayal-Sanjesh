@@ -208,7 +208,7 @@ const SmartCounterStorage = () => {
   };
   const tableData = () => {
     let deviceTableData: SmartStorageTable[] = [];
-    smartCounterData.data.forEach((device: DeviceObj) => {
+    smartCounterData.data?.forEach((device: DeviceObj) => {
       deviceTableData.push({
         counterName: device.water_meter_name,
         bodySerial: device.water_meter_serial,

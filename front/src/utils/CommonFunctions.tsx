@@ -129,7 +129,7 @@ export const renderSelectData = (
   switch (selectDataType) {
     case "counter":
       let counters: DeviceObj[] = data;
-      counters.forEach((obj) => {
+      counters?.forEach((obj) => {
         selectData.push({
           label: obj.water_meter_name,
           value: obj.water_meter_serial,
@@ -138,7 +138,7 @@ export const renderSelectData = (
       return selectData;
     case "module":
       let modules: ModuleObject[] = data;
-      modules.forEach((obj) => {
+      modules?.forEach((obj) => {
         selectData.push({
           label: obj.water_meter_module_name,
           value: obj.water_meter_module_id,
@@ -147,7 +147,7 @@ export const renderSelectData = (
       return selectData;
     case "user":
       let users: UserObject[] = data;
-      users.forEach((user) => {
+      users?.forEach((user) => {
         selectData.push({
           value: user.user_id,
           label: `${user.user_name} ${user.user_lastname}`,
@@ -156,7 +156,7 @@ export const renderSelectData = (
       return selectData;
     case "project":
       let projects: ProjectObject[] = data;
-      projects.forEach((project) => {
+      projects?.forEach((project) => {
         selectData.push({
           value: project.water_meter_project_id,
           label: project.water_meter_project_name,

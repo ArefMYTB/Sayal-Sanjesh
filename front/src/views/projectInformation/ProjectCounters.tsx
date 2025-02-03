@@ -195,7 +195,7 @@ const ProjectCounters = (props: ProjectCountersProps) => {
   const renderTableData = () => {
     let tableData: CounterConsumptionTableData[] = [];
     // console.log(consumptionData.data);
-    consumptionData.data.forEach((consumption: ConsumptionArray) => {
+    consumptionData.data?.forEach((consumption: ConsumptionArray) => {
       tableData.push({
         counterName: renderDeviceName(
           projectDevices.filter(

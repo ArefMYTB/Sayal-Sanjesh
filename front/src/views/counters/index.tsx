@@ -239,7 +239,7 @@ const CountersView = () => {
   const renderModulesSelectData = () => {
     let selectedData: DynamicOption[] = [];
     if (!modulesIsLoading && modulesStatus !== "pending") {
-      modulesData.data.forEach(
+      modulesData.data?.forEach(
         (module: {
           water_meter_module_name: string;
           water_meter_module_id: string;

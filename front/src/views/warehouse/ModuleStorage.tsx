@@ -48,7 +48,7 @@ const ModuleStorage = () => {
   );
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const [count, setCount] = useState<CountOption>(countSelect[0]);
+  const [count, setCount] = useState<CountOption>(countSelect?.[0]);
   const {
     data: moduleTypesData,
     isLoading: moduleTypesIsLoading,
@@ -147,7 +147,7 @@ const ModuleStorage = () => {
       ? moduleTypesData.data
       : [];
     let selectData: DynamicOption[] = [];
-    allTypes.forEach((type) =>
+    allTypes?.forEach((type) =>
       selectData.push({
         label: type.module_type_name,
         value: type.module_type_id,
@@ -157,7 +157,7 @@ const ModuleStorage = () => {
   };
   const tableData = () => {
     let moduleTableData: ModuleTableData[] = [];
-    modulesData.data.forEach((eModule: ModuleObject) => {
+    modulesData.data?.forEach((eModule: ModuleObject) => {
       moduleTableData.push({
         moduleName: eModule.water_meter_module_name,
         moduleCode: eModule.water_meter_module_code,
@@ -221,8 +221,8 @@ const ModuleStorage = () => {
           {`ماژول ها (${
             !modulesIsLoading &&
             modulesStatus === "success" &&
-            modulesData.data[0]?.modules_total_number
-              ? modulesData.data[0].modules_total_number
+            modulesData.data?.[0]?.modules_total_number
+              ? modulesData.data?.[0].modules_total_number
               : 0
           })`}
         </div>
@@ -256,8 +256,8 @@ const ModuleStorage = () => {
           totalData={
             !modulesIsLoading &&
             modulesStatus === "success" &&
-            modulesData?.data.length > 0
-              ? modulesData.data[0].modules_total_number
+            modulesData?.data?.length > 0
+              ? modulesData.data?.[0].modules_total_number
               : 100
           }
           changePageFunc={setPage}

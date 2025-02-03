@@ -116,7 +116,7 @@ const OrdersView = () => {
       !deviceIsLoading &&
       deviceStatus !== "pending"
     ) {
-      orderData.data.forEach((obj: OrderObject) =>
+      orderData.data?.forEach((obj: OrderObject) =>
         projectTableData.push({
           orderName: obj.order_type.order_type_name,
           orderCode: obj.order_type.order_type_code,
@@ -195,7 +195,7 @@ const OrdersView = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`دستور ها (${
-              orderIsLoading ? "loading..." : orderData?.data.length
+              orderIsLoading ? "loading..." : orderData?.data?.length ?? 0
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">
