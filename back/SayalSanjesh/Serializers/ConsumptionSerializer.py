@@ -1520,58 +1520,69 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
             if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
-                # consumptions
-                filters = {
-                    "water_meters": water_meter_serial,
-                    "create_time__gte": start_time,
-                    "create_time__lte": end_time
-                }
-                filters = {k: v for k, v in filters.items() if v is not None}
-                consumption_objects = WaterMetersConsumptions.objects.filter(**filters)
-                consumption_objects_count = consumption_objects.count()
-                if consumption_objects_count == 0:
-                    wrong_data_result["farsi_message"] = "هیچ مقدار مصرفی در بازه ی مورد نظر وجود ندارد"
-                    wrong_data_result["english_message"] = "There is no consumption amount in the desired range"
-                    return False, wrong_data_result
+                
+                # Fetch all water meter serials
+                # water_meter_serials = WaterMeters.objects.all().values_list('water_meter_serial', flat=True)
+                # print(f"Total number of water meter serials: {len(water_meter_serials)}")
+                
 
-                prepared_data_list = []
-                headers = ['شماره سریال', 'تاریخ', 'ساعت', 'مقدار مصرف']
-
-                base_dir = os.getcwd()
-                csv_file_root = os.path.join(base_dir, 'media', 'csv', 'detail')
-
-                for cons_obj in consumption_objects:
-                    value = cons_obj.value
-                    create_time = cons_obj.create_time
-                    jalali_time = JalaliDateTime.fromtimestamp(create_time.timestamp(), pytz.timezone("Asia/Tehran"))
-                    jalali_time_split = str(jalali_time).split(' ')
-                    jalali_date = jalali_time_split[0]
-                    jalali_time = jalali_time_split[1].split('.')[0]
-                    # create csv file
-                    prepared_data = {
-                        "شماره سریال": water_meter_serial,
-
-                        "تاریخ": jalali_date,
-                        "ساعت": jalali_time,
-                        "مقدار مصرف": value
+                # for water_meter_serial in water_meter_serials: # to get all water meters csv file
+                    # print(water_meter_serial)
+                    # consumptions
+                    filters = {
+                        "water_meters": water_meter_serial,
+                        "create_time__gte": start_time,
+                        "create_time__lte": end_time
                     }
+                    filters = {k: v for k, v in filters.items() if v is not None}
+                    consumption_objects = WaterMetersConsumptions.objects.filter(**filters).order_by('create_time')
+                    consumption_objects_count = consumption_objects.count()
+                    # print(consumption_objects_count)
+                    if consumption_objects_count == 0:
+                        wrong_data_result["farsi_message"] = "هیچ مقدار مصرفی در بازه ی مورد نظر وجود ندارد"
+                        wrong_data_result["english_message"] = "There is no consumption amount in the desired range"
+                        # return False, wrong_data_result
 
-                    csv_file_path = os.path.join(csv_file_root, f'{water_meter_serial}.csv')
-                    # check file exist
-                    csv_checker = os.path.exists(csv_file_path)
-                    if csv_checker is True:
-                        os.remove(csv_file_path)
+                    prepared_data_list = []
+                    headers = ['شماره سریال', 'تاریخ', 'ساعت', 'مقدار مصرف','مقدار مصرف تجمعی']
 
-                    prepared_data_list.append(prepared_data)
-                    # create to csv file .
-                    with open(csv_file_path, 'w', encoding="utf-8-sig") as csvfile:
-                        writer = csv.DictWriter(csvfile, fieldnames=headers)
-                        writer.writeheader()
-                        writer.writerows(prepared_data_list)
-                download_link = f'/media/csv/detail/{water_meter_serial}.csv'
-                result = {
-                    "fileurl": download_link
-                }
+                    base_dir = os.getcwd()
+                    csv_file_root = os.path.join(base_dir, 'media', 'csv', 'detail')
+
+                    for cons_obj in consumption_objects:
+                        value = cons_obj.value
+                        create_time = cons_obj.create_time
+                        cumulative_value = cons_obj.cumulative_value
+                        jalali_time = JalaliDateTime.fromtimestamp(create_time.timestamp(), pytz.timezone("Asia/Tehran"))
+                        jalali_time_split = str(jalali_time).split(' ')
+                        jalali_date = jalali_time_split[0]
+                        jalali_time = jalali_time_split[1].split('.')[0]
+                        # create csv file
+                        prepared_data = {
+                            "شماره سریال": water_meter_serial,
+                            "تاریخ": jalali_date,
+                            "ساعت": jalali_time,
+                            "مقدار مصرف": value,
+                            "مقدار مصرف تجمعی": cumulative_value
+                        }
+
+                        csv_file_path = os.path.join(csv_file_root, f'{water_meter_serial}.csv')
+                        # check file exist
+                        csv_checker = os.path.exists(csv_file_path)
+                        if csv_checker is True:
+                            os.remove(csv_file_path)
+
+                        prepared_data_list.append(prepared_data)
+                        # create to csv file .
+                        with open(csv_file_path, 'w', encoding="utf-8-sig", newline='') as csvfile:
+                            writer = csv.DictWriter(csvfile, fieldnames=headers)
+                            writer.writeheader()
+                            writer.writerows(prepared_data_list)
+                    download_link = f'/media/csv/detail/{water_meter_serial}.csv'
+                    result = {
+                        "fileurl": download_link
+                    }
+                    
             return True, result
         else:
             return False, wrong_token_result

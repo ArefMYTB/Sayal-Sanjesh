@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'AutomationSayalSanjesh.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sayalsanjesh3',
+        'NAME': 'sayalsanjesh',
         'USER': 'postgres',
         'PASSWORD': 'Sayal$Sanjesh', #2515263
         'HOST': 'localhost',

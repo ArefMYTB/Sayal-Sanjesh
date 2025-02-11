@@ -63,9 +63,9 @@ export const reversedSelect: DynamicOption[] = [
    { label: "صعودی" ,value:false},
 ] 
 export const countSelect: CountOption[] = [
+    { label: "50 عدد" ,value:50},
     { label: "10 عدد" ,value:10},
    { label: "20 عدد" ,value:20},
-   { label: "50 عدد" ,value:50},
    { label: "100 عدد" ,value:100},
 ]
 export const cities:DynamicOption[]=[

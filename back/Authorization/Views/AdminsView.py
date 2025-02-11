@@ -16,7 +16,6 @@ class AdminsView:
 
     @csrf_exempt
     def login_admin(self, request):
-
         if request.method.lower() == "options":
             return result_creator()
         input_data = json.loads(request.body)

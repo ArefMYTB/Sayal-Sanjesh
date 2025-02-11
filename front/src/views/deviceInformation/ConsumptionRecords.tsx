@@ -171,7 +171,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
   };
   const tableData = () => {
     let tableData: RecordsTableData[] = [];
-    recordsData.data.forEach((record: ConsumptionRecordObject) => {
+    recordsData.data?.forEach((record: ConsumptionRecordObject) => {
       tableData.push({
         // projectName: record.project_info.water_meter_project_name,
         deviceSerial: record.water_meters_info.water_meter_serial,
@@ -264,7 +264,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
                 page={page}
                 pageSize={count}
                 totalData={
-                  recordsData?.data.length > 0
+                  recordsData?.data?.length > 0
                     ? recordsData.data[0].all_consumptions
                     : 0
                 }
