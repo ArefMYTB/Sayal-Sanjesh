@@ -8,14 +8,7 @@ from SayalSanjesh.Serializers.WaterMeterProjectsSerializer import WaterMeterProj
 from SayalSanjesh.models import NoticeCategories
 
 
-class WaterMeterProjectView:
-    """
-       A view class for handling GET and POST requests.
-
-       Methods:
-       - get: Handles GET requests and returns a JSON response.
-       - post: Handles POST requests and returns a JSON response.
-   """
+class WaterMeterProjectView():
 
     @csrf_exempt
     def admin_add_water_meter_project_view(self, request):

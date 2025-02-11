@@ -60,6 +60,7 @@ class WaterMetersConsumptions(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False)
     create_time = models.DateTimeField(default=datetime.now, blank=True)
     value = models.FloatField()
+    device_value = models.FloatField(null=True)
     cumulative_value = models.FloatField(null=True, blank=True)
     water_meters = models.ForeignKey('WaterMeters', on_delete=CASCADE)
     information = models.JSONField()
@@ -124,12 +125,12 @@ class CustomTypeManager(models.Manager):
                 "admin_info": obj.admin.as_dict()['admin_id'],
                 "water_meter_type_id": obj.water_meter_type_id,
                 "water_meter_type_name": obj.water_meter_type_name,
-                "water_meter_type_create_date": obj.water_meter_type_create_date,
+                "water_meter_type_create_date": str(obj.water_meter_type_create_date),
                 "water_meter_type_other_information": obj.water_meter_type_other_information,
                 "water_meter_tag": {
                     "water_meter_tag_id": obj.water_meter_tag.water_meter_tag_id,
                     "water_meter_tag_name": obj.water_meter_tag.water_meter_tag_name,
-                    "water_meter_tag_create_date": obj.water_meter_tag.water_meter_tag_create_date,
+                    "water_meter_tag_create_date": str(obj.water_meter_tag.water_meter_tag_create_date),
                 },
                 "water_meter_type_files": obj.water_meter_type_files,
                 "All_counter_with_this_type": count_info['All_counter_with_this_type'],
@@ -429,7 +430,7 @@ class CustomMeterManager(models.Manager):
                 "other_information": obj.other_information,
                 "water_meter_size": obj.water_meter_size,
                 "water_meter_model": obj.water_meter_model,
-                "water_meter_create_date": obj.water_meter_create_date,
+                "water_meter_create_date": str(obj.water_meter_create_date),
                 # "water_meter_status": self.check_records(water_meter_serial=obj.water_meter_serial),
                 "water_meter_bill": obj.water_meter_bill,
                 "water_meter_manual_number": obj.water_meter_manual_number,
@@ -443,7 +444,7 @@ class CustomMeterManager(models.Manager):
                 "water_meter_tag_info": {
                     "water_meter_tag_name": obj.water_meter_type.water_meter_tag.water_meter_tag_name,
                     "water_meter_tag_id": obj.water_meter_type.water_meter_tag.water_meter_tag_id,
-                    "water_meter_tag_create_date": obj.water_meter_type.water_meter_tag.water_meter_tag_create_date
+                    "water_meter_tag_create_date": str(obj.water_meter_type.water_meter_tag.water_meter_tag_create_date)
                 },
                 # "water_meter_user_info": {},
                 # "water_meter_project_info": {},
@@ -473,7 +474,7 @@ class CustomMeterManager(models.Manager):
                     "project_id": obj.water_meter_project.water_meter_project_id,
                     "project_name": obj.water_meter_project.water_meter_project_name,
                     "project_title": obj.water_meter_project.water_meter_project_title,
-                    "project_create_date": obj.water_meter_project.water_meter_project_create_date,
+                    "project_create_date": str(obj.water_meter_project.water_meter_project_create_date),
                 }
             elif obj.water_meter_project is None:
                 serialized_obj['water_meter_project_info'] = {
@@ -488,7 +489,7 @@ class CustomMeterManager(models.Manager):
                     "water_meter_module_code": obj.water_meter_module.water_meter_module_code,
                     "water_meter_module_name": obj.water_meter_module.water_meter_module_name,
                     "water_meter_module_unit": obj.water_meter_module.water_meter_module_unit,
-                    "water_meter_module_create_date": obj.water_meter_module.water_meter_module_create_date,
+                    "water_meter_module_create_date": str(obj.water_meter_module.water_meter_module_create_date),
                     "water_meter_module_other_information": obj.water_meter_module.water_meter_module_other_information,
                 }
             elif obj.water_meter_module is None:
@@ -510,7 +511,7 @@ class CustomMeterManager(models.Manager):
         if consumption is not None:
             last_cons_time = consumption.create_time.date()
             delta_time = current_time - last_cons_time
-            result['last_consumption_time'] = last_cons_time
+            result['last_consumption_time'] = str(last_cons_time)
             if delta_time.days <= 1:
                 result['status'] = ('Ok', delta_time.days)
             else:
@@ -805,7 +806,7 @@ class Bills(models.Model):
             "water_meter_validation": self.bill_water_meter.water_meter_validation,
             "water_meter_condition": self.bill_water_meter.water_meter_condition,
             "water_meter_location": self.bill_water_meter.water_meter_location,
-            "water_meter_create_date": self.bill_water_meter.water_meter_create_date,
+            "water_meter_create_date": str(self.bill_water_meter.water_meter_create_date),
             "other_information": self.bill_water_meter.other_information,
             "water_meter_project_info": water_meter_project_info,
             "water_meter_type_info": water_meter_type_info,
@@ -817,10 +818,10 @@ class Bills(models.Model):
             "bill_admin_info": bill_admin_info,
             "bill_id": self.bill_id,
             "bill_serial": self.bill_serial,
-            "bill_start_date": self.bill_start_date,
-            "bill_end_date": self.bill_end_date,
-            "payment_dead_line": self.payment_dead_line,
-            "bill_create_date": self.bill_create_date,
+            "bill_start_date": str(self.bill_start_date),
+            "bill_end_date": str(self.bill_end_date),
+            "payment_dead_line": str(self.payment_dead_line),
+            "bill_create_date": str(self.bill_create_date),
             "consumptions": self.consumptions,
             "bill_price": self.bill_price,
             "other_information": self.other_information,

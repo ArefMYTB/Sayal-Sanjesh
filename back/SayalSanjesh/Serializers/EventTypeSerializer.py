@@ -3,7 +3,6 @@ from SayalSanjesh.Serializers import wrong_token_result, status_success_result, 
 from SayalSanjesh.models import EventType
 from Authorization.models.Admins import Admins
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
-from General.Serializers.LogSerializers import LogSerializers
 
 
 class EventTypeSerializer:
@@ -76,11 +75,6 @@ class EventTypeSerializer:
                 try:
                     event_type = EventType.objects.get(event_type_id=event_type_id)
                     event_type.delete()
-                    admin_object = Admins.objects.get(admin_id=admin_id)
-                    LogSerializers().system_log_create_serializer(
-                        token=token, system_log_admin=admin_object, system_log_action='Delete', system_log_user=None,
-                        system_log_field_changes=None, system_log_message=None,
-                        system_log_object_action_on=event_type_id, system_log_action_table='EventType')
                 except:
                     wrong_data_result["farsi_message"] = "ای دی های ورودی اشتباه است"
                     wrong_data_result["english_message"] = "input IDs are wrong"
@@ -130,11 +124,6 @@ class EventTypeSerializer:
                                              event_type_keyword=event_type_keyword,
                                              event_type_importance=event_type_importance,
                                              evnet_type_information=evnet_type_information)
-                    admin_object = Admins.objects.get(admin_id=admin_id)
-                    LogSerializers().system_log_create_serializer(
-                        token=token, system_log_admin=admin_object, system_log_action='Add', system_log_user=None,
-                        system_log_field_changes=None, system_log_message=None,
-                        system_log_object_action_on=key, system_log_action_table='EventType')
                 except:
                     wrong_data_result["farsi_message"] = "خطای نامشخص"
                     wrong_data_result["english_message"] = "unknown error"
@@ -170,12 +159,6 @@ class EventTypeSerializer:
                         "english_message"] = "event_type_importance field must be selected from 'H', 'M', 'L'"
                     wrong_data_result["code"] = 444
                     return False, wrong_data_result
-                event_type = EventType.objects.get(event_type_id=event_type_id)
-                first_device_state_dict = {
-                    "event_type_dashboard_view": event_type.event_type_dashboard_view,
-                    "event_type_importance": event_type.event_type_importance,
-                    "evnet_type_information": event_type.evnet_type_information,
-                }
                 try:
                     filters = {
                         'event_type_dashboard_view': event_type_dashboard_view,
@@ -194,28 +177,6 @@ class EventTypeSerializer:
                     wrong_data_result["english_message"] = "invalid event_type_id"
                     wrong_data_result["code"] = 444
                     return False, wrong_data_result
-                second_device_state = EventType.objects.get(event_type_id=event_type_id)
-                second_device_state_dict = {
-                    "event_type_dashboard_view": second_device_state.event_type_dashboard_view,
-                    "event_type_importance": second_device_state.event_type_importance,
-                    "evnet_type_information": second_device_state.evnet_type_information,
-                }
-
-                changed_fields = {key: (first_device_state_dict[key], second_device_state_dict[key]) for key in
-                                  first_device_state_dict if
-                                  first_device_state_dict[key] != second_device_state_dict[key]}
-                system_log_message = ''
-                for key, values in changed_fields.items():
-                    system_log_message += f"Field '{key}' changed from '{values[0]}' to '{values[1]}'\n"
-                admin_obj = Admins.objects.get(admin_id=admin_id)
-                LogSerializers().system_log_create_serializer(token=token, system_log_admin=admin_obj,
-                                                              system_log_user=None,
-                                                              system_log_object_action_on=event_type_id,
-                                                              system_log_action='Edit',
-                                                              system_log_action_table='EventType',
-                                                              system_log_message=system_log_message,
-                                                              system_log_field_changes=changed_fields)
-
                 return True, status_success_result
             else:
                 wrong_token_result['code'] = 403

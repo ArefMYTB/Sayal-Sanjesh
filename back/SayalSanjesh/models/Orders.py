@@ -93,8 +93,9 @@ class CustomOrderManager(models.Manager):
                     "order_type_information": obj.order_type.order_type_information,
                 },
                 "order_meter": {
-                    "water_meter_user": obj.order_meter.water_meter_user.user_id,
+                    # "water_meter_user": obj.order_meter.water_meter_user.user_id,
                     "water_meter_serial": obj.order_meter.water_meter_serial,
+                    "water_meter_name": obj.order_meter.water_meter_name,
                 },
                 "order_counter": obj.order_counter,
                 "order_information": obj.order_information,

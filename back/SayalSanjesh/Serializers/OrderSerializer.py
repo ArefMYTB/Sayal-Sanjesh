@@ -4,9 +4,8 @@ from Authorization.Serializers.StaticTokenSerializer import StaticTokenSerialize
 from SayalSanjesh.Serializers import wrong_token_result, status_success_result, wrong_data_result
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
 from SayalSanjesh.models import OrderType, WaterMetersModules, Order, WaterMeters, OrderGroups
-from Authorization.models.Admins import Admins
 from MQQTReceiver.publisher import ResponsePublisher
-from General.Serializers.LogSerializers import LogSerializers
+
 
 class OrderSerializer:
     @staticmethod
@@ -84,11 +83,6 @@ class OrderSerializer:
                 try:
                     order = Order.objects.get(order_id=order_id)
                     order.delete()
-                    admin_object = Admins.objects.get(admin_id=admin_id)
-                    LogSerializers().system_log_create_serializer(
-                        token=token, system_log_admin=admin_object, system_log_action='Delete', system_log_user=None,
-                        system_log_field_changes=None, system_log_message=None,
-                        system_log_object_action_on=order_id, system_log_action_table='Order')
                 except:
                     wrong_data_result["farsi_message"] = "ای دی  ورودی اشتباه است"
                     wrong_data_result["english_message"] = "input ID are wrong"

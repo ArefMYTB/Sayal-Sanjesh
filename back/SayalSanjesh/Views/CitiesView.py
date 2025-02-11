@@ -5,14 +5,8 @@ from SayalSanjesh.Views import result_creator
 from SayalSanjesh.Serializers.CitiesSerializer import citiesSerializer
 
 
-class citiesView:
-    """
-       A view class for handling GET and POST requests.
+class citiesView():
 
-       Methods:
-       - get: Handles GET requests and returns a JSON response.
-       - post: Handles POST requests and returns a JSON response.
-   """
     @csrf_exempt
     def admin_create_city_view(self, request):
         if request.method.lower() == "options":

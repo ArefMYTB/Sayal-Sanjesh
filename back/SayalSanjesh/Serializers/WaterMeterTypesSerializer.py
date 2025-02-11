@@ -386,7 +386,7 @@ class WaterMeterTypesSerializer:
                     tag_result = {
                         "water_meter_tag_id": tag_value.water_meter_tag_id,
                         "water_meter_tag_name": tag_value.water_meter_tag_name,
-                        "water_meter_tag_create_date": tag_value.water_meter_tag_create_date,
+                        "water_meter_tag_create_date": str(tag_value.water_meter_tag_create_date),
                         "number_of_type": count_type,
                     }
                     tag_information.append(tag_result)

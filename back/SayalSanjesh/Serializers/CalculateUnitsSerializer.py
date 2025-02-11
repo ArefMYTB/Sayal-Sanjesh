@@ -9,13 +9,6 @@ class CalculateUnitesSerializer():
 
     @staticmethod
     def admin_add_calculate_unites_serializer(token, water_meter_serial, calculate_unites):
-        """
-            param : [token, water_meter_serial, calculate_unites]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
@@ -40,13 +33,6 @@ class CalculateUnitesSerializer():
 
     @staticmethod
     def admin_delete_calculate_unites_serializer(token, calculate_id):
-        """
-            param : [token, calculate_id]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
@@ -65,13 +51,6 @@ class CalculateUnitesSerializer():
 
     @staticmethod
     def admin_get_all_calculate_price_serializer(token, page, count):
-        """
-            param : [token, page, count]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]

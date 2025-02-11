@@ -645,6 +645,78 @@ class WaterMeterSerializer:
                 return False, wrong_token_result
         else:
             return False, wrong_token_result
+        
+    @staticmethod
+    def admin_get_location_serializer(token, type_id_list, project_id_list, tag_id_list):
+        """
+            param : [token, type_id_list, project_id_list, tag_id_list]
+            return :
+            A tuple containing a boolean indicating the success or failure of the operation, and a list of
+            serialized data results. If unsuccessful, returns a false status along with an error message.
+        """
+        token_result = token_to_user_id(token)
+        
+        if token_result["status"] == "OK":
+            admin_id = token_result["data"]["user_id"]
+
+            # SuperAdmin Logic
+            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+                filters = {
+                    'water_meter_type__in': type_id_list,
+                    'water_meter_project__in': project_id_list,
+                    'water_meter_type__water_meter_tag__water_meter_tag_id__in': tag_id_list,
+                }
+                filters = {k: v for k, v in filters.items() if v is not None}
+                
+                try:
+                    queryset = WaterMeters.objects.filter(**filters).values(
+                        'water_meter_serial', 'water_meter_location', 'water_meter_name',
+                        'water_meter_type__water_meter_type_name', 
+                        'water_meter_type__water_meter_tag__water_meter_tag_name',
+                        'water_meter_project__water_meter_project_name'
+                    ).order_by('-water_meter_create_date')
+                    response = list(queryset)
+                except:
+                    response = []
+                return True, response
+
+            # MiddleAdmin Logic: Only return locations within projects assigned to this MiddleAdmin
+            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin', 'ProjectList']):
+                try:
+                    middle_admin_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id)
+                except:
+                    wrong_data_result = {
+                        "farsi_message": "پروژه ای برای این ادمین ثبت نشده یا ای دی اشتباه است",
+                        "english_message": "Project for this admin is not registered or the ID is wrong"
+                    }
+                    return False, wrong_data_result
+
+                middle_admin_projects = middle_admin_projects.project_ids
+                
+                filters = {
+                    'water_meter_project__in': middle_admin_projects,
+                    'water_meter_type__in': type_id_list,
+                    'water_meter_type__water_meter_tag__water_meter_tag_id__in': tag_id_list,
+                }
+                filters = {k: v for k, v in filters.items() if v is not None}
+                
+                try:
+                    queryset = WaterMeters.objects.filter(**filters).values(
+                        'water_meter_serial', 'water_meter_location', 'water_meter_name',
+                        'water_meter_type__water_meter_type_name', 
+                        'water_meter_type__water_meter_tag__water_meter_tag_name',
+                        'water_meter_project__water_meter_project_name'
+                    ).order_by('-water_meter_create_date')
+                    response = list(queryset)
+                except:
+                    response = []
+                return True, response
+
+            # Invalid token or permissions
+            else:
+                return False, wrong_token_result
+        else:
+            return False, wrong_token_result
 
     @staticmethod
     def admin_count_all_water_meter_serializer(token, type, project, water_meter_activation,
@@ -851,7 +923,7 @@ class WaterMeterSerializer:
     @staticmethod
     def v2_admin_get_all_water_meters_serializer(token, page, count, user_id, project_id, water_meter_serial,
                                                  water_meter_tag_id, water_meter_size, water_meter_model,
-                                                 water_meter_type_id, has_module):
+                                                 water_meter_type_id, has_module,has_user):
         """
             param : [token, page, count, user_id, project_id, water_meter_serial,
                                                  water_meter_tag_id]
@@ -900,6 +972,11 @@ class WaterMeterSerializer:
                                 meters = meters.filter(water_meter_module=None)
                             if has_module is True:
                                 meters = meters.exclude(water_meter_module=None)
+                                if has_user is False:
+                                    meters = meters.filter(water_meter_user=None)
+                                if has_user is True:
+                                    meters = meters.exclude(water_meter_user=None)
+
                             sub_query = len(meters)
                             queryset = meters.annotate(
                                 all_water_meters=Value(sub_query, output_field=IntegerField()))
@@ -912,17 +989,18 @@ class WaterMeterSerializer:
                                 'water_meter_condition',
                                 'water_meter_activation',
                                 'other_information',
-                                'water_meter_create_date',
-                                'water_meter_create_date',
+                                # 'water_meter_create_date',
+                                # 'water_meter_create_date',
                                 'water_meter_bill',
                                 'water_meter_manual_number',
                                 'water_meter_order_mode',
                                 'water_meter_size',
                                 'water_meter_model',
                                 'water_meter_type__water_meter_type_name',
+                                'water_meter_type__water_meter_type_id',
                                 'water_meter_type__water_meter_tag__water_meter_tag_name',
                                 'water_meter_type__water_meter_tag__water_meter_tag_id',
-                                'water_meter_type__water_meter_tag__water_meter_tag_create_date',
+                                # 'water_meter_type__water_meter_tag__water_meter_tag_create_date',
                                 'water_meter_user__user_id',
                                 'water_meter_user__user_name',
                                 'water_meter_user__user_lastname',
@@ -932,12 +1010,16 @@ class WaterMeterSerializer:
                                 'water_meter_project__water_meter_project_id',
                                 'water_meter_project__water_meter_project_name',
                                 'water_meter_project__water_meter_project_title',
-                                'water_meter_project__water_meter_project_create_date',
+                                # 'water_meter_project__water_meter_project_create_date',
                                 'water_meter_module__water_meter_module_id',
                                 'water_meter_module__water_meter_module_code',
                                 'water_meter_module__water_meter_module_name',
-                                'water_meter_module__water_meter_module_create_date',
-                                'water_meter_module__water_meter_module_other_information',
+                                'water_meter_module__water_meter_module_property',
+                                # 'water_meter_module__water_meter_module_create_date',
+                                'water_meter_module__module_type__module_type_id',
+                                'water_meter_module__module_type__module_type_name',
+                                'water_meter_module__module_type__module_type_create_date',
+                                'water_meter_module__module_type__module_other_information',
                             ).order_by(
                                 '-water_meter_create_date')[
                                        offset:offset + limit]
@@ -1313,7 +1395,7 @@ class WaterMeterSerializer:
             if user_id == user_id:
                 try:
                     queryset = WaterMeters.objects.filter(water_meter_serial=water_meter_serial)
-                    response = WaterMeters.objects.serialize(queryset=queryset, req_from='user')
+                    response = WaterMeters.objects.serialize(queryset=queryset)
                     return True, response
                 except:
                     wrong_data_result["farsi_message"] = "اشتباه است water_meter_serial"

@@ -1,17 +1,14 @@
+from itertools import count
 from django.views.decorators.csrf import csrf_exempt
 import json
 from SayalSanjesh.Views import result_creator
+from SayalSanjesh.Serializers.NoticeCategoriesSerializer import NoticeCategoriesSerializer
 from SayalSanjesh.Serializers.WaterMeterTypesSerializer import WaterMeterTypesSerializer
 
+from SayalSanjesh.models import NoticeCategories
 
-class WaterMeterTypesView:
-    """
-       A view class for handling GET and POST requests.
 
-       Methods:
-       - get: Handles GET requests and returns a JSON response.
-       - post: Handles POST requests and returns a JSON response.
-   """
+class WaterMeterTypesView():
 
     @csrf_exempt
     def admin_add_water_meter_type(self, request):

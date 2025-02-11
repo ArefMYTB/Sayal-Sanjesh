@@ -8,14 +8,6 @@ class citiesSerializer:
 
     @staticmethod
     def admin_create_city_serializer(token, city_name, city_state):
-        """
-            param : [token, city_name, city_state]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
-
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
@@ -35,13 +27,6 @@ class citiesSerializer:
 
     @staticmethod
     def admin_edit_city_serializer(token, city_id, city_name, city_state):
-        """
-            param : [token, city_id, city_name, city_state]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
@@ -65,13 +50,6 @@ class citiesSerializer:
 
     @staticmethod
     def admin_delete_city_serializer(token, city_id):
-        """
-            param : [token, city_id]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
@@ -92,13 +70,6 @@ class citiesSerializer:
 
     @staticmethod
     def admin_get_all_cities_serializer(token, page, count, city_name, city_state):
-        """
-            param : [token, page, count, city_name, city_state]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
@@ -131,13 +102,6 @@ class citiesSerializer:
 
     @staticmethod
     def admin_get_one_city_serializer(token, city_id):
-        """
-            param : [token, city_id]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of
-            serialized data results.  it returns a false status along with an error message.
-        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]

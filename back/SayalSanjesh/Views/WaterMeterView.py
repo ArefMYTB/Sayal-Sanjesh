@@ -2,6 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from SayalSanjesh.Serializers.WaterMeterSerializer import WaterMeterSerializer
 from SayalSanjesh.Views import result_creator
+from SayalSanjesh.models import WaterMeters
 
 
 @csrf_exempt
@@ -79,23 +80,27 @@ class WaterMeterView:
             input_data = json.loads(request.body)
         except:
             return result_creator(status="failure", code=406, farsi_message="وارد نشده است json",
-                                  english_message="invalid JSON error")
+                                english_message="invalid JSON error")
+
         if "Token" in request.headers:
             token = request.headers["Token"]
         else:
             token = ''
+            
         if 'water_meter_serial' in input_data:
             water_meter_serial = input_data["water_meter_serial"]
         else:
             return result_creator(status="failure", code=406, farsi_message=".وارد نشده است water_meter_serial",
-                                  english_message="water_meter_serial is Null.")
+                                english_message="water_meter_serial is Null.")
+        try:
+            water_meter = WaterMeters.objects.get(water_meter_serial=water_meter_serial)
+        except WaterMeters.DoesNotExist:
+            return result_creator(status="failure", code=404, farsi_message="کنتور پیدا نشد",
+                                english_message="Water meter not found.")
+        water_meter.delete()
 
-        result, data = WaterMeterSerializer.admin_remove_water_meter_serializer(token, water_meter_serial)
-        if result:
-            return result_creator(data=data)
-        else:
-            return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
-                                  english_message=data["english_message"])
+        return result_creator(status="success", farsi_message="کنتور و قبض‌ها با موفقیت حذف شدند",
+                            english_message="Water meter and its bills were successfully deleted.")
 
     @csrf_exempt
     def admin_edit_water_meter_view(self, request):
@@ -298,8 +303,32 @@ class WaterMeterView:
         else:
             return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
                                   english_message=data["english_message"])
-
+        
     @csrf_exempt
+    def admin_get_location_view(self, request):
+        input_data = json.loads(request.body)
+        if "Token" in request.headers:
+            token = request.headers["Token"]
+        else:
+            token = ''
+        fields = ["type_id_list", "project_id_list", "tag_id_list"]
+        for field in fields:
+            if field not in input_data:
+                return result_creator(status="failure", code=406, farsi_message=f".وارد نشده است {field}",
+                                    english_message=f"{field} is Null.")
+        
+        type_id_list = input_data["type_id_list"]
+        project_id_list = input_data["project_id_list"]
+        tag_id_list = input_data["tag_id_list"]
+        result, data = WaterMeterSerializer.admin_get_location_serializer(
+            token=token, type_id_list=type_id_list, project_id_list=project_id_list, tag_id_list=tag_id_list
+        )
+        if result:
+            return result_creator(data=data)
+        else:
+            return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
+                                english_message=data["english_message"])
+
     def user_get_one_water_meter_view(self, request):
         try:
             input_data = json.loads(request.body)
@@ -526,11 +555,15 @@ class WaterMeterView:
             has_module = None
         else:
             has_module = input_data["has_module"]
+        if 'has_user' not in input_data:
+            has_user = None
+        else:
+            has_user = input_data["has_user"]
         result, data = WaterMeterSerializer.v2_admin_get_all_water_meters_serializer(
             token=token, page=page, count=count, user_id=user_id, project_id=project_id,
             water_meter_serial=water_meter_serial, water_meter_tag_id=water_meter_tag_id,
             water_meter_size=water_meter_size, water_meter_model=water_meter_model,
-            water_meter_type_id=water_meter_type_id, has_module=has_module)
+            water_meter_type_id=water_meter_type_id, has_module=has_module, has_user=has_user)
         if result:
             return result_creator(data=data)
         else:

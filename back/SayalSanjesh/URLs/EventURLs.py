@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/getOne', event_view.admin_get_one_event_view),
     path('admin/create', event_view.create_event_view),
     path('admin/delete', event_view.admin_remove_event_view),
+    path('admin/delete/all', event_view.admin_remove_all_event_view),
     # create event view
     path('admin/create/eventView', event_view.admin_create_event_view_view),
 

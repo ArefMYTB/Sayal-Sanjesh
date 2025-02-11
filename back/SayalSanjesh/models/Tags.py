@@ -27,7 +27,7 @@ class CustomWaterMetersTagManager(models.Manager):
                 },
                 "water_meter_tag_id": obj.water_meter_tag_id,
                 "water_meter_tag_name": obj.water_meter_tag_name,
-                "water_meter_tag_create_date": obj.water_meter_tag_create_date,
+                "water_meter_tag_create_date": str(obj.water_meter_tag_create_date),
                 "water_meter_tag_other_information": obj.water_meter_tag_other_information,
                 "water_meter_tag_files": obj.water_meter_tag_files,
             }
@@ -55,7 +55,7 @@ class WaterMetersTags(models.Model):
             "admin_info": self.admin.as_dict(),
             "water_meter_tag_id": self.water_meter_tag_id,
             "water_meter_tag_name": self.water_meter_tag_name,
-            "water_meter_tag_create_date": self.water_meter_tag_create_date,
+            "water_meter_tag_create_date": str(self.water_meter_tag_create_date),
             "water_meter_tag_other_information": self.water_meter_tag_other_information,
             "water_meter_tag_files": self.water_meter_tag_files,
         }

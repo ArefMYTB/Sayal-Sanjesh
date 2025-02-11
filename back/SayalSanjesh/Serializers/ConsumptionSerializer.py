@@ -68,15 +68,17 @@ class ConsumptionSerializer:
                     consumption_info = {
                         "consumption_id": consumption.consumption_id,
                         "value": consumption.value,
-                        "create_time": consumption.create_time,
+                        "device_value": consumption.device_value,
+                        "cumulative_value": consumption.cumulative_value,
+                        "create_time": str(consumption.create_time),
                         "information": consumption.information,
                         "counter": consumption.counter,
                         "value_type": consumption.value_type,
                         "flow_instantaneous": consumption.flow_instantaneous,
                         "flow_Type": consumption.flow_Type,
                         "flow_Value": consumption.flow_Value,
-                        "from_previous_record": from_previous_record,
-                        "to_current_record": to_current_record,
+                        "from_previous_record": str(from_previous_record),
+                        "to_current_record":str(to_current_record),
                         "bill_created": consumption.bill_created,
                         "water_meters_info": {
                             "water_meter_serial": consumption.water_meters.water_meter_serial,
@@ -84,19 +86,19 @@ class ConsumptionSerializer:
                             "water_meter_condition": consumption.water_meters.water_meter_condition,
                             "water_meter_validation": consumption.water_meters.water_meter_validation,
                             "water_meter_activation": consumption.water_meters.water_meter_activation,
-                            "water_meter_create_date": consumption.water_meters.water_meter_create_date,
+                            "water_meter_create_date": str(consumption.water_meters.water_meter_create_date),
                             "other_information": consumption.water_meters.other_information,
                         },
 
                         "type_info": {
                             "water_meter_type_id": consumption.water_meters.water_meter_type.water_meter_type_id,
                             "water_meter_type_name": consumption.water_meters.water_meter_type.water_meter_type_name,
-                            "water_meter_type_create_date": consumption.water_meters.water_meter_type.water_meter_type_create_date,
+                            "water_meter_type_create_date": str(consumption.water_meters.water_meter_type.water_meter_type_create_date),
                         },
                         "tag_info": {
                             "water_meter_tag_id": consumption.water_meters.water_meter_type.water_meter_tag.water_meter_tag_id,
                             "water_meter_tag_name": consumption.water_meters.water_meter_type.water_meter_tag.water_meter_tag_name,
-                            "water_meter_tag_create_date": consumption.water_meters.water_meter_type.water_meter_tag.water_meter_tag_create_date,
+                            "water_meter_tag_create_date": str(consumption.water_meters.water_meter_type.water_meter_tag.water_meter_tag_create_date),
                         },
                         "all_consumptions": all_consumption_count,
                     }
@@ -115,7 +117,7 @@ class ConsumptionSerializer:
                             "water_meter_project_id": consumption.water_meters.water_meter_project.water_meter_project_id,
                             "water_meter_project_name": consumption.water_meters.water_meter_project.water_meter_project_name,
                             "water_meter_project_title": consumption.water_meters.water_meter_project.water_meter_project_title,
-                            "water_meter_project_create_date": consumption.water_meters.water_meter_project.water_meter_project_create_date,
+                            "water_meter_project_create_date": str(consumption.water_meters.water_meter_project.water_meter_project_create_date),
                         }
                     else:
                         consumption_info['project_info'] = "project is null"
@@ -1520,69 +1522,60 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
             if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
-                
-                # Fetch all water meter serials
-                # water_meter_serials = WaterMeters.objects.all().values_list('water_meter_serial', flat=True)
-                # print(f"Total number of water meter serials: {len(water_meter_serials)}")
-                
+                # consumptions
+                filters = {
+                    "water_meters": water_meter_serial,
+                    "create_time__gte": start_time,
+                    "create_time__lte": end_time
+                }
+                filters = {k: v for k, v in filters.items() if v is not None}
+                consumption_objects = WaterMetersConsumptions.objects.filter(**filters)
+                consumption_objects_count = consumption_objects.count()
+                if consumption_objects_count == 0:
+                    wrong_data_result["farsi_message"] = "هیچ مقدار مصرفی در بازه ی مورد نظر وجود ندارد"
+                    wrong_data_result["english_message"] = "There is no consumption amount in the desired range"
+                    return False, wrong_data_result
 
-                # for water_meter_serial in water_meter_serials: # to get all water meters csv file
-                    # print(water_meter_serial)
-                    # consumptions
-                    filters = {
-                        "water_meters": water_meter_serial,
-                        "create_time__gte": start_time,
-                        "create_time__lte": end_time
+                prepared_data_list = []
+                headers = ['شماره سریال', 'تاریخ', 'ساعت', 'مقدار مصرف','مقدار مصرف تجمعی']
+
+                base_dir = os.getcwd()
+                csv_file_root = os.path.join(base_dir, 'media', 'csv', 'detail')
+
+                for cons_obj in consumption_objects:
+                    value = cons_obj.value
+                    create_time = cons_obj.create_time
+                    cumulative_value = cons_obj.cumulative_value
+                    jalali_time = JalaliDateTime.fromtimestamp(create_time.timestamp(), pytz.timezone("Asia/Tehran"))
+                    jalali_time_split = str(jalali_time).split(' ')
+                    jalali_date = jalali_time_split[0]
+                    jalali_time = jalali_time_split[1].split('.')[0]
+                    # create csv file
+                    prepared_data = {
+                        "شماره سریال": water_meter_serial,
+
+                        "تاریخ": jalali_date,
+                        "ساعت": jalali_time,
+                        "مقدار مصرف": value,
+                        "مقدار مصرف تجمعی": cumulative_value
                     }
-                    filters = {k: v for k, v in filters.items() if v is not None}
-                    consumption_objects = WaterMetersConsumptions.objects.filter(**filters).order_by('create_time')
-                    consumption_objects_count = consumption_objects.count()
-                    # print(consumption_objects_count)
-                    if consumption_objects_count == 0:
-                        wrong_data_result["farsi_message"] = "هیچ مقدار مصرفی در بازه ی مورد نظر وجود ندارد"
-                        wrong_data_result["english_message"] = "There is no consumption amount in the desired range"
-                        # return False, wrong_data_result
 
-                    prepared_data_list = []
-                    headers = ['شماره سریال', 'تاریخ', 'ساعت', 'مقدار مصرف','مقدار مصرف تجمعی']
+                    csv_file_path = os.path.join(csv_file_root, f'{water_meter_serial}.csv')
+                    # check file exist
+                    csv_checker = os.path.exists(csv_file_path)
+                    if csv_checker is True:
+                        os.remove(csv_file_path)
 
-                    base_dir = os.getcwd()
-                    csv_file_root = os.path.join(base_dir, 'media', 'csv', 'detail')
-
-                    for cons_obj in consumption_objects:
-                        value = cons_obj.value
-                        create_time = cons_obj.create_time
-                        cumulative_value = cons_obj.cumulative_value
-                        jalali_time = JalaliDateTime.fromtimestamp(create_time.timestamp(), pytz.timezone("Asia/Tehran"))
-                        jalali_time_split = str(jalali_time).split(' ')
-                        jalali_date = jalali_time_split[0]
-                        jalali_time = jalali_time_split[1].split('.')[0]
-                        # create csv file
-                        prepared_data = {
-                            "شماره سریال": water_meter_serial,
-                            "تاریخ": jalali_date,
-                            "ساعت": jalali_time,
-                            "مقدار مصرف": value,
-                            "مقدار مصرف تجمعی": cumulative_value
-                        }
-
-                        csv_file_path = os.path.join(csv_file_root, f'{water_meter_serial}.csv')
-                        # check file exist
-                        csv_checker = os.path.exists(csv_file_path)
-                        if csv_checker is True:
-                            os.remove(csv_file_path)
-
-                        prepared_data_list.append(prepared_data)
-                        # create to csv file .
-                        with open(csv_file_path, 'w', encoding="utf-8-sig", newline='') as csvfile:
-                            writer = csv.DictWriter(csvfile, fieldnames=headers)
-                            writer.writeheader()
-                            writer.writerows(prepared_data_list)
-                    download_link = f'/media/csv/detail/{water_meter_serial}.csv'
-                    result = {
-                        "fileurl": download_link
-                    }
-                    
+                    prepared_data_list.append(prepared_data)
+                    # create to csv file .
+                    with open(csv_file_path, 'w', encoding="utf-8-sig") as csvfile:
+                        writer = csv.DictWriter(csvfile, fieldnames=headers)
+                        writer.writeheader()
+                        writer.writerows(prepared_data_list)
+                download_link = f'/media/csv/detail/{water_meter_serial}.csv'
+                result = {
+                    "fileurl": download_link
+                }
             return True, result
         else:
             return False, wrong_token_result
@@ -1865,9 +1858,9 @@ class ConsumptionSerializer:
                             Sum('value'))['value__sum']
                         structure[meter_id] = {
                             'cumulative_consumptions': {
-                                "year": (year, j_2_g[0]),
-                                "month": (month, j_2_g[1]),
-                                "day": (day, j_2_g[2]),
+                                "year": [year, j_2_g[0]],
+                                "month": [month, j_2_g[1]],
+                                "day": [day, j_2_g[2]],
                             }}
                         if last_query is not None:
                             last_bill_created_time = Bills.objects.filter(
@@ -1896,55 +1889,70 @@ class ConsumptionSerializer:
 
                 if sort_value == 'year':
                     if input_reverse:
-                        result = sorted(structure.items(),
-                                        key=lambda x: x[1]['cumulative_consumptions']['year'][0] if
-                                        x[1]['cumulative_consumptions']['year'][0] is not None else float(
-                                            'inf'), reverse=True)
+                        result = list(map(list, sorted(structure.items(),
+                                                       key=lambda x: x[1]['cumulative_consumptions']['year'][0] if
+                                                       x[1]['cumulative_consumptions']['year'][
+                                                           0] is not None else float(
+                                                           'inf'), reverse=True)))
                     else:
-                        result = sorted(structure.items(),
-                                        key=lambda x: x[1]['cumulative_consumptions']['year'][0] if
-                                        x[1]['cumulative_consumptions']['year'][0] is not None else float(
-                                            'inf'), reverse=False)
+                        result = list(map(list, sorted(structure.items(),
+                                                       key=lambda x: x[1]['cumulative_consumptions']['year'][0] if
+                                                       x[1]['cumulative_consumptions']['year'][
+                                                           0] is not None else float(
+                                                           'inf'), reverse=False)))
 
                 elif sort_value == 'month':
                     if input_reverse:
-                        result = sorted(structure.items(),
-                                        key=lambda x: x[1]['cumulative_consumptions']['month'][0] if
-                                        x[1]['cumulative_consumptions']['month'][0] is not None else float(
-                                            'inf'), reverse=True)
+                        result = list(map(list, sorted(structure.items(),
+                                                       key=lambda x: x[1]['cumulative_consumptions']['month'][0] if
+                                                       x[1]['cumulative_consumptions']['month'][
+                                                           0] is not None else float(
+                                                           'inf'), reverse=True)))
                     else:
-                        result = sorted(structure.items(),
-                                        key=lambda x: x[1]['cumulative_consumptions']['month'][0] if
-                                        x[1]['cumulative_consumptions']['month'][0] is not None else float(
-                                            'inf'), reverse=False)
+                        result = list(map(list, sorted(structure.items(),
+                                                       key=lambda x: x[1]['cumulative_consumptions']['month'][0] if
+                                                       x[1]['cumulative_consumptions']['month'][
+                                                           0] is not None else float(
+                                                           'inf'), reverse=False)))
                 elif sort_value == 'day':
                     if input_reverse:
-                        result = sorted(structure.items(),
-                                        key=lambda x: x[1]['cumulative_consumptions']['day'][1] if
-                                        x[1]['cumulative_consumptions']['day'][0] is not None else float(
-                                            'inf'), reverse=True)
+                        result = list(map(list, sorted(structure.items(),
+                                                       key=lambda x: x[1]['cumulative_consumptions']['day'][1] if
+                                                       x[1]['cumulative_consumptions']['day'][0] is not None else float(
+                                                           'inf'), reverse=True)))
                     else:
-                        result = sorted(structure.items(),
-                                        key=lambda x: x[1]['cumulative_consumptions']['day'][1] if
-                                        x[1]['cumulative_consumptions']['day'][0] is not None else float(
-                                            'inf'), reverse=False)
+                        result = list(map(list, sorted(structure.items(),
+                                                       key=lambda x: x[1]['cumulative_consumptions']['day'][1] if
+                                                       x[1]['cumulative_consumptions']['day'][0] is not None else float(
+                                                           'inf'), reverse=False)))
                 elif sort_value == 'last_consumption_value':
                     if input_reverse:
-                        result = sorted(structure.items(), key=lambda x: x[1]['last_consumption']['value']
-                        if x[1]['last_consumption'] is not None else float('inf'), reverse=True)
+                        result = list(
+                            map(list, sorted(structure.items(), key=lambda x: x[1]['last_consumption']['value']
+                            if x[1]['last_consumption'] is not None else float('inf'), reverse=True)))
                     else:
-                        result = sorted(structure.items(), key=lambda x: x[1]['last_consumption']['value']
-                        if x[1]['last_consumption'] is not None else float('inf'), reverse=False)
+                        result = list(
+                            map(list, sorted(structure.items(), key=lambda x: x[1]['last_consumption']['value']
+                            if x[1]['last_consumption'] is not None else float('inf'), reverse=False)))
 
                 elif sort_value == 'last_cons_object_create_time':
                     if input_reverse:
-                        result = sorted(structure.items(), key=lambda x: x[1]['last_consumption']['create_time']
-                        if x[1]['last_consumption'] is not None else datetime.max.replace(tzinfo=pytz.utc),
-                                        reverse=True)
+                        result = list(
+                            map(list, sorted(structure.items(), key=lambda x: x[1]['last_consumption']['create_time']
+                            if x[1]['last_consumption'] is not None else datetime.max.replace(tzinfo=pytz.utc),
+                                             reverse=True)))
                     else:
-                        result = sorted(structure.items(), key=lambda x: x[1]['last_consumption']['create_time']
-                        if x[1]['last_consumption'] is not None else datetime.max.replace(tzinfo=pytz.utc),
-                                        reverse=False)
+                        result = list(
+                            map(list, sorted(structure.items(), key=lambda x: x[1]['last_consumption']['create_time']
+                            if x[1]['last_consumption'] is not None else datetime.max.replace(tzinfo=pytz.utc),
+                                             reverse=False)))
+
+                for itm in result:
+                    if itm[1]['last_consumption'] is not None:
+                        itm[1]['last_consumption']['create_time'] = str(itm[1]['last_consumption']['create_time'])
+                        itm[1]['last_consumption']['last_bill_created_time'] = str(
+                            itm[1]['last_consumption']['last_bill_created_time'])
+
                 return result
 
             if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
@@ -3179,28 +3187,8 @@ class ConsumptionSerializer:
                         None and create_time_input is None:
                     consumption.to_current_record = datetime.now()
                     consumption.from_previous_record = from_previous_record
-                print(f"this is final save_data_checker : {save_data_checker}")
                 if save_data_checker is False:
                     consumption.save()
-                # try:
-                #     consumptions = WaterMetersConsumptions.objects.filter(water_meters=water_meters)
-                #     sum_all_consumptions = consumptions.aggregate(Sum('value'))
-                #     sum_all_consumptions = sum_all_consumptions['value__sum']
-                #     sum_all_values = float('{:.2f}'.format(sum_all_consumptions))
-                #     consumptions.update(sum_all_value=sum_all_values)
-                # except:
-                #     pass
-                # if water_meters.water_meter_user is not None:
-                #     phone_number = water_meters.water_meter_user.user_phone
-                #     publish_message_to_client(phone_number=phone_number, from_where='add_consumption')
-                # if water_meters.water_meter_project is not None:
-                #     project_id = water_meters.water_meter_project.water_meter_project_id
-                #     middle_admin_publish_data = {
-                #         'project_id': project_id,
-                #         'meter_serial': water_meters.water_meter_serial,
-                #         'from_where': 'add_consumption'
-                #     }
-                #     publish_message_to_client(publish_func='middle_admin', data=middle_admin_publish_data)
                 return True, status_success_result
             else:
                 return result
@@ -3480,37 +3468,53 @@ class ConsumptionSerializer:
 
     @staticmethod
     def add_consumptions_from_mqtt_broker(token, value, water_meters, information,
-                                          cumulative_value, create_time, counter, value_type, flow_instantaneous,
-                                          flow_type, flow_value):
+                                        cumulative_value, create_time, counter, value_type, flow_instantaneous,
+                                        flow_type, flow_value):
         token_result = StaticTokenSerializer()
         token_result = token_result.token_checker(token)
-        if token_result == None:
-            # if value none get last cumulative and do minus
-            # try:
+        if token_result is None:
+            # Parse the create_time string to datetime object
             time_string = create_time
             date_time_obj = datetime.strptime(time_string, "%m/%d/%Y-%H:%M:%S")
+            
+            # Get the meter object from the water_meter_serial
             meter_object = WaterMeters.objects.get(water_meter_serial=water_meters)
+            
             try:
+                # Check if the record already exists
                 WaterMetersConsumptions.objects.get(water_meters=meter_object, create_time=date_time_obj)
                 return False, wrong_data_result
             except WaterMetersConsumptions.DoesNotExist:
-                # last_consumption = WaterMetersConsumptions.objects.filter(water_meters=meter_object).order_by(
-                #     'create_time').last()
-                # if last_consumption is not None:
-                #     last_cumulative_value = last_consumption.cumulative_value
-                #     difference_cumulative = cumulative_value - last_cumulative_value
-                #     # if difference_cumulative < 0:
-                #     #     return False, wrong_data_result
-                # if last_consumption is not None and value is None:
-                #     calculated_value = cumulative_value - last_consumption.cumulative_value
-                #     value = calculated_value
-                # if value is not None and last_consumption is not None:
-                #     if value != difference_cumulative:
-                #         value = difference_cumulative
+                # Get the last consumption entry for the water meter
+                last_consumption = WaterMetersConsumptions.objects.filter(water_meters=meter_object).order_by(
+                    'create_time').last()
+                
+                device_value = value
+                
+                if last_consumption is not None:
+                    last_cumulative_value = last_consumption.cumulative_value
+                    difference_cumulative = cumulative_value - last_cumulative_value
+                    
+                    # Handle the case where cumulative difference is negative or positive, no restriction
+                    # This will treat both positive and negative values equally
+                    if value is None:
+                        value = cumulative_value - last_consumption.cumulative_value
+                    if value is not None and last_consumption is not None:
+                        if value != difference_cumulative:
+                            value = difference_cumulative
+                            
+                if last_consumption is None:
+                    from_previous_record = datetime.now()
+                else:
+                    from_previous_record = last_consumption.create_time
+                
                 print("add_consumptions_from_mqtt_broker")
+                
+                # Create and save the consumption object
                 consumption_object = WaterMetersConsumptions()
                 consumption_object.water_meters = meter_object
                 consumption_object.value = value
+                consumption_object.device_value = device_value
                 consumption_object.information = information
                 consumption_object.cumulative_value = cumulative_value
                 consumption_object.create_time = date_time_obj
@@ -3519,12 +3523,15 @@ class ConsumptionSerializer:
                 consumption_object.flow_instantaneous = flow_instantaneous
                 consumption_object.flow_type = flow_type
                 consumption_object.flow_value = flow_value
+                consumption_object.from_previous_record = from_previous_record
+                consumption_object.to_current_record = datetime.now()
                 consumption_object.save()
+                
                 return True, status_success_result
-            # except:
-            #     return False, wrong_data_result
+            
         else:
             return False, wrong_token_result
+
 
     @staticmethod
     def get_last_consumptions_(token, water_meters):

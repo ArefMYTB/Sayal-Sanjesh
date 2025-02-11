@@ -9,6 +9,7 @@ from SayalSanjesh.models import EventType, WaterMetersModules, Event, WaterMeter
 from MQQTReceiver import websockets_publisher
 from General.Serializers.LogSerializers import LogSerializers
 
+
 class EventSerializer:
     @staticmethod
     def admin_get_all_event_serializer(token, page, count, module_id, module_code):
@@ -26,11 +27,11 @@ class EventSerializer:
                 limit = int(count)
                 filters = {
                     "event_module__water_meter_module_code": module_code,
-                    "event_module__water_meter_module_id": module_id,
+                    "event_module": module_id,
                 }
                 filters = {k: v for k, v in filters.items() if v is not None}
                 queryset = Event.objects.filter(**filters).order_by('-event_create_time')[offset:offset + limit]
-                response = Event.objects.serialize(queryset=queryset ,admin_id = admin_id)
+                response = Event.objects.serialize(queryset=queryset)
                 return True, response
             else:
                 return False, wrong_token_result
@@ -95,6 +96,38 @@ class EventSerializer:
             return False, wrong_token_result
 
     @staticmethod
+    def admin_remove_all_event_serializer(token, meter_serial):
+        """
+            param : [token, meter_serial]
+            return :
+            A tuple containing a boolean indicating the success or failure of the operation, and a list of
+            serialized data results.  it returns a false status along with an error message.
+        """
+        token_result = token_to_user_id(token)
+        if token_result["status"] == "OK":
+            admin_id = token_result["data"]["user_id"]
+            if AdminsSerializer.admin_check_permission(admin_id, 'EventDelete'):
+
+                try:
+                    meter_obj = WaterMeters.objects.get(water_meter_serial =meter_serial )
+                    module_id = meter_obj.water_meter_module.water_meter_module_id
+                    event = Event.objects.filter(event_module=module_id)
+                    event.delete()
+                    admin_object = Admins.objects.get(admin_id=admin_id)
+                    LogSerializers().system_log_create_serializer(
+                        token=token, system_log_admin=admin_object, system_log_action='Delete', system_log_user=None,
+                        system_log_field_changes=None, system_log_message=None,
+                        system_log_object_action_on=module_id, system_log_action_table='Event')
+                except:
+                    wrong_data_result["farsi_message"] = "ای دی  ورودی اشتباه است"
+                    wrong_data_result["english_message"] = "input ID are wrong"
+                return True, status_success_result
+            else:
+                return False, wrong_token_result
+        else:
+            return False, wrong_token_result
+
+    @staticmethod
     def create_event_serializer(
             token, event_type_code, meter_serial, event_count, event_information, event_counter,
             event_last_occurrence, event_create_time, event_module_code=None):
@@ -106,6 +139,7 @@ class EventSerializer:
         """
         token_result = StaticTokenSerializer()
         token_result = token_result.token_checker(token)
+
         if token_result == None:
 
             try:
@@ -119,7 +153,6 @@ class EventSerializer:
                 utc_event_create_time = utc_timezone.localize(datetime.strptime(event_create_time, '%m/%d/%Y-%H:%M:%S'))
                 utc_event_last_occurrence = utc_timezone.localize(
                     datetime.strptime(event_last_occurrence, '%m/%d/%Y-%H:%M:%S'))
-
                 Event.objects.create(event_type=event_type_obj, event_module=event_module_obj,
                                      event_count=event_count,
                                      event_information=event_information,
@@ -184,8 +217,8 @@ class EventSerializer:
             admin_id = token_result["data"]["user_id"]
             if AdminsSerializer.admin_check_permission(admin_id, 'Event'):
                 for id in event_id_list:
-                    event_obj = Event.objects.get(event_id = id)
-                    admin_obj = Admins.objects.get(admin_id = admin_id)
+                    event_obj = Event.objects.get(event_id=id)
+                    admin_obj = Admins.objects.get(admin_id=admin_id)
                     EventView.objects.create(admin=admin_obj, event=event_obj)
                 return True, status_success_result
             else:

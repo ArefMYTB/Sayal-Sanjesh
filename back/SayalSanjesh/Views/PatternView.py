@@ -6,13 +6,7 @@ from SayalSanjesh.Serializers.PatternSerializer import PatternSerializer
 
 @csrf_exempt
 class PatternView:
-    """
-       A view class for handling GET and POST requests.
 
-       Methods:
-       - get: Handles GET requests and returns a JSON response.
-       - post: Handles POST requests and returns a JSON response.
-   """
     @csrf_exempt
     def admin_create_pattern_view(self, request):
         if request.method.lower() == "options":

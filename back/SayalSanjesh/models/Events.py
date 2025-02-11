@@ -114,12 +114,13 @@ class CustomEventsManager(models.Manager):
                 "event_count": obj.event_count,
                 "event_counter": obj.event_counter,
                 "event_last_occurrence": obj.event_last_occurrence,
+                "all_event_numbers": Event.objects.filter(event_module=obj.event_module).count(),
             }
-            try:
-                event_view = EventView.objects.get(event=obj.event_id, admin=admin_id)
-                serialized_obj['event_view_by_admin'] = (True, event_view.viewed_at)
-            except:
-                serialized_obj['event_view_by_admin'] = (False, None)
+            # try:
+            #     event_view = EventView.objects.get(event=obj.event_id, admin=admin_id)
+            #     serialized_obj['event_view_by_admin'] = (True, event_view.viewed_at)
+            # except:
+            #     serialized_obj['event_view_by_admin'] = (False, None)
             serialized_data.append(serialized_obj)
         return serialized_data
 

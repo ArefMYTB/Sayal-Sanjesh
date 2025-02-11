@@ -8,14 +8,7 @@ from SayalSanjesh.Serializers.CalculateUnitsSerializer import CalculateUnitesSer
 from SayalSanjesh.models import NoticeCategories
 
 
-class CalculateUnitesView:
-    """
-        A view class for handling GET and POST requests.
-
-        Methods:
-        - get: Handles GET requests and returns a JSON response.
-        - post: Handles POST requests and returns a JSON response.
-    """
+class CalculateUnitesView():
 
     @csrf_exempt
     def admin_add_calculate_unites_view(self, request):

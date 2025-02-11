@@ -481,7 +481,7 @@ class WaterMeterProjectsSerializer:
                         if project_id[0] != None:
                             project_detail = projects.get(water_meter_project_id=project_id[0])
                             max_project_info = {
-                                "water_meter_project_id": project_detail.water_meter_project_id,
+                                "water_meter_project_id": str(project_detail.water_meter_project_id),
                                 "water_meter_project_title": project_detail.water_meter_project_title,
                                 "water_meter_project_name": project_detail.water_meter_project_name,
                                 "number_of_counter": number_of_counter,
@@ -490,7 +490,7 @@ class WaterMeterProjectsSerializer:
                 result = {
                     "all_projects": projects.count(),
                     "all_cities": projects_city_count,
-                    "city_with_max_projects": max_city_repetition_result,
+                    "city_with_max_projects": list(max_city_repetition_result),
                     "project_with_max_counters": project_counters,
                 }
 

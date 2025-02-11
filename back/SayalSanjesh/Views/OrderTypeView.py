@@ -6,13 +6,6 @@ from SayalSanjesh.Serializers.OrderTypeSerializer import OrderTypeSerializer
 
 @csrf_exempt
 class OrderTypeView:
-    """
-       A view class for handling GET and POST requests.
-
-       Methods:
-       - get: Handles GET requests and returns a JSON response.
-       - post: Handles POST requests and returns a JSON response.
-   """
     @csrf_exempt
     def admin_get_all_order_type_view(self, request):
         if request.method.lower() == "options":

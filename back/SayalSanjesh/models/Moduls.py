@@ -21,7 +21,7 @@ class CustomModuleTypeManager(models.Manager):
                 "admin_info": obj.admin.as_dict()['admin_id'],
                 "module_type_id": obj.module_type_id,
                 "module_type_name": obj.module_type_name,
-                "module_type_create_date": obj.module_type_create_date,
+                "module_type_create_date": str(obj.module_type_create_date),
                 "module_other_information": obj.module_other_information,
             }
             serialized_data.append(serialized_obj)
@@ -70,14 +70,14 @@ class CustomMetersModuleManager(models.Manager):
                 "water_meter_module_sim": obj.water_meter_module_sim,
                 "water_meter_module_sim_operator": obj.water_meter_module_sim_operator,
                 "water_meter_module_property": obj.water_meter_module_property,
-                "water_meter_module_create_date": obj.water_meter_module_create_date,
+                "water_meter_module_create_date": str(obj.water_meter_module_create_date),
                 "water_meter_module_other_information": obj.water_meter_module_other_information,
             }
             if obj.module_type is not None:
                 serialized_obj['module_type_info'] = {
                     "module_type_id": obj.module_type.module_type_id,
                     "module_type_name": obj.module_type.module_type_name,
-                    "module_type_create_date": obj.module_type.module_type_create_date,
+                    "module_type_create_date": str(obj.module_type.module_type_create_date),
                     "module_other_information": obj.module_type.module_other_information,
                 }
             else:

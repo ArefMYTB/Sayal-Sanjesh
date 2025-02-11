@@ -158,3 +158,5 @@ CORS_ALLOW_HEADERS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # media directory in the root directory
 MEDIA_URL = '/media/'
+
+ENCODE_DATA = False

@@ -31,17 +31,17 @@ class CustomPatternManager(models.Manager):
                 "pattern_tag": {
                     "water_meter_tag_id": obj.pattern_tag.water_meter_tag_id,
                     "water_meter_tag_name": obj.pattern_tag.water_meter_tag_name,
-                    "water_meter_tag_create_date": obj.pattern_tag.water_meter_tag_create_date,
+                    "water_meter_tag_create_date": str(obj.pattern_tag.water_meter_tag_create_date),
                     "water_meter_tag_other_information": obj.pattern_tag.water_meter_tag_other_information,
                 },
                 "pattern_project": {
                     "water_meter_project_id": obj.pattern_project.water_meter_project_id,
                     "water_meter_project_name": obj.pattern_project.water_meter_project_name,
                     "water_meter_project_title": obj.pattern_project.water_meter_project_title,
-                    "water_meter_project_create_date": obj.pattern_project.water_meter_project_create_date,
+                    "water_meter_project_create_date": str(obj.pattern_project.water_meter_project_create_date),
                 },
                 "pattern_list": obj.pattern_list,
-                "pattern_create_date": obj.pattern_create_date,
+                "pattern_create_date": str(obj.pattern_create_date),
             }
             if hasattr(queryset, '__iter__') is True:
                 serialized_obj['all_pattern_number'] =all_pattern_number

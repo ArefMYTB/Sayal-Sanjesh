@@ -6,13 +6,7 @@ from SayalSanjesh.Serializers.BillsSerializer import BillsSerializer
 
 @csrf_exempt
 class BillsView:
-    """
-        A view class for handling GET and POST requests.
-
-        Methods:
-        - get: Handles GET requests and returns a JSON response.
-        - post: Handles POST requests and returns a JSON response.
-    """
+    # TODO edit user getALl like admin.
     @csrf_exempt
     def admin_get_all_bills(self, request):
         if request.method.lower() == "options":

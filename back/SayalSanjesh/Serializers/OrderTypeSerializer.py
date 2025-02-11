@@ -3,7 +3,6 @@ from SayalSanjesh.Serializers import wrong_token_result, status_success_result, 
 from SayalSanjesh.models import OrderType
 from Authorization.models.Admins import Admins
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
-from General.Serializers.LogSerializers import LogSerializers
 
 
 class OrderTypeSerializer:
@@ -76,11 +75,6 @@ class OrderTypeSerializer:
                 try:
                     order_type = OrderType.objects.get(order_type_id=order_type_id)
                     order_type.delete()
-                    admin_object = Admins.objects.get(admin_id=admin_id)
-                    LogSerializers().system_log_create_serializer(
-                        token=token, system_log_admin=admin_object, system_log_action='Delete', system_log_user=None,
-                        system_log_field_changes=None, system_log_message=None,
-                        system_log_object_action_on=order_type_id, system_log_action_table='OrderType')
                 except:
                     wrong_data_result["farsi_message"] = "ای دی های ورودی اشتباه است"
                     wrong_data_result["english_message"] = "input IDs are wrong"
@@ -115,11 +109,6 @@ class OrderTypeSerializer:
                     OrderType.objects.create(order_type_admin=admin, order_type_code=key,
                                              order_type_name=order_type_name,
                                              order_type_information=order_type_information)
-                    admin_object = Admins.objects.get(admin_id=admin_id)
-                    LogSerializers().system_log_create_serializer(
-                        token=token, system_log_admin=admin_object, system_log_action='Add', system_log_user=None,
-                        system_log_field_changes=None, system_log_message=None,
-                        system_log_object_action_on=order_type_name, system_log_action_table='OrderType')
                 except:
                     wrong_data_result["farsi_message"] = "خطای نامشخص"
                     wrong_data_result["english_message"] = "unknown error"
