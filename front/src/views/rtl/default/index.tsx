@@ -27,7 +27,6 @@ import {
   renderComplexChartOptions,
 } from "utils/globalUtils";
 import { renderSelectData } from "utils/CommonFunctions";
-import SimpleCard from "components/SimpleCard";
 
 const Dashboard = () => {
   const [tag, setTag] = useState<DynamicOption>(counterTagSelect[0]);
@@ -230,7 +229,7 @@ const Dashboard = () => {
   };
   return (
     <div>
-      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3  2xl:grid-cols-4 3xl:grid-cols-6">
+      <div className="xl:grid-col-4 mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-6">
         {!dashboardDataIsLoading && dashboardDataStatus === "success" ? (
           <>
             <Widget
@@ -268,182 +267,41 @@ const Dashboard = () => {
           <Loading />
         )}
       </div>
-
-      {!usersIsLoading &&
-      usersStatus === "success" &&
-      !projectsIsLoading &&
-      projectsStatus === "success" &&
-      !typesIsLoading &&
-      typesStatus === "success" ? (
-        <div className="chart-statistics py-2">
-          <ConsumptionChartFilter
-            tagSelect={counterTagSelect}
-            tag={tag}
-            setTag={setTag}
-            userSelect={renderSelectData(usersData.data, "user")}
-            user={user}
-            setUser={setUser}
-            projectSelect={renderSelectData(projectsData.data, "project")}
-            project={project}
-            setProject={setProject}
-            typeSelect={renderTypeSelect(typesData.data)}
-            type={type}
-            setType={setType}
-            // fromDate={fromDate}
-            // setFromDate={setFromDate}
-            // tillDate={tillDate}
-            // setTillDate={setTillDate}
-            // update={consumptionDatesRefetch}
-          />
-        </div>
-      ) : (
-        <Loading />
-      )}
-
       {!citiesIsLoading &&
       citiesStatus &&
       !devicesIsLoading &&
       devicesStatus === "success" ? (
         <>
-          <div className="grid grid-cols-1 gap-4 py-4 xl:grid-cols-7">
-            <div className="grid xl:col-span-4">
-              {/* Consumption Chart */}
-              <div className="mx-auto h-[40vh] w-full min-w-[95%] rounded-lg border p-1 shadow-md">
-                {/* Header */}
-                <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
-                  نمودار مصرف
-                </div>
-
-                {/* Content */}
-                {!consumptionsDatesIsLoading &&
-                consumptionsDatesStatus === "success" ? (
-                  <MixChart
-                    chartData={renderComplexChartData(
-                      consumptionsDatesData.data,
-                      fromDate,
-                      tillDate
-                    )}
-                    chartOptions={renderComplexChartOptions(
-                      // consumptionsDatesData.data,
-                      fromDate,
-                      tillDate
-                    )}
-                    chartTag={tag}
-                  />
-                ) : (
-                  // <div>chart is loading</div>
-                  <Loading />
-                )}
-              </div>
-
-              <div className="mt-2 flex gap-1">
-                {/* Announcements */}
-                <SimpleCard title="رخدادهای مهم">
-                  <div className="space-y-3 text-right">
-                    {[
-                      { label: "کاهش ولتاژ باطری اصلی:", value: "۲۶" },
-                      { label: "کاهش ولتاژ باطری بکاپ:", value: "۶" },
-                      { label: "باز شدن درب کنتور:", value: "۵" },
-                      { label: "صدور دستور قطع:", value: "۵۲" },
-                      {
-                        label: "برداشت آب در هنگام اعمال دستور قطع:",
-                        value: "۵۶",
-                      },
-                      { label: "درخواست پشتیبانی:", value: "۲" },
-                      { label: "سایر:", value: "۵۲۶" },
-                    ].map((item, index) => (
-                      <div key={index} className="flex justify-between gap-2">
-                        <span className="text-sm">{item.label}</span>
-                        <span className="text-sm font-bold">{item.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </SimpleCard>
-
-                {/* Consumption Info */}
-                <SimpleCard title="اطلاعات مصرف">
-                  <div className="space-y-3 text-right">
-                    {[
-                      { label: "مصرف کل (مترمکعب):", value: "۲۶/۵۵۳/۵۲۶" },
-                      {
-                        label: "بیشینه مصرف سالانه (مترمکعب):",
-                        value: "۳۵۶/۲۸۵",
-                        style: "text-red-500",
-                      },
-                      {
-                        label: "کمینه مصرف سالانه (مترمکعب):",
-                        value: "۳۵۶/۲۸۵",
-                        style: "text-blue-500",
-                      },
-                      {
-                        label: "بیشینه مصرف ماهانه (مترمکعب):",
-                        value: "۱۱/۳۶۱",
-                        style: "text-red-500",
-                      },
-                      {
-                        label: "کمینه مصرف ماهانه (مترمکعب):",
-                        value: "۱۱/۳۶۱",
-                        style: "text-blue-500",
-                      },
-                      {
-                        label: "بیشینه مصرف روزانه (مترمکعب):",
-                        value: "۳۵/۶",
-                        style: "text-red-500",
-                      },
-                      {
-                        label: "کمینه مصرف روزانه (مترمکعب):",
-                        value: "۳۵/۶",
-                        style: "text-blue-500",
-                      },
-                    ].map((item, index) => (
-                      <div key={index} className="flex justify-between gap-2">
-                        <span className={`text-sm ${item.style || ""}`}>
-                          {item.label}
-                        </span>
-                        <span className="text-sm font-bold">{item.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </SimpleCard>
-
-                {/* PieCharts */}
-                <div className="mx-auto max-w-md rounded-lg border p-1 shadow-md">
-                  {/* Header */}
-                  <div className="rounded-t-lg bg-gray-200 py-2 text-center font-bold">
-                    وضعیت پروژه ها
-                  </div>
-                  {/* Content */}
-                  <div className="pie py-2">
-                    {/* <div className="donat h-[20vh]">
-                      <div className=" text-lg font-semibold dark:text-white">
-                        تفکیک دستگاه ها
-                      </div>
-                      <DonutChart
-                        chartOptions={renderDonutOptions(devicesData.data)}
-                        chartData={renderDonutData(devicesData.data)}
-                      />
-                    </div>
-                    <div className="text-lg font-semibold dark:text-white">
-                      پروژه به تفکیک شهر
-                    </div> */}
-                    <PieChart
-                      chartOptions={renderChartOptions(citiesData.data)}
-                      chartData={renderChartData(citiesData.data)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Geography Map */}
-            <div className="rounded-lg border p-1 shadow-md xl:col-span-3">
+          <div className=" grid grid-cols-1 gap-4 py-4 xl:grid-cols-6">
+            <div className=" map-wrapper xl:col-span-4">
               <CustomMap />
+            </div>
+            <div className="round-charts grid grid-cols-1 gap-2 xl:col-span-2 ">
+              <div className="donat h-[29vh]">
+                <div className=" text-lg font-semibold dark:text-white">
+                  تفکیک دستگاه ها
+                </div>
+                <DonutChart
+                  chartOptions={renderDonutOptions(devicesData.data)}
+                  chartData={renderDonutData(devicesData.data)}
+                />
+              </div>
+              <div className="pie h-[29vh]">
+                <div className="text-lg font-semibold dark:text-white">
+                  پروژه به تفکیک شهر
+                </div>
+                <PieChart
+                  chartOptions={renderChartOptions(citiesData.data)}
+                  chartData={renderChartData(citiesData.data)}
+                />
+              </div>
             </div>
           </div>
         </>
       ) : (
         <Loading />
       )}
-      {/* <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
+      <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
         مصرف ماه اخیر
       </div>
       {!usersIsLoading &&
@@ -517,7 +375,7 @@ const Dashboard = () => {
         </>
       ) : (
         <></>
-      )} */}
+      )}
     </div>
   );
 };

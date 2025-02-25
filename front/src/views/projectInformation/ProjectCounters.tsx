@@ -129,7 +129,7 @@ const ProjectCounters = (props: ProjectCountersProps) => {
       reversed,
     ],
   });
-  console.log(consumptionData);
+  // console.log(consumptionData);
   const tableHeader: HeaderObject[] = [
     { title: "نام کنتور", headerKey: "counterName" },
     { title: "شماره سریال", headerKey: "counterSerial" },

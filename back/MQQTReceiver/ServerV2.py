@@ -1,3 +1,4 @@
+import datetime
 import random
 import json
 import time
@@ -39,11 +40,53 @@ def on_connect(client, userdata, flags, rc):
         print("Connection failed")
 
 
+print("path : ", os.getcwd())
+
+
+def write_to_file(text):
+    # Get the directory from the file path
+    current_time = datetime.datetime.now()
+    base_dir = os.getcwd()
+
+    # Check if the directory exists, if not, create it
+    if not os.path.exists(os.path.join(base_dir, "Log")):
+        os.makedirs(os.path.join(base_dir, "Log"))
+    log_dir = os.path.join(base_dir, "Log")
+    pure_log = os.path.join(log_dir, "pure_log.txt")
+    # Open the file in append mode, which creates the file if it doesn't exist
+    with open(pure_log, 'a') as file:
+        # Write the text followed by a newline character
+        message = f"{current_time}  , {str(text)} \n"
+        file.write(message)
+    
+    test_log = os.path.join(log_dir, "test_log.txt")
+    with open(test_log, 'a') as file:
+        file.write("Aref Edit")
+
+
 def on_message(client, userdata, message):
-    # print(f"{message.topic}")
-    print("Message received: " + message.payload.decode("utf-8"))
-    handler_object.get_message(message=message.payload.decode("utf-8"), topic=message.topic)
-    # send received message to handler class .
+    try:
+        print("message : ", message.payload)
+        write_to_file(text=message.payload)
+
+        # Attempt to decode the message
+        try:
+            decoded_message = message.payload.decode("utf-8", errors="replace")  # or "ignore"
+        except UnicodeDecodeError:
+            decoded_message = None
+            print("Failed to decode message in UTF-8. Skipping this message.")
+
+        # Proceed only if decoding was successful
+        if decoded_message:
+            print("Message received: " + decoded_message)
+            handler_object.get_message(message=decoded_message, topic=message.topic)
+        else:
+            print("Message could not be processed due to decoding issues.")
+
+    except Exception as e:
+        # General exception handling to ensure no crashes
+        print("An unexpected error occurred while handling the message:", e)
+
 
 
 broker = '217.144.106.32'
@@ -55,10 +98,10 @@ client_id = f'python-mqtt-{random.randint(0, 1000)}'
 # user = "test"
 # password = "sayal@mqtt"
 
-# user = "meters"
-# password = "S@yal1402"
-user = "server"
-password = "S@sV02"
+user = "meters"
+password = "S@yal1402"
+# user = "server"
+# password = "S@sV02"
 
 client = mqttClient.Client("Python")
 client.username_pw_set(user, password=password)

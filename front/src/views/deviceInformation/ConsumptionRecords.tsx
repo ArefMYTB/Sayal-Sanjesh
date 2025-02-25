@@ -40,6 +40,7 @@ type RecordsTableData = {
   // projectName: string;
   deviceSerial: string;
   recordDate: JSX.Element;
+  // TODO
   recordValue: string;
   recordTimeSpan: string;
   consumptionInPeriod: string;
@@ -87,7 +88,8 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
   });
   let tableHeader = [
     { title: "سریال دستگاه", headerKey: "deviceSerial" },
-    { title: "زمان ارسال", headerKey: "recordDate" },
+    { title: "زمان ایجاد", headerKey: "recordDate" },
+    // TODO
     { title: "آخرین مصرف ارسالی", headerKey: "recordValue" },
     { title: "بازه ارسال", headerKey: "recordTimeSpan" },
     { title: "مصرف در بازه ارسال", headerKey: "consumptionInPeriod" },
@@ -96,7 +98,8 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
   if (deviceInfo[0]?.water_meter_tag_info?.water_meter_tag_name === "برق") {
     tableHeader = [
       { title: "سریال دستگاه", headerKey: "deviceSerial" },
-      { title: "زمان ارسال", headerKey: "recordDate" },
+      { title: "زمان ایجاد", headerKey: "recordDate" },
+      // TODO
       { title: "مصرف در بازه ارسال", headerKey: "consumptionInPeriod" },
     ];
   }
@@ -176,6 +179,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
         // projectName: record.project_info.water_meter_project_name,
         deviceSerial: record.water_meters_info.water_meter_serial,
         recordDate: renderTimeJalali(record.create_time, "chart"),
+        // TODO
         recordValue:
           record.device_value || record.device_value === 0
             ? `${Math.round(record.device_value).toLocaleString()} ${renderUnit(

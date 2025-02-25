@@ -82,7 +82,7 @@ const MqttLogs = () => {
   const TableHeader = [
     { title: "سریال کنتور", headerKey: "deviceSerial" },
     { title: "نام تاپیک", headerKey: "topicName" },
-    { title: "تاریخ ایجاد", headerKey: "messageCreateDate" },
+    { title: "زمان ارسال", headerKey: "messageCreateDate" },
     { title: "وضعیت پیام", headerKey: "messageStatus" },
     { title: "عملیات", headerKey: "messageAction" },
   ];
@@ -157,7 +157,6 @@ const MqttLogs = () => {
     return m ? m?.DevInfo?.SerialNum : "";
   };
   const renderMessage = (message: string) => {
-    console.log(message);
     let correctMessage = message
       .replace(/\s/g, "")
       .replace(/\?/g, "")

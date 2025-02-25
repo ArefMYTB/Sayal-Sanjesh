@@ -83,6 +83,7 @@ p.connect(host=host, port=port)
 
 
 def publish_event_message(data_dict, topic=None):
+    print("code in publisher")
     if topic is not None:
         topic = topic
     else:

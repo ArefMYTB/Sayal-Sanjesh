@@ -99,7 +99,7 @@ const MixChart = (props: ChartProps) => {
         style: {
           fontFamily: "Vazir",
           cssClass: "axisXLabel",
-          fontSize: "8px",
+          // fontSize: "8px",
         },
       },
     },

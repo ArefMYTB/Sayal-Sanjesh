@@ -120,33 +120,50 @@ class Logger:
         if self.status == 'response':
             self.__response_logs()
 
+    def __log_to_file(self, log_message, file_name):
+        log_path = os.path.join(self.log_dir, file_name)
+        with open(log_path, 'a') as file:
+            # Write log message to the file
+            file.write(log_message)
+
+    def __check_existing_log(self):
+        # Check if the same topic_name, message, and state already exists in the database
+        return MqttLoger.objects.filter(
+            topic_name=self.topic,
+            message=self.message,
+            state=self.status
+        ).exists()
+
     def __receive_logs(self):
         current_time = datetime.now()
         log_message = f"Message received :\n Time : {current_time}\n Topic :{self.topic}\n Content :\n {self.message}\n\n\n"
-        receive_root = os.path.join(self.log_dir, 'ReceiveLogs.txt')
-        with open(receive_root, 'a') as file:
-            # Write text to the file
-            file.write(log_message)
-        # add log to data base
-        MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Receive')
+        self.__log_to_file(log_message, 'ReceiveLogs.txt')
+
+        # Check if this log already exists before saving to the database
+        if not self.__check_existing_log():
+            MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Receive')
 
     def __error_logs(self):
         current_time = datetime.now()
-        log_message = f"Message received :\n Time : {current_time}\n Topic :{self.topic}\n Content :\n {self.message}\n\n\n"
-        receive_root = os.path.join(self.log_dir, 'ErrorLogs.txt')
-        with open(receive_root, 'a') as file:
-            # Write text to the file
-            file.write(log_message)
-        # add log to data base
-        MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Error')
+        log_message = f"Error received :\n Time : {current_time}\n Topic :{self.topic}\n Content :\n {self.message}\n\n\n"
+        self.__log_to_file(log_message, 'ErrorLogs.txt')
+
+        # Check if this log already exists before saving to the database
+        if not self.__check_existing_log():
+            MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Error')
 
     def __response_logs(self):
         current_time = datetime.now()
-        log_message = f"Message received :\n Time : {current_time}\n Topic :{self.topic}\n Content :\n {self.message}\n\n\n"
-        receive_root = os.path.join(self.log_dir, 'ResponseLogs.txt')
-        with open(receive_root, 'a') as file:
-            # Write text to the file
-            file.write(log_message)
+        log_message = f"Response sent :\n Time : {current_time}\n Topic :{self.topic}\n Content :\n {self.message}\n\n\n"
+        self.__log_to_file(log_message, 'ResponseLogs.txt')
+
+        # Check if this log already exists before saving to the database
+        if not self.__check_existing_log():
+            MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Response')
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Validation(DataBaseConnection):
@@ -191,6 +208,7 @@ class Validation(DataBaseConnection):
             if temperature_detail is not None and temperature_detail != {}:
                 prepared_data['information']['temperature_detail'] = temperature_detail
             # send prepared_data to add to database
+
             self.add_meter_data(data=prepared_data)
             # t = threading.Thread(target=self.add_meter_data, args=(prepared_data,))
             # t.start()
@@ -212,8 +230,8 @@ class Validation(DataBaseConnection):
                         "meter_serial": data.get('DevInfo').get('SerialNum'),
                         "event_counter": data.get('DevInfo').get('EventCounter'),
                         "event_type_code": key,
-                        "event_count": data.get(key).get('Count'),
-                        "event_last_occurrence": data.get(key).get('LastOccurence'),
+                        "event_count": data.get(key).get('Counter'),
+                        "event_last_occurrence": data.get(key).get('LastEventDate'),
                         'event_create_time': data.get('DevInfo').get('DateTime'),
                         "event_information": {}
                     }
