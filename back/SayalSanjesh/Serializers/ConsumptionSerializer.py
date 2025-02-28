@@ -3487,7 +3487,7 @@ class ConsumptionSerializer:
             except WaterMetersConsumptions.DoesNotExist:
                 # Get the last consumption entry for the water meter
                 last_consumption = WaterMetersConsumptions.objects.filter(water_meters=meter_object,
-                                                                          create_time__lte=create_time).order_by(
+                                                                          create_time__lte=date_time_obj).order_by(
                     'create_time').last()
                 
                 device_value = value
