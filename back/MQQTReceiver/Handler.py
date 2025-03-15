@@ -40,7 +40,8 @@ class DataBaseConnection:
     def add_meter_data(self, data):
         data['token'] = self.static_token
         response = self.meter_related_class.add_consumptions_from_mqtt_broker(**data)
-        print("this is response  : ", response)
+
+        # print("this is response  : ", response)
         meter_serial = data.get('water_meters')
         try:
             last_counter = self.meter_related_class.get_last_consumptions_(
@@ -75,13 +76,13 @@ class DataBaseConnection:
                 self.publisher_class.add_event_response(topic_name=f'/meters/eventResponse/{meter_serial}',
                                                         message=publish_message)
         except:
-            print("add_events,except")
+            # print("add_events,except")
             publish_message = f'serial : {meter_serial} , {None}'
             self.publisher_class.add_event_response(topic_name=f'/meters/eventResponse/{meter_serial}',
                                                     message=publish_message)
 
     def command_response(self, data):
-        print("command_response")
+        # print("command_response")
         current_time = datetime.now(pytz.utc)
         order_meter = data.get('order_meter')
         order_meter_obj = WaterMeters.objects.get(water_meter_serial=order_meter)
@@ -114,7 +115,7 @@ class Logger:
         self.topic = topic
         self.log_dir = os.path.join(os.getcwd(), 'Log')
         if self.status == 'receive':
-            self.__receive_logs()
+            self.log = self.__receive_logs()  # Store log object for reference
         if self.status == 'error':
             self.__error_logs()
         if self.status == 'response':
@@ -141,7 +142,10 @@ class Logger:
 
         # Check if this log already exists before saving to the database
         if not self.__check_existing_log():
-            MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Receive')
+            log = MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Receive')
+            print("log: ", log)
+            return log  # Return log object
+        return None
 
     def __error_logs(self):
         current_time = datetime.now()
@@ -172,7 +176,8 @@ class Validation(DataBaseConnection):
 
     def data_validation(self, message, topic):
         # write every message t logger file
-        Logger(status='receive', message=message, topic=topic)
+        logger = Logger(status='receive', message=message, topic=topic)
+        log_id = logger.log.log_id if logger.log else None  # Get log_id
 
         try:
             data = json.loads(message)
@@ -186,6 +191,7 @@ class Validation(DataBaseConnection):
                 "flow_instantaneous": None,
                 "flow_type": None,
                 "flow_value": None,
+                "log_id": log_id,  # Attach log_id
                 'information': {}
             }
             if 'Value' in data.get('Volume').keys():
@@ -267,7 +273,7 @@ class Handler(Validation):
         super().__init__()
 
     def get_message(self, message, topic):
-        print("topic : ", topic)
+        # print("topic : ", topic)
         if topic == '/meters/data':
             # validate message
             t = threading.Thread(target=self.data_validation, args=(message, topic,))

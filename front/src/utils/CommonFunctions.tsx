@@ -70,7 +70,7 @@ export const renderCounterStatus = (status: LastConsumptionInfo) => {
         )}
       </Tooltip>
       <Tooltip label={`${signal !== 0 ? signal : "__"}`} fontSize="sm">
-        {signal <= 30 && signal > 25 ? (
+        {signal > 25 ? (
           <span className="  mx-1 text-xl text-green-600">
             <MdNetworkWifi />
           </span>

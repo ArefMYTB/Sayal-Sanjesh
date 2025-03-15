@@ -73,6 +73,7 @@ class WaterMetersConsumptions(models.Model):
     flow_instantaneous = models.FloatField(null=True)
     flow_Type = models.CharField(max_length=200, null=True)
     flow_Value = models.FloatField(null=True)
+    log = models.ForeignKey('General.MqttLoger', on_delete=models.SET_NULL, null=True, blank=True)  # Link to log entry
     objects = CustomConsumptionsManager()
 
     class Meta:
@@ -104,6 +105,7 @@ class WaterMetersConsumptions(models.Model):
             "from_previous_record": from_previous_record,
             "to_current_record": to_current_record,
             "bill_created": self.bill_created,
+            "log_id": self.log.log_id if self.log else None,  # Include log_id
         }
 
 

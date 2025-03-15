@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { useDisclosure } from "@chakra-ui/hooks";
 import CustomButton from "components/button";
 import CustomPagination from "components/pagination";
 import SimpleTable from "components/tables/SimpleTable";
 import { useState } from "react";
 import { MdDelete, MdOutlineFileDownload } from "react-icons/md";
+import { MdRemoveRedEye } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { reqFunction } from "utils/API";
 import { renderUnit } from "utils/CommonFunctions";
@@ -15,10 +17,16 @@ import { TypeObject } from "views/settings/DeviceTypesTable";
 import { UserObject } from "views/users/UsersTable";
 import { OneDeviceObj } from ".";
 import ConsumptionChartFilter from "./ConsumptionChartFilter";
+import CustomModal from "components/modals";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 export type ConsumptionRecordObject = {
   from_previous_record: string;
   to_current_record: string;
   consumption_id: string;
+  log_id: string;
+  log_time: string;
+  log_message: string;
   value: number;
   device_value: null | number;
   cumulative_value: number;
@@ -39,6 +47,7 @@ export type ConsumptionRecordObject = {
 type RecordsTableData = {
   // projectName: string;
   deviceSerial: string;
+  logDate: JSX.Element;
   recordDate: JSX.Element;
   // TODO
   recordValue: string;
@@ -46,6 +55,7 @@ type RecordsTableData = {
   consumptionInPeriod: string;
   cumulativeValue: string;
   recordActions: JSX.Element;
+  messageAction: JSX.Element;
 };
 interface ConsumptionRecordsProps {
   deviceInfo: [OneDeviceObj];
@@ -60,6 +70,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
   const [excelLoading, setExcelLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<CountOption>(countSelect[0]);
+  const [message, setMessage] = useState<string | null>(null);
   const AdminPermissions: string[] = JSON.parse(
     window.localStorage.getItem("permissions")
   );
@@ -89,6 +100,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
   let tableHeader = [
     { title: "سریال دستگاه", headerKey: "deviceSerial" },
     { title: "زمان ایجاد", headerKey: "recordDate" },
+    { title: "زمان دریافت", headerKey: "logDate" },
     // TODO
     { title: "آخرین مصرف ارسالی", headerKey: "recordValue" },
     { title: "بازه ارسال", headerKey: "recordTimeSpan" },
@@ -102,6 +114,9 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
       // TODO
       { title: "مصرف در بازه ارسال", headerKey: "consumptionInPeriod" },
     ];
+  }
+  if (AdminPermissions.includes("LogDetail")) {
+    tableHeader.push({ title: "لاگ دستگاه", headerKey: "messageAction" });
   }
   if (AdminPermissions.includes("ConsumptionDelete")) {
     tableHeader.push({ title: "عملیات", headerKey: "recordActions" });
@@ -179,7 +194,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
         // projectName: record.project_info.water_meter_project_name,
         deviceSerial: record.water_meters_info.water_meter_serial,
         recordDate: renderTimeJalali(record.create_time, "chart"),
-        // TODO
+        logDate: renderTimeJalali(record.log_time, "chart"),
         recordValue:
           record.device_value || record.device_value === 0
             ? `${Math.round(record.device_value).toLocaleString()} ${renderUnit(
@@ -204,10 +219,59 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
           false
         )}`,
         recordActions: renderActions(record.consumption_id),
+        messageAction: renderLogAction(record.log_message),
       });
     });
     return tableData;
   };
+
+  const renderLogAction = (message: string) => {
+    return (
+      <div className=" flex items-center justify-center">
+        <CustomButton
+          onClick={() => renderMessage(message)}
+          icon={<MdRemoveRedEye />}
+          color="blue"
+          extra="!p-2"
+        />
+      </div>
+    );
+  };
+
+  const {
+    isOpen: isLogOpen,
+    onOpen: onLogOpen,
+    onClose: onLogClose,
+  } = useDisclosure();
+
+  const renderMessage = (message: string) => {
+    // Check if message is empty or invalid before parsing
+    if (!message.trim()) {
+      setMessage(message); // Handle empty or whitespace-only messages
+      onLogOpen();
+      return;
+    }
+
+    // Replace unwanted characters
+    let correctMessage = message
+      .replace(/\s/g, "")
+      .replace(/\?/g, "")
+      .replace(/\bnan\b/g, "null");
+
+    // Try parsing the message safely
+    let parsed = null;
+    try {
+      parsed = JSON.parse(correctMessage);
+    } catch (e) {
+      // Handle cases where parsing fails (keep original message)
+      parsed = null;
+    }
+
+    // Set the message (either parsed or original)
+    setMessage(parsed ? parsed : message);
+    onLogOpen();
+  };
+
   return (
     <>
       <div className="projects-overview pt-4">
@@ -255,6 +319,24 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
         </div> */}
         {!recordsIsLoading && recordsStatus === "success" ? (
           <div className="table-container mx-auto  w-full ">
+            <CustomModal
+              isOpen={isLogOpen}
+              onClose={onLogClose}
+              title={"پیام"}
+              modalType="confirmation"
+              information={
+                <SyntaxHighlighter
+                  language="json"
+                  style={vscDarkPlus}
+                  customStyle={{ whiteSpace: "pre-wrap !important" }}
+                >
+                  {typeof message === "string"
+                    ? message
+                    : JSON.stringify(message, null, 2)}
+                  {/* {message} */}
+                </SyntaxHighlighter>
+              }
+            />
             <SimpleTable
               header={tableHeader}
               data={tableData()}

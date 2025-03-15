@@ -13,6 +13,7 @@ from Authorization.models.MiddleAdmins import MiddleAdmins
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
 from Authorization.Serializers.StaticTokenSerializer import StaticTokenSerializer
 from MQQTReceiver.publisher import publish_message_to_client
+from General.models import MqttLoger
 from .jalali import jalali_to_gregorian
 from persiantools.jdatetime import JalaliDateTime
 from django.db.models import Sum, Max, Min, Q, F, Case, When, Value, IntegerField, Subquery, OuterRef, Count
@@ -22,7 +23,7 @@ from django.contrib.postgres.aggregates import StringAgg
 from django.db.models import Aggregate
 from django.db.models import CharField
 from django.db.models.functions import TruncDate
-
+from django.utils import timezone
 
 class Concat(Aggregate):
     function = 'GROUP_CONCAT'
@@ -57,6 +58,8 @@ class ConsumptionSerializer:
             def consumption_results(all_consumption, all_consumption_count):
                 consumptions_result = []
                 for consumption in all_consumption:
+                    if (consumption.log_id != None):
+                        print(MqttLoger.objects.get(log_id=consumption.log_id))
                     if consumption.from_previous_record == None:
                         from_previous_record = ""
                     else:
@@ -77,6 +80,10 @@ class ConsumptionSerializer:
                         "flow_instantaneous": consumption.flow_instantaneous,
                         "flow_Type": consumption.flow_Type,
                         "flow_Value": consumption.flow_Value,
+                        # Read from log
+                        "log_time": str(MqttLoger.objects.filter(log_id=consumption.log_id).values_list('create_date', flat=True).first()) or "",
+                        "log_message": str(MqttLoger.objects.filter(log_id=consumption.log_id).values_list('message', flat=True).first()) or "",
+
                         "from_previous_record": str(from_previous_record),
                         "to_current_record":str(to_current_record),
                         "bill_created": consumption.bill_created,
@@ -3469,14 +3476,13 @@ class ConsumptionSerializer:
     @staticmethod
     def add_consumptions_from_mqtt_broker(token, value, water_meters, information,
                                         cumulative_value, create_time, counter, value_type, flow_instantaneous,
-                                        flow_type, flow_value):
+                                        flow_type, flow_value, log_id):
         token_result = StaticTokenSerializer()
         token_result = token_result.token_checker(token)
         if token_result is None:
             # Parse the create_time string to datetime object
             time_string = create_time
             date_time_obj = datetime.strptime(time_string, "%m/%d/%Y-%H:%M:%S")
-            
             # Get the meter object from the water_meter_serial
             meter_object = WaterMeters.objects.get(water_meter_serial=water_meters)
             
@@ -3487,7 +3493,7 @@ class ConsumptionSerializer:
             except WaterMetersConsumptions.DoesNotExist:
                 # Get the last consumption entry for the water meter
                 last_consumption = WaterMetersConsumptions.objects.filter(water_meters=meter_object,
-                                                                          create_time__lte=create_time).order_by(
+                                                                          create_time__lte=date_time_obj).order_by(
                     'create_time').last()
                 
                 device_value = value
@@ -3509,8 +3515,11 @@ class ConsumptionSerializer:
                 else:
                     from_previous_record = last_consumption.create_time
                 
-                print("add_consumptions_from_mqtt_broker")
-                
+                # print("add_consumptions_from_mqtt_broker")
+
+                if water_meters in {"SWMM-02511102", "SWMM-02511101", "SWMM-02511103", "TWM13"}:
+                    device_value *= 10
+
                 # Create and save the consumption object
                 consumption_object = WaterMetersConsumptions()
                 consumption_object.water_meters = meter_object
@@ -3524,6 +3533,7 @@ class ConsumptionSerializer:
                 consumption_object.flow_instantaneous = flow_instantaneous
                 consumption_object.flow_type = flow_type
                 consumption_object.flow_value = flow_value
+                consumption_object.log_id = log_id
                 consumption_object.from_previous_record = from_previous_record
                 consumption_object.to_current_record = datetime.now()
                 consumption_object.save()

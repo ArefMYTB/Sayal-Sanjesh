@@ -82,14 +82,14 @@ const MqttLogs = () => {
   const TableHeader = [
     { title: "سریال کنتور", headerKey: "deviceSerial" },
     { title: "نام تاپیک", headerKey: "topicName" },
-    { title: "زمان ارسال", headerKey: "messageCreateDate" },
+    { title: "زمان دریافت", headerKey: "messageCreateDate" },
     { title: "وضعیت پیام", headerKey: "messageStatus" },
     { title: "عملیات", headerKey: "messageAction" },
   ];
   const tableData = () => {
     let logTableData: MqttLogTable = [];
     if (!MqttLogIsLoading && MqttLogStatus === "success") {
-      MqttLogData.data.forEach((obj: MqttLogObject) =>
+      MqttLogData.data.forEach((obj: MqttLogObject) => {
         logTableData.push({
           deviceSerial: showSerial(obj.message),
           // deviceSerial: "",
@@ -107,8 +107,8 @@ const MqttLogs = () => {
             </span>
           ),
           messageAction: renderLogAction(obj.message, obj.log_id),
-        })
-      );
+        });
+      });
     }
     return logTableData;
   };
