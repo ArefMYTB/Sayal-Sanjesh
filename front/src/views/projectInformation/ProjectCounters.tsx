@@ -133,7 +133,7 @@ const ProjectCounters = (props: ProjectCountersProps) => {
   const tableHeader: HeaderObject[] = [
     { title: "نام کنتور", headerKey: "counterName" },
     { title: "شماره سریال", headerKey: "counterSerial" },
-    { title: "باتری | سیگنال | بکاپ", headerKey: "counterStatus" },
+    { title: "بکاپ | سیگنال | باتری و برق", headerKey: "counterStatus" },
     { title: "ثبت آخرین مصرف", headerKey: "lastConsumptionTime" },
     { title: "وضعیت ارسال", headerKey: "sendingStatus" },
     {

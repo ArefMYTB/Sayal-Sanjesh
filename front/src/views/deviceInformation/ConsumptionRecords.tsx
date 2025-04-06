@@ -20,13 +20,26 @@ import ConsumptionChartFilter from "./ConsumptionChartFilter";
 import CustomModal from "components/modals";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { renderCounterStatus } from "utils/CommonFunctions";
+
+export type LastConsumptionInfo = {
+  RelayStatus: boolean;
+  DeviceOnTime: number;
+  SignalQuality: number;
+  voltage_detail: {
+    RTC: number;
+    Backup: number;
+    Battery: number;
+  };
+  FirmwareVersion: string;
+};
 export type ConsumptionRecordObject = {
   from_previous_record: string;
   to_current_record: string;
   consumption_id: string;
-  log_id: string;
   log_time: string;
   log_message: string;
+  information: LastConsumptionInfo;
   value: number;
   device_value: null | number;
   cumulative_value: number;
@@ -46,10 +59,11 @@ export type ConsumptionRecordObject = {
 };
 type RecordsTableData = {
   // projectName: string;
-  deviceSerial: string;
+  // deviceSerial: string;
+  dataCounter: string;
   logDate: JSX.Element;
   recordDate: JSX.Element;
-  // TODO
+  counterStatus: JSX.Element;
   recordValue: string;
   recordTimeSpan: string;
   consumptionInPeriod: string;
@@ -98,10 +112,11 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
     queryKey: ["consumptionRecords", deviceSerial, page, count],
   });
   let tableHeader = [
-    { title: "سریال دستگاه", headerKey: "deviceSerial" },
+    // { title: "سریال دستگاه", headerKey: "deviceSerial" },
+    { title: "دیتا کانتر", headerKey: "dataCounter" },
     { title: "زمان ایجاد", headerKey: "recordDate" },
     { title: "زمان دریافت", headerKey: "logDate" },
-    // TODO
+    { title: "بکاپ | سیگنال | باتری و برق", headerKey: "counterStatus" },
     { title: "آخرین مصرف ارسالی", headerKey: "recordValue" },
     { title: "بازه ارسال", headerKey: "recordTimeSpan" },
     { title: "مصرف در بازه ارسال", headerKey: "consumptionInPeriod" },
@@ -111,7 +126,6 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
     tableHeader = [
       { title: "سریال دستگاه", headerKey: "deviceSerial" },
       { title: "زمان ایجاد", headerKey: "recordDate" },
-      // TODO
       { title: "مصرف در بازه ارسال", headerKey: "consumptionInPeriod" },
     ];
   }
@@ -179,7 +193,11 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
           extra="!p-2"
         /> */}
         <CustomButton
-          onClick={() => deleteRecordClick(id)}
+          onClick={() => {
+            if (window.confirm("آیا از حذف این رکورد اطمینان دارید؟")) {
+              deleteRecordClick(id);
+            }
+          }}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"
@@ -192,9 +210,35 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
     recordsData.data?.forEach((record: ConsumptionRecordObject) => {
       tableData.push({
         // projectName: record.project_info.water_meter_project_name,
-        deviceSerial: record.water_meters_info.water_meter_serial,
+        // deviceSerial: record.water_meters_info.water_meter_serial,
+        dataCounter: (() => {
+          try {
+            const parsed = JSON.parse(
+              record.log_message
+                ?.replace(/\s/g, "")
+                .replace(/\?/g, "")
+                .replace(/\bnan\b/g, "null")
+            );
+            return parsed?.DevInfo?.DataCounter?.toString() ?? "__";
+          } catch (e) {
+            return "__";
+          }
+        })(),
+
         recordDate: renderTimeJalali(record.create_time, "chart"),
-        logDate: renderTimeJalali(record.log_time, "chart"),
+        logDate: (() => {
+          try {
+            return record.log_time ? (
+              <>{renderTimeJalali(record.log_time, "chart")}</>
+            ) : (
+              <></>
+            );
+          } catch (error) {
+            return <></>;
+          }
+        })(),
+        counterStatus: renderCounterStatus(record.information),
+
         recordValue:
           record.device_value || record.device_value === 0
             ? `${Math.round(record.device_value).toLocaleString()} ${renderUnit(
@@ -212,9 +256,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
           record.tag_info.water_meter_tag_name,
           false
         )}`,
-        cumulativeValue: `${Math.round(
-          record.cumulative_value
-        ).toLocaleString()} ${renderUnit(
+        cumulativeValue: `${record.cumulative_value.toLocaleString()} ${renderUnit(
           record.tag_info.water_meter_tag_name,
           false
         )}`,
@@ -276,9 +318,29 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
     <>
       <div className="projects-overview pt-4">
         <div className=" grid  grid-cols-1 gap-2 md:grid-cols-12">
-          <div className=" mt-1 flex items-end py-2  font-bold text-navy-700 md:col-span-3 dark:text-white">
-            {`رکوردهای مصرف ${deviceInfo[0].water_meter_name} -${deviceInfo[0]?.water_meter_project_info?.project_name} `}
+          <div className="mt-1 space-y-1 py-2 font-bold text-navy-700 md:col-span-3 dark:text-white">
+            <div>
+              <span className="text-gray-500 dark:text-gray-300">
+                نام دستگاه:{" "}
+              </span>
+              <span>{deviceInfo[0].water_meter_name}</span>
+            </div>
+            <div>
+              <span className="text-gray-500 dark:text-gray-300">
+                نام پروژه:{" "}
+              </span>
+              <span>
+                {deviceInfo[0]?.water_meter_project_info?.project_name}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-500 dark:text-gray-300">
+                سریال دستگاه:{" "}
+              </span>
+              <span>{deviceInfo[0].water_meter_serial}</span>
+            </div>
           </div>
+
           <div className="chart-statistics flex items-end py-2 md:col-span-7">
             <ConsumptionChartFilter
               fromDate={fromDate}
