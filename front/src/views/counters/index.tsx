@@ -188,7 +188,7 @@ const CountersView = () => {
           { title: "نوع دستگاه", headerKey: "deviceType" },
           { title: "وضعیت تایید(ماژول)", headerKey: "deviceValidation" },
           { title: "فعال سازی(کاربر)", headerKey: "deviceActivation" },
-          { title: "مالک دستگاه", headerKey: "deviceOwner" },
+          { title: "بهره بردار", headerKey: "deviceOwner" },
           { title: "ماژول دستگاه", headerKey: "deviceModuleName" },
           { title: "عملیات", headerKey: "deviceActions" },
         ]
@@ -200,7 +200,7 @@ const CountersView = () => {
           { title: "نوع دستگاه", headerKey: "deviceType" },
           { title: "وضعیت تایید(ماژول)", headerKey: "deviceValidation" },
           { title: "فعال سازی(کاربر)", headerKey: "deviceActivation" },
-          { title: "مالک دستگاه", headerKey: "deviceOwner" },
+          { title: "بهره بردار", headerKey: "deviceOwner" },
           { title: "ماژول دستگاه", headerKey: "deviceModuleName" },
         ];
   const renderTags = (renderType: "select" | "show", tagId: string) => {
