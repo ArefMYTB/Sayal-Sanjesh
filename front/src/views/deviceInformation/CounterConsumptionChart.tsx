@@ -38,7 +38,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
           type_id: null,
           tag_id: deviceInfo[0].water_meter_tag_info.water_meter_tag_id,
           start_time: fromDate.format("YYYY-M-D"),
-          end_time: tillDate.format("YYYY-M-D"),
+          end_time: tillDate.add(1, "day").format("YYYY-MM-DD"),
         },
         "post"
       ),

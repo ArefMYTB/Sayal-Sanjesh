@@ -73,7 +73,7 @@ export const getDatesBetween = (from: string, till: string) => {
   let currentDate = new Date(from);
   const endDateObj = new Date(till);
 
-  while (currentDate < endDateObj) {
+  while (currentDate <= endDateObj) {
     const formattedDate = currentDate.toISOString().split("T")[0];
     dates.push(formattedDate);
     currentDate.setDate(currentDate.getDate() + 1);

@@ -101,7 +101,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
           page: page,
           count: count.value,
           start_time: fromDate.format("YYYY-M-D"),
-          end_time: tillDate.format("YYYY-M-D"),
+          end_time: tillDate.format("YYYY-M-D 20:29:59"),
           water_meters: deviceSerial,
           water_meter_user: null,
           water_meter_project: null,
@@ -321,17 +321,17 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
           <div className="mt-1 space-y-1 py-2 font-bold text-navy-700 md:col-span-3 dark:text-white">
             <div>
               <span className="text-gray-500 dark:text-gray-300">
-                نام دستگاه:{" "}
-              </span>
-              <span>{deviceInfo[0].water_meter_name}</span>
-            </div>
-            <div>
-              <span className="text-gray-500 dark:text-gray-300">
                 نام پروژه:{" "}
               </span>
               <span>
                 {deviceInfo[0]?.water_meter_project_info?.project_name}
               </span>
+            </div>
+            <div>
+              <span className="text-gray-500 dark:text-gray-300">
+                نام دستگاه:{" "}
+              </span>
+              <span>{deviceInfo[0].water_meter_name}</span>
             </div>
             <div>
               <span className="text-gray-500 dark:text-gray-300">
