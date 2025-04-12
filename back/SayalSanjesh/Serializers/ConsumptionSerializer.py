@@ -68,6 +68,7 @@ class ConsumptionSerializer:
                         to_current_record = ""
                     else:
                         to_current_record = consumption.to_current_record
+                    
                     consumption_info = {
                         "consumption_id": consumption.consumption_id,
                         "value": consumption.value,
@@ -1002,7 +1003,7 @@ class ConsumptionSerializer:
                     date_sum_value = {}
 
                     # all consumptions per date
-                    try:
+                    try:                        
                         filters['create_time__gte'] = start_time
                         filters['create_time__lte'] = end_time
                         all_consumption_filters = {k: v for k, v in filters.items() if v is not None}
@@ -3496,6 +3497,16 @@ class ConsumptionSerializer:
                                                                           create_time__lte=date_time_obj).order_by(
                     'create_time').last()
                 
+                # Get the first consumption after this consumption so we can update it when missed data comes back
+                first_later_consumption = WaterMetersConsumptions.objects.filter(water_meters=meter_object,
+                                                                        create_time__gte=date_time_obj).order_by(
+                    'create_time').first()
+                
+                if first_later_consumption is not None:
+                    first_later_consumption.value = first_later_consumption.cumulative_value - cumulative_value
+                    first_later_consumption.from_previous_record = date_time_obj
+                    first_later_consumption.save()
+                    
                 device_value = value
                 
                 if last_consumption is not None:
@@ -3514,8 +3525,6 @@ class ConsumptionSerializer:
                     from_previous_record = datetime.now()
                 else:
                     from_previous_record = last_consumption.create_time
-                
-                # print("add_consumptions_from_mqtt_broker")
 
                 if water_meters in {"SWMM-02511102", "SWMM-02511101", "SWMM-02511103", "TWM13"}:
                     device_value *= 10
