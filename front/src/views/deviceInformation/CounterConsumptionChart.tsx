@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import MixChart from "components/charts/MixChart";
 import { useParams } from "react-router-dom";
 import { OneDeviceObj } from ".";
+import ApexChart from "components/charts/ApexChart";
 import {
   renderComplexChartData,
   renderComplexChartOptions,
@@ -38,12 +39,13 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
           type_id: null,
           tag_id: deviceInfo[0].water_meter_tag_info.water_meter_tag_id,
           start_time: fromDate.format("YYYY-M-D"),
-          end_time: tillDate.add(1, "day").format("YYYY-MM-DD"),
+          end_time: tillDate.format("YYYY-MM-DD 23:59:59"),
         },
         "post"
       ),
     queryKey: ["consumptionsDates", deviceSerial],
   });
+  console.log(consumptionsDatesData);
   return (
     <>
       <div className="projects-overview pt-2">
@@ -72,7 +74,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
         {!consumptionsDatesIsLoading &&
         consumptionsDatesStatus === "success" ? (
           <div className="chart-container mx-auto h-[500px] w-full min-w-[95%]">
-            <MixChart
+            {/* <MixChart
               chartData={renderComplexChartData(
                 consumptionsDatesData.data,
                 fromDate,
@@ -87,7 +89,8 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
                 label: deviceInfo[0].water_meter_tag_info.water_meter_tag_name,
                 value: deviceInfo[0].water_meter_tag_info.water_meter_tag_id,
               }}
-            />
+            /> */}
+            <ApexChart />
           </div>
         ) : (
           <div>chart is loading</div>
