@@ -143,7 +143,6 @@ class Logger:
         # Check if this log already exists before saving to the database
         if not self.__check_existing_log():
             log = MqttLoger.objects.create(topic_name=self.topic, message=self.message, state='Receive')
-            print("log: ", log)
             return log  # Return log object
         return None
 

@@ -40,7 +40,7 @@ def on_connect(client, userdata, flags, rc):
         print("Connection failed")
 
 
-print("path : ", os.getcwd())
+# print("path : ", os.getcwd())
 
 
 def write_to_file(text):
@@ -66,7 +66,8 @@ def write_to_file(text):
 
 def on_message(client, userdata, message):
     try:
-        print("message : ", message.payload)
+        print("---------------------------------------------")
+        # print("message : ", message.payload)
         write_to_file(text=message.payload)
 
         # Attempt to decode the message
@@ -78,7 +79,7 @@ def on_message(client, userdata, message):
 
         # Proceed only if decoding was successful
         if decoded_message:
-            print("Message received: " + decoded_message)
+            # print("Message received: " + decoded_message)
             handler_object.get_message(message=decoded_message, topic=message.topic)
         else:
             print("Message could not be processed due to decoding issues.")
