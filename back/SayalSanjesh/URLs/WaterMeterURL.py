@@ -40,6 +40,7 @@ urlpatterns = [
     path('admin/getOne/consumption', consumption_view.admin_get_one_consumption_view),
     path('admin/getAll/consumption', consumption_view.admin_get_all_consumptions_view),
     path('admin/getAll/consumption/date', consumption_view.admin_get_all_consumptions_by_date_view),
+    path('admin/getAll/consumption/chart', consumption_view.admin_get_all_consumptions_by_date_for_chart_view),
     path('admin/getAll/consumption/date/meter', consumption_view.admin_get_all_consumptions_by_date__per_meter_view),
     path('admin/getAll/consumption/date/app', consumption_view.admin_get_all_consumptions_by_date_app_view),
     path('admin/delete/consumption', consumption_view.admin_remove_consumption_view),

@@ -1132,6 +1132,67 @@ class ConsumptionSerializer:
             return False, wrong_token_result
 
     @staticmethod
+    def admin_get_all_consumptions_by_date_for_chart_serializer(token, page, count, water_meters, start_time, end_time, user_id,
+                                                      tag_id, project_id, type_id):
+        """
+            param : [token, page, count, water_meters, start_time, end_time, user_id,
+                                                      tag_id, project_id, type_id]
+            return :
+            A tuple containing a boolean indicating the success or failure of the operation, and a list of
+            serialized data results.  it returns a false status along with an error message.
+        """
+        token_result = token_to_user_id(token)
+        if token_result["status"] == "OK":
+            admin_id = token_result["data"]["user_id"]
+
+            def consumption_results(all_consumption):
+                consumptions_result = []
+                for consumption in all_consumption:
+                    
+                    consumption_info = {
+                        "value": consumption.value,
+                        # "device_value": consumption.device_value,
+                        # "cumulative_value": consumption.cumulative_value,
+                        "create_time": str(consumption.create_time),
+                        # "information": consumption.information,
+                        # "counter": consumption.counter,
+                    }
+
+                    consumptions_result.append(consumption_info)
+                return consumptions_result
+
+            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+                fields = {
+                    "page": (page, int),
+                    "count": (count, int),
+                }
+                field_result = wrong_result(fields)
+                if field_result == None:
+                    offset = int((page - 1) * count)
+                    limit = int(count)
+                    filters = {
+                        'water_meters': water_meters,
+                        'water_meters__water_meter_user': user_id,
+                        'water_meters__water_meter_type': type_id,
+                        'water_meters__water_meter_type__water_meter_tag': tag_id,
+                        'water_meters__water_meter_project': project_id,
+                        'create_time__gte': start_time,
+                        'create_time__lte': end_time,
+                    }
+                    filters = {k: v for k, v in filters.items() if v is not None}
+                    all_consumption = WaterMetersConsumptions.objects.filter(**filters)
+                    all_consumption_paginated = all_consumption.order_by('-create_time')[
+                                                offset:offset + limit]
+                    cons_results = consumption_results(all_consumption=all_consumption_paginated)
+                    return True, cons_results
+                else:
+                    return field_result
+            else:
+                return False, wrong_token_result
+        else:
+            return False, wrong_token_result
+
+    @staticmethod
     def admin_get_all_consumptions_by_date__per_meter_serializer(token, water_meters_list, start_time,
                                                                  end_time):
         """

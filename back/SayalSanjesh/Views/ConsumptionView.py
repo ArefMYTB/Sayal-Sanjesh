@@ -314,7 +314,62 @@ class ConsumptionView:
         start_time = input_data["start_time"]
         end_time = input_data["end_time"]
 
+        print("Vanilla")
+
         result, data = self.serializer_class.admin_get_all_consumptions_by_date_serializer(
+            token=token, page=page, count=count, water_meters=water_meters, user_id=user_id, project_id=project_id,
+            tag_id=tag_id, type_id=type_id,
+            start_time=start_time, end_time=end_time)
+
+        if result:
+            return result_creator(data=data)
+        else:
+            return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
+                                  english_message=data["english_message"])
+
+    @csrf_exempt
+    def admin_get_all_consumptions_by_date_for_chart_view(self, request):
+        try:
+            input_data = json.loads(request.body)
+        except:
+            return result_creator(status="failure", code=406, farsi_message="وارد نشده است json",
+                                  english_message="invalid JSON error")
+        if "Token" in request.headers:
+            token = request.headers["Token"]
+        else:
+            token = ''
+        fields = ["page", "count", "water_meters", "start_time",
+                  "end_time"]
+        # "user_id", "project_id", "type_id", "tag_id",
+        for field in fields:
+            if field not in input_data:
+                return result_creator(status="failure", code=406, farsi_message=f".وارد نشده است {field}",
+                                      english_message=f"{field} is Null.")
+        page = input_data["page"]
+        count = input_data["count"]
+        water_meters = input_data["water_meters"]
+        if 'user_id' not in input_data:
+            user_id = None
+        else:
+            user_id = input_data["user_id"]
+        if 'project_id' not in input_data:
+            project_id = None
+        else:
+            project_id = input_data["project_id"]
+        if 'type_id' not in input_data:
+            type_id = None
+        else:
+            type_id = input_data["type_id"]
+        if 'tag_id' not in input_data:
+            tag_id = None
+        else:
+            tag_id = input_data["tag_id"]
+        start_time = input_data["start_time"]
+        end_time = input_data["end_time"]
+
+        print("for chart")
+
+        result, data = self.serializer_class.admin_get_all_consumptions_by_date_for_chart_serializer(
             token=token, page=page, count=count, water_meters=water_meters, user_id=user_id, project_id=project_id,
             tag_id=tag_id, type_id=type_id,
             start_time=start_time, end_time=end_time)

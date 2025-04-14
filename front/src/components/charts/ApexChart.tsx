@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import ApexCharts from "apexcharts";
+import { useQuery } from "@tanstack/react-query";
+import { reqFunction } from "utils/API";
 
 interface ChartState {
   series: ApexAxisChartSeries;
@@ -9,8 +10,20 @@ interface ChartState {
   selection: string;
 }
 
+interface ApexChartProps {
+  project_id: string | null;
+  user_id?: number | null;
+  water_meters: string;
+  type_id?: number | null;
+  chart_type?: "line" | "bar";
+  tag_id: string;
+}
+
 const parseDate = (dateStr: string): number => {
-  return new Date(dateStr).getTime(); // "YYYY-MM-DD HH:MM:SS" works here
+  // "YYYY-MM-DD HH:MM:SS" works here
+  const date = new Date(dateStr);
+  date.setMinutes(date.getMinutes() + 210); // add 3.5 hours = 210 minutes bc of time difference
+  return date.getTime();
 };
 
 // Time Range for Chart Data
@@ -28,39 +41,30 @@ const getTimeRange = (range: "1D" | "1W" | "1M" | "6M" | "1Y") => {
   return {
     start: start.getTime(),
     end,
+    startFormatted: start.toISOString().split("T")[0] + " 00:00:00",
+    endFormatted: now.toISOString().split("T")[0] + " 20:29:00",
   };
 };
 
-const ApexChart: React.FC = () => {
+const ApexChart: React.FC<ApexChartProps> = ({
+  project_id,
+  user_id = null,
+  water_meters,
+  type_id = null,
+  chart_type,
+  tag_id,
+}) => {
+  const [timeRange, setTimeRange] = useState(getTimeRange("1W")); // default to 1 week
   const [state, setState] = useState<ChartState>({
     series: [
       {
-        data: [
-          [parseDate("2024-08-28 06:00:00"), 30.95],
-          [parseDate("2024-09-29 06:00:00"), 31.34],
-          [parseDate("2024-11-30 06:00:00"), 31.18],
-          [parseDate("2025-01-28 06:00:00"), 30.95],
-          [parseDate("2025-01-29 06:00:00"), 31.34],
-          [parseDate("2025-01-30 06:00:00"), 31.18],
-          [parseDate("2025-01-31 06:00:00"), 31.05],
-          [parseDate("2025-02-01 06:00:00"), 31.0],
-          [parseDate("2025-02-28 06:00:00"), 30.95],
-          [parseDate("2025-03-29 06:00:00"), 31.34],
-          [parseDate("2025-03-30 06:00:00"), 31.18],
-          [parseDate("2025-03-31 06:00:00"), 31.05],
-          [parseDate("2025-04-01 06:00:00"), 31.0],
-          [parseDate("2025-04-08 06:00:00"), 38.0],
-          [parseDate("2025-04-12 06:00:00"), 31.0],
-          [parseDate("2025-04-13 05:00:00"), 31.0],
-          [parseDate("2025-04-13 08:00:00"), 38.0],
-          [parseDate("2025-04-13 12:00:00"), 31.0],
-        ],
+        data: [],
       },
     ],
     options: {
       chart: {
         id: "area-datetime",
-        type: "area",
+        type: chart_type, // line or bar
         height: 350,
         zoom: {
           autoScaleYaxis: true,
@@ -97,7 +101,7 @@ const ApexChart: React.FC = () => {
       //   ],
       // },
       dataLabels: {
-        enabled: true, // False = Hiding Data
+        enabled: false, // False = Hiding Data
       },
       markers: {
         size: 0,
@@ -108,21 +112,27 @@ const ApexChart: React.FC = () => {
         min: new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
         max: new Date().getTime(),
       },
+      yaxis: {
+        labels: {
+          formatter: (value: number) =>
+            (Math.round(value / 10) * 10).toString(), // round y-axis to 10
+        },
+      },
       tooltip: {
         x: {
           format: "yyyy-MM-dd HH:mm:ss", // format of our time data in database
         },
       },
-      fill: {
-        // play with gradient colors
-        type: "gradient",
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.7,
-          opacityTo: 0.9,
-          stops: [0, 100],
-        },
-      },
+      // fill: {
+      //   // play with gradient colors
+      //   type: "gradient",
+      //   gradient: {
+      //     shadeIntensity: 1,
+      //     opacityFrom: 0.7,
+      //     opacityTo: 0.9,
+      //     stops: [0, 100],
+      //   },
+      // },
       grid: {
         padding: {
           left: 50, // creates spacing between y-axis and chart area
@@ -160,76 +170,97 @@ const ApexChart: React.FC = () => {
         return;
     }
 
+    setTimeRange(range); // ← triggers refetch
     ApexCharts.exec("area-datetime", "zoomX", range.start, range.end);
   };
+
+  const {
+    data: consumptionsDatesData,
+    isLoading: consumptionsDatesIsLoading,
+    status: consumptionsDatesStatus,
+  } = useQuery({
+    queryFn: () =>
+      reqFunction(
+        "watermeters/admin/getAll/consumption/chart",
+        {
+          page: 1,
+          count: 1000,
+          project_id: project_id,
+          user_id: null,
+          water_meters: water_meters,
+          type_id: null,
+          tag_id: tag_id,
+          start_time: timeRange.startFormatted,
+          end_time: timeRange.endFormatted,
+        },
+        "post"
+      ),
+    queryKey: [
+      "consumptionsDates",
+      water_meters,
+      tag_id,
+      timeRange.startFormatted,
+      timeRange.endFormatted,
+    ],
+  });
+
+  useEffect(() => {
+    if (consumptionsDatesData && Array.isArray(consumptionsDatesData.data)) {
+      const formattedData = consumptionsDatesData.data.map((item: any) => [
+        parseDate(item.create_time),
+        item.value,
+      ]);
+
+      setState((prev) => ({
+        ...prev,
+        series: [{ data: formattedData }],
+      }));
+    }
+  }, [consumptionsDatesData]);
+
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      options: {
+        ...prev.options,
+        chart: {
+          ...prev.options.chart,
+          type: chart_type, // dynamically update chart type
+        },
+      },
+    }));
+  }, [chart_type]);
 
   return (
     <div>
       <div id="chart">
         <div className="toolbar mt-4 flex justify-end space-x-2">
-          <button
-            id="one_day"
-            onClick={() => updateData("one_day")}
-            className={`ml-2 rounded-md px-4 py-2 text-white ${
-              state.selection === "one_day"
-                ? "bg-blue-500"
-                : "bg-gray-300 hover:bg-blue-200"
-            } transition duration-300`}
-          >
-            1D
-          </button>
-
-          <button
-            id="one_week"
-            onClick={() => updateData("one_week")}
-            className={`ml-2 rounded-md px-4 py-2 text-white ${
-              state.selection === "one_week"
-                ? "bg-blue-500"
-                : "bg-gray-300 hover:bg-blue-200"
-            } transition duration-300`}
-          >
-            1W
-          </button>
-          <button
-            id="one_month"
-            onClick={() => updateData("one_month")}
-            className={`ml-2 rounded-md px-4 py-2 text-white ${
-              state.selection === "one_month"
-                ? "bg-blue-500"
-                : "bg-gray-300 hover:bg-blue-200"
-            } transition duration-300`}
-          >
-            1M
-          </button>
-          <button
-            id="six_months"
-            onClick={() => updateData("six_months")}
-            className={`rounded-md px-4 py-2 text-white ${
-              state.selection === "six_months"
-                ? "bg-blue-500"
-                : "bg-gray-300 hover:bg-blue-200"
-            } transition duration-300`}
-          >
-            6M
-          </button>
-          <button
-            id="one_year"
-            onClick={() => updateData("one_year")}
-            className={`rounded-md px-4 py-2 text-white ${
-              state.selection === "one_year"
-                ? "bg-blue-500"
-                : "bg-gray-300 hover:bg-blue-200"
-            } transition duration-300`}
-          >
-            1Y
-          </button>
+          {[
+            ["one_day", "1D"],
+            ["one_week", "1W"],
+            ["one_month", "1M"],
+            ["six_months", "6M"],
+            ["one_year", "1Y"],
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => updateData(key)}
+              className={`ml-2 rounded-md px-4 py-2 text-white ${
+                state.selection === key
+                  ? "bg-blue-500"
+                  : "bg-gray-300 hover:bg-blue-200"
+              } transition duration-300`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         <div id="chart-timeline">
           <ReactApexChart
             options={state.options}
             series={state.series}
-            type="area"
+            type={chart_type}
             height={350}
           />
         </div>

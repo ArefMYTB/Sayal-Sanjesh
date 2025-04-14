@@ -37,7 +37,6 @@ export const renderTags = (tagName: string) => {
   );
 };
 export const renderCounterStatus = (status: LastConsumptionInfo) => {
-  // console.log(status);
   let battery: number =
     status && status?.voltage_detail ? status.voltage_detail.Battery : 0;
   let signal: number =
