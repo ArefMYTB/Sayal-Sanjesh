@@ -100,7 +100,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
         {
           page: page,
           count: count.value,
-          start_time: fromDate.format("YYYY-M-D"),
+          start_time: fromDate.subtract(1, "day").format("YYYY-M-D 20:30:00"), // reduce one day and set time for 20:30 so after time changing it will be 00:00 at that day
           end_time: tillDate.format("YYYY-M-D 20:29:59"), // it adds with 3:30 bc of time difference
           water_meters: deviceSerial,
           water_meter_user: null,
