@@ -54,7 +54,7 @@ export type OneDeviceObj = {
 };
 const DeviceDetailsView = () => {
   const { deviceSerial } = useParams();
-  const [fromDate, setFromDate] = useState(getToday().subtract(20, "day"));
+  const [fromDate, setFromDate] = useState(getToday().jDate(1));
   const [tillDate, setTillDate] = useState(getToday().add(1, "day"));
   const AdminPermissions: string[] = JSON.parse(
     window.localStorage.getItem("permissions")

@@ -33,7 +33,7 @@ const Dashboard = () => {
   const [user, setUser] = useState<DynamicOption>(null);
   const [project, setProject] = useState<DynamicOption>(null);
   const [type, setType] = useState<DynamicOption>(null);
-  const fromDate = getToday().subtract(20, "day");
+  const fromDate = getToday().jDate(1);
   const tillDate = getToday().add(1, "day");
   let permissions: string[] = JSON.parse(
     window.localStorage.getItem("permissions")

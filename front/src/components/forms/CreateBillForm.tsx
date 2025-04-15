@@ -40,7 +40,7 @@ const CreateBillForm = (props: CreateBillFormProps) => {
   const [payTextBorder, setPayTextBorder] = useState<
     "err" | "success" | "dis" | "normal"
   >("normal");
-  const [fromDate, setFromDate] = useState(getToday().subtract(1, "month"));
+  const [fromDate, setFromDate] = useState(getToday().jDate(1));
   const [tillDate, setTillDate] = useState(getToday());
   const [payDate, setPayDate] = useState(getToday().add(10, "day"));
   const {

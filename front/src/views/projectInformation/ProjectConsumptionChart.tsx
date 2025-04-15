@@ -28,7 +28,7 @@ const ProjectConsumptionChart = ({
   //    projectData
   //    } = props;
   const [tag, setTag] = useState<DynamicOption>(counterTagSelect[tagDefault]);
-  const [fromDate, setFromDate] = useState(getToday().subtract(20, "day"));
+  const [fromDate, setFromDate] = useState(getToday().jDate(1));
   const [tillDate, setTillDate] = useState(getToday().add(1, "day"));
   // const [total, setTotal] = useState<number>(0);
   const {

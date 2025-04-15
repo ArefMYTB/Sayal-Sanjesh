@@ -19,7 +19,7 @@ import { renderUnit } from "utils/CommonFunctions";
 
 const ConsumptionReport = () => {
   const id = useId();
-  const [fromDate, setFromDate] = useState(getToday().subtract(20, "day"));
+  const [fromDate, setFromDate] = useState(getToday().jDate(1));
   const [tillDate, setTillDate] = useState(getToday().add(1, "day"));
   const [project, setProject] = useState<DynamicOption>(null);
   const [tag, setTag] = useState<DynamicOption>(counterTagSelect[0]);
