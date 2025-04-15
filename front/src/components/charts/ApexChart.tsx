@@ -41,7 +41,7 @@ const getTimeRange = (range: "1D" | "1W" | "1M" | "6M" | "1Y") => {
   return {
     start: start.getTime(),
     end,
-    startFormatted: start.toISOString().split("T")[0] + " 00:00:00",
+    startFormatted: start.toISOString().split("T")[0] + " 20:30:00",
     endFormatted: now.toISOString().split("T")[0] + " 20:29:00",
   };
 };
@@ -71,6 +71,27 @@ const ApexChart: React.FC<ApexChartProps> = ({
         },
         offsetX: -10,
         offsetY: 10,
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+          },
+          export: {
+            csv: {
+              //ToDo: Reduce 3.5 hours
+              dateFormatter(timestamp: number) {
+                return new Date(timestamp).toLocaleString("en-GB", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                });
+              },
+            },
+          },
+        },
       },
       // annotations: {
       //   yaxis: [
@@ -183,8 +204,6 @@ const ApexChart: React.FC<ApexChartProps> = ({
       reqFunction(
         "watermeters/admin/getAll/consumption/chart",
         {
-          page: 1,
-          count: 1000,
           project_id: project_id,
           user_id: null,
           water_meters: water_meters,
@@ -261,7 +280,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
             options={state.options}
             series={state.series}
             type={chart_type}
-            height={350}
+            height={550}
           />
         </div>
       </div>

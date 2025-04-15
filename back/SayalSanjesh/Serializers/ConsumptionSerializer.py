@@ -1132,10 +1132,10 @@ class ConsumptionSerializer:
             return False, wrong_token_result
 
     @staticmethod
-    def admin_get_all_consumptions_by_date_for_chart_serializer(token, page, count, water_meters, start_time, end_time, user_id,
+    def admin_get_all_consumptions_by_date_for_chart_serializer(token, water_meters, start_time, end_time, user_id,
                                                       tag_id, project_id, type_id):
         """
-            param : [token, page, count, water_meters, start_time, end_time, user_id,
+            param : [token, water_meters, start_time, end_time, user_id,
                                                       tag_id, project_id, type_id]
             return :
             A tuple containing a boolean indicating the success or failure of the operation, and a list of
@@ -1162,31 +1162,20 @@ class ConsumptionSerializer:
                 return consumptions_result
 
             if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
-                fields = {
-                    "page": (page, int),
-                    "count": (count, int),
+                filters = {
+                    'water_meters': water_meters,
+                    'water_meters__water_meter_user': user_id,
+                    'water_meters__water_meter_type': type_id,
+                    'water_meters__water_meter_type__water_meter_tag': tag_id,
+                    'water_meters__water_meter_project': project_id,
+                    'create_time__gte': start_time,
+                    'create_time__lte': end_time,
                 }
-                field_result = wrong_result(fields)
-                if field_result == None:
-                    offset = int((page - 1) * count)
-                    limit = int(count)
-                    filters = {
-                        'water_meters': water_meters,
-                        'water_meters__water_meter_user': user_id,
-                        'water_meters__water_meter_type': type_id,
-                        'water_meters__water_meter_type__water_meter_tag': tag_id,
-                        'water_meters__water_meter_project': project_id,
-                        'create_time__gte': start_time,
-                        'create_time__lte': end_time,
-                    }
-                    filters = {k: v for k, v in filters.items() if v is not None}
-                    all_consumption = WaterMetersConsumptions.objects.filter(**filters)
-                    all_consumption_paginated = all_consumption.order_by('-create_time')[
-                                                offset:offset + limit]
-                    cons_results = consumption_results(all_consumption=all_consumption_paginated)
-                    return True, cons_results
-                else:
-                    return field_result
+                filters = {k: v for k, v in filters.items() if v is not None}
+                all_consumption = WaterMetersConsumptions.objects.filter(**filters)
+                all_consumption_paginated = all_consumption.order_by('-create_time')
+                cons_results = consumption_results(all_consumption=all_consumption_paginated)
+                return True, cons_results
             else:
                 return False, wrong_token_result
         else:
@@ -3587,7 +3576,7 @@ class ConsumptionSerializer:
                 else:
                     from_previous_record = last_consumption.create_time
 
-                if water_meters in {"SWMM-02511102", "SWMM-02511101", "SWMM-02511103", "TWM13"}:
+                if water_meters in {"SWMM-02511102", "SWMM-02511103", "TWM13"}:
                     device_value *= 10
 
                 # Create and save the consumption object
