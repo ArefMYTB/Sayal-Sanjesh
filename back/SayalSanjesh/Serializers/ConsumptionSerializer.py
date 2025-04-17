@@ -68,12 +68,11 @@ class ConsumptionSerializer:
                         to_current_record = ""
                     else:
                         to_current_record = consumption.to_current_record
-                    
                     consumption_info = {
                         "consumption_id": consumption.consumption_id,
                         "value": consumption.value,
                         "device_value": consumption.device_value,
-                        "cumulative_value": consumption.cumulative_value,
+                        "cumulative_value": consumption.cumulative_value  + (consumption.water_meters.initial_value or 0.0),
                         "create_time": str(consumption.create_time),
                         "information": consumption.information,
                         "counter": consumption.counter,
@@ -3576,7 +3575,7 @@ class ConsumptionSerializer:
                 else:
                     from_previous_record = last_consumption.create_time
 
-                if water_meters in {"SWMM-02511102", "SWMM-02511103", "TWM13"}:
+                if water_meters in {"SWMM-02511102", "SWMM-02511103"}:
                     device_value *= 10
 
                 # Create and save the consumption object

@@ -548,6 +548,7 @@ class WaterMeters(models.Model):
     water_meter_order_mode = models.CharField(max_length=200, null=True, blank=True, choices=ORDER_MODE_CHOICE)
     water_meter_size = models.IntegerField(null=True)
     water_meter_model = models.CharField(max_length=200, null=True)
+    initial_value = models.FloatField(default=0) # Mechanic Value
     objects = CustomMeterManager()
 
     class Meta:
