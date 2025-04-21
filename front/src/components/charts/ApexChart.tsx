@@ -3,6 +3,7 @@ import ReactApexChart from "react-apexcharts";
 import ApexCharts from "apexcharts";
 import { useQuery } from "@tanstack/react-query";
 import { reqFunction } from "utils/API";
+import moment from "moment-jalaali";
 
 interface ChartState {
   series: ApexAxisChartSeries;
@@ -22,7 +23,6 @@ interface ApexChartProps {
 const parseDate = (dateStr: string): number => {
   // "YYYY-MM-DD HH:MM:SS" works here
   const date = new Date(dateStr);
-  date.setMinutes(date.getMinutes() + 210); // add 3.5 hours = 210 minutes bc of time difference
   return date.getTime();
 };
 
@@ -55,6 +55,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
   tag_id,
 }) => {
   const [timeRange, setTimeRange] = useState(getTimeRange("1W")); // default to 1 week
+  const [isZoomedIn, setIsZoomedIn] = useState(false);
   const [state, setState] = useState<ChartState>({
     series: [
       {
@@ -69,6 +70,17 @@ const ApexChart: React.FC<ApexChartProps> = ({
         zoom: {
           autoScaleYaxis: true,
         },
+        events: {
+          zoomed: function (chartContext, { xaxis }) {
+            const zoomDuration = xaxis.max - xaxis.min;
+
+            // If zoom range is less than 1 day → show time
+            setIsZoomedIn(zoomDuration < 24 * 60 * 60 * 1000);
+          },
+          beforeResetZoom: () => {
+            setIsZoomedIn(false);
+          },
+        },
         offsetX: -10,
         offsetY: 10,
         toolbar: {
@@ -78,18 +90,13 @@ const ApexChart: React.FC<ApexChartProps> = ({
           },
           export: {
             csv: {
-              //ToDo: Reduce 3.5 hours
               dateFormatter(timestamp: number) {
-                return new Date(timestamp).toLocaleString("en-GB", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                });
+                return moment(timestamp).format("jYYYY/jMM/jDD HH:mm:ss");
               },
             },
+            // png: {
+            //   filename: "chart",
+            // },
           },
         },
       },
@@ -109,13 +116,14 @@ const ApexChart: React.FC<ApexChartProps> = ({
       //   ],
       //   xaxis: [
       //     {
-      //       x: parseDate("2025-04-11 05:00:00"), // to put a vertical line in the chart
+      //       x: parseDate("2025-04-21 05:00:00"), // to put a vertical line in the chart
       //       borderColor: "#999",
       //       label: {
       //         text: "شکستگی",
       //         style: {
       //           color: "#fff",
       //           background: "#775DD0",
+      //           fontSize: "18",
       //         },
       //       },
       //     },
@@ -130,8 +138,13 @@ const ApexChart: React.FC<ApexChartProps> = ({
       },
       xaxis: {
         type: "datetime",
-        min: new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
-        max: new Date().getTime(),
+        labels: {
+          formatter: function (val: string) {
+            return moment(val).format("jMM/jDD HH:mm:SS");
+          },
+        },
+        min: timeRange.start,
+        max: timeRange.end,
       },
       yaxis: {
         labels: {
@@ -141,19 +154,11 @@ const ApexChart: React.FC<ApexChartProps> = ({
       },
       tooltip: {
         x: {
-          format: "yyyy-MM-dd HH:mm:ss", // format of our time data in database
+          formatter: (timestamp: number) => {
+            return moment(timestamp).format("jYYYY/jMM/jDD HH:mm");
+          },
         },
       },
-      // fill: {
-      //   // play with gradient colors
-      //   type: "gradient",
-      //   gradient: {
-      //     shadeIntensity: 1,
-      //     opacityFrom: 0.7,
-      //     opacityTo: 0.9,
-      //     stops: [0, 100],
-      //   },
-      // },
       grid: {
         padding: {
           left: 50, // creates spacing between y-axis and chart area
@@ -163,6 +168,21 @@ const ApexChart: React.FC<ApexChartProps> = ({
     },
     selection: "one_week", // default
   });
+
+  useEffect(() => {
+    // Trigger chart update when zoom level changes
+    ApexCharts.exec("area-datetime", "updateOptions", {
+      xaxis: {
+        labels: {
+          formatter: function (val: string) {
+            return isZoomedIn
+              ? moment(+val).format("HH:mm") // Just show time when zoomed in
+              : moment(+val).format("jMM/jDD HH:mm"); // Show date in Jalali format when zoomed out
+          },
+        },
+      },
+    });
+  }, [isZoomedIn]);
 
   const updateData = (timeline: string) => {
     setState((prev) => ({
@@ -197,8 +217,8 @@ const ApexChart: React.FC<ApexChartProps> = ({
 
   const {
     data: consumptionsDatesData,
-    isLoading: consumptionsDatesIsLoading,
-    status: consumptionsDatesStatus,
+    // isLoading: consumptionsDatesIsLoading,
+    // status: consumptionsDatesStatus,
   } = useQuery({
     queryFn: () =>
       reqFunction(
@@ -254,25 +274,27 @@ const ApexChart: React.FC<ApexChartProps> = ({
     <div>
       <div id="chart">
         <div className="toolbar mt-4 flex justify-end space-x-2">
-          {[
-            ["one_day", "1D"],
-            ["one_week", "1W"],
-            ["one_month", "1M"],
-            ["six_months", "6M"],
-            ["one_year", "1Y"],
-          ].map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => updateData(key)}
-              className={`ml-2 rounded-md px-4 py-2 text-white ${
-                state.selection === key
-                  ? "bg-blue-500"
-                  : "bg-gray-300 hover:bg-blue-200"
-              } transition duration-300`}
-            >
-              {label}
-            </button>
-          ))}
+          <div>
+            {[
+              ["one_day", "1D"],
+              ["one_week", "1W"],
+              // ["one_month", "1M"],
+              // ["six_months", "6M"],
+              // ["one_year", "1Y"],
+            ].map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => updateData(key)}
+                className={`ml-2 rounded-md px-4 py-2 text-white ${
+                  state.selection === key
+                    ? "bg-blue-500"
+                    : "bg-gray-300 hover:bg-blue-200"
+                } transition duration-300`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div id="chart-timeline">
@@ -290,3 +312,31 @@ const ApexChart: React.FC<ApexChartProps> = ({
 };
 
 export default ApexChart;
+
+// generate annotations:
+
+// const generateDayStartAnnotations = (start: number, end: number) => {
+//   const dayMs = 24 * 60 * 60 * 1000;
+//   let annotations = [];
+
+//   let current = moment(start).startOf("day");
+//   while (current.valueOf() < end) {
+//     annotations.push({
+//       x: current.valueOf(),
+//       borderColor: "#e0e0e0",
+//       label: {
+//         text: current.format("jMM/jDD"),
+//         style: {
+//           fontSize: "10px",
+//         },
+//       },
+//     });
+//     current = current.add(1, "day");
+//   }
+
+//   return annotations;
+// };
+// in options
+// annotations: {
+//   xaxis: [...generateDayStartAnnotations(timeRange.start, timeRange.end)],
+// },

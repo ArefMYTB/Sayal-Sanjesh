@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { reqFunction } from "utils/API";
 import ConsumptionChartFilter from "./ConsumptionChartFilter";
+import DateInput from "components/fields/DateInput";
 import { useQuery } from "@tanstack/react-query";
 import MixChart from "components/charts/MixChart";
 import { useParams } from "react-router-dom";
@@ -107,27 +108,34 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
 
         {/* Chart Types for ApexChart */}
         {chartType === "range" && (
-          <div className="flex justify-end gap-4 pb-4">
-            <button
-              className={`rounded-lg px-4 py-2 ${
-                apexChartType === "bar"
-                  ? "bg-navy-600 text-white"
-                  : "bg-gray-100 text-gray-800"
-              }`}
-              onClick={() => setApexChartType("bar")}
-            >
-              bar
-            </button>
-            <button
-              className={`rounded-lg px-4 py-2 ${
-                apexChartType === "line"
-                  ? "bg-navy-600 text-white"
-                  : "bg-gray-100 text-gray-800"
-              }`}
-              onClick={() => setApexChartType("line")}
-            >
-              line
-            </button>
+          <div className="flex items-center justify-between gap-4 pb-4">
+            <DateInput
+              label="تاریخ شروع"
+              value={fromDate}
+              onChange={setFromDate}
+            />
+            <div className="flex gap-2">
+              <button
+                className={`rounded-lg px-4 py-2 ${
+                  apexChartType === "bar"
+                    ? "bg-navy-600 text-white"
+                    : "bg-gray-100 text-gray-800"
+                }`}
+                onClick={() => setApexChartType("bar")}
+              >
+                bar
+              </button>
+              <button
+                className={`rounded-lg px-4 py-2 ${
+                  apexChartType === "line"
+                    ? "bg-navy-600 text-white"
+                    : "bg-gray-100 text-gray-800"
+                }`}
+                onClick={() => setApexChartType("line")}
+              >
+                line
+              </button>
+            </div>
           </div>
         )}
 
