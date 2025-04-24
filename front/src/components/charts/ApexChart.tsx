@@ -18,6 +18,7 @@ interface ApexChartProps {
   type_id?: number | null;
   chart_type?: "line" | "bar";
   tag_id: string;
+  tillDate: any;
 }
 
 const parseDate = (dateStr: string): number => {
@@ -27,7 +28,7 @@ const parseDate = (dateStr: string): number => {
 };
 
 // Time Range for Chart Data
-const getTimeRange = (range: "1D" | "1W" | "1M" | "6M" | "1Y") => {
+const getTimeRange = (range: "1D" | "1W" | "1M" | "6M" | "1Y", baseDate: Date) => {
   const now = new Date();
   const end = now.getTime();
 
@@ -35,14 +36,14 @@ const getTimeRange = (range: "1D" | "1W" | "1M" | "6M" | "1Y") => {
   if (range === "1D") start.setDate(now.getDate() - 1);
   if (range === "1W") start.setDate(now.getDate() - 7);
   if (range === "1M") start.setMonth(now.getMonth() - 1);
-  if (range === "6M") start.setMonth(now.getMonth() - 6);
-  if (range === "1Y") start.setFullYear(now.getFullYear() - 1);
+  // if (range === "6M") start.setMonth(now.getMonth() - 6);
+  // if (range === "1Y") start.setFullYear(now.getFullYear() - 1);
 
   return {
     start: start.getTime(),
     end,
-    startFormatted: start.toISOString().split("T")[0] + " 20:30:00",
-    endFormatted: now.toISOString().split("T")[0] + " 20:29:00",
+    startFormatted: start.toISOString().split("T")[0] + " 20:30:00", // from 00:00:00
+    endFormatted: now.toISOString().split("T")[0] + " 20:29:59", // till 23:59:59
   };
 };
 
@@ -53,9 +54,31 @@ const ApexChart: React.FC<ApexChartProps> = ({
   type_id = null,
   chart_type,
   tag_id,
+  tillDate,
 }) => {
-  const [timeRange, setTimeRange] = useState(getTimeRange("1W")); // default to 1 week
+  const [timeRange, setTimeRange] = useState(getTimeRange("1W", tillDate)); // default to 1 week
   const [isZoomedIn, setIsZoomedIn] = useState(false);
+  // Yaxis annotations for separating dates
+  const generateDayStartAnnotations = (start: number, end: number) => {
+    const dayMs = 24 * 60 * 60 * 1000;
+    let annotations = [];
+    let current = moment(start).startOf("day");
+    while (current.valueOf() < end) {
+      annotations.push({
+        x: current.valueOf(),
+        borderColor: "#e0e0e0",
+        label: {
+          text: current.format("jMM/jDD"),
+          style: {
+            fontSize: "12px",
+          },
+        },
+      });
+      current = current.add(1, "day");
+    }
+    return annotations;
+  };
+
   const [state, setState] = useState<ChartState>({
     series: [
       {
@@ -75,17 +98,19 @@ const ApexChart: React.FC<ApexChartProps> = ({
             const zoomDuration = xaxis.max - xaxis.min;
 
             // If zoom range is less than 1 day → show time
-            setIsZoomedIn(zoomDuration < 24 * 60 * 60 * 1000);
+            setIsZoomedIn(zoomDuration < 72 * 60 * 60 * 1000);
           },
           beforeResetZoom: () => {
             setIsZoomedIn(false);
           },
         },
-        offsetX: -10,
-        offsetY: 10,
+        // offsetX: -10,
+        // offsetY: 10,
+        // Tools: Download + Zoom in&out + Hand
         toolbar: {
           show: true,
           tools: {
+            pan: false,
             download: true,
           },
           export: {
@@ -100,6 +125,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
           },
         },
       },
+
       // annotations: {
       //   yaxis: [
       //     {
@@ -129,6 +155,10 @@ const ApexChart: React.FC<ApexChartProps> = ({
       //     },
       //   ],
       // },
+      annotations: {
+        xaxis: [...generateDayStartAnnotations(timeRange.start, timeRange.end)],
+      },
+
       dataLabels: {
         enabled: false, // False = Hiding Data
       },
@@ -138,11 +168,11 @@ const ApexChart: React.FC<ApexChartProps> = ({
       },
       xaxis: {
         type: "datetime",
-        labels: {
-          formatter: function (val: string) {
-            return moment(val).format("jMM/jDD HH:mm:SS");
-          },
-        },
+        // labels: {
+        //   formatter: function (val: string) {
+        //     return moment(val).format("jMM/jDD HH:mm:SS");
+        //   },
+        // },
         min: timeRange.start,
         max: timeRange.end,
       },
@@ -152,11 +182,23 @@ const ApexChart: React.FC<ApexChartProps> = ({
             (Math.round(value / 10) * 10).toString(), // round y-axis to 10
         },
       },
+      // on hover
       tooltip: {
         x: {
           formatter: (timestamp: number) => {
             return moment(timestamp).format("jYYYY/jMM/jDD HH:mm");
           },
+        },
+        y: {
+          formatter: function (value: number) {
+            return `${value} لیتر`;
+          },
+          title: {
+            formatter: () => "",
+          },
+        },
+        marker: {
+          show: false,
         },
       },
       grid: {
@@ -169,21 +211,34 @@ const ApexChart: React.FC<ApexChartProps> = ({
     selection: "one_week", // default
   });
 
+  // Trigger chart update when zoom level changes
   useEffect(() => {
-    // Trigger chart update when zoom level changes
     ApexCharts.exec("area-datetime", "updateOptions", {
       xaxis: {
         labels: {
           formatter: function (val: string) {
-            return isZoomedIn
-              ? moment(+val).format("HH:mm") // Just show time when zoomed in
-              : moment(+val).format("jMM/jDD HH:mm"); // Show date in Jalali format when zoomed out
+            const date = moment(+val);
+  
+            if (isZoomedIn) {
+              // Round to the nearest 30 minutes
+              const minutes = date.minutes();
+              const rounded = minutes < 15
+                ? date.minutes(0)
+                : minutes < 45
+                ? date.minutes(30)
+                : date.add(1, "hour").minutes(0);
+  
+              return rounded.format("HH:mm");
+            } else {
+              return ""; // or return date.format("jMM/jDD") if you want to show dates when zoomed out
+            }
           },
         },
       },
     });
   }, [isZoomedIn]);
 
+  // Data per Time Range
   const updateData = (timeline: string) => {
     setState((prev) => ({
       ...prev,
@@ -193,20 +248,20 @@ const ApexChart: React.FC<ApexChartProps> = ({
     let range;
     switch (timeline) {
       case "one_day":
-        range = getTimeRange("1D");
+        range = getTimeRange("1D", tillDate);
         break;
       case "one_week":
-        range = getTimeRange("1W");
+        range = getTimeRange("1W", tillDate);
         break;
       case "one_month":
-        range = getTimeRange("1M");
+        range = getTimeRange("1M", tillDate);
         break;
-      case "six_months":
-        range = getTimeRange("6M");
-        break;
-      case "one_year":
-        range = getTimeRange("1Y");
-        break;
+      // case "six_months":
+      //   range = getTimeRange("6M");
+      //   break;
+      // case "one_year":
+      //   range = getTimeRange("1Y");
+      //   break;
       default:
         return;
     }
@@ -215,6 +270,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
     ApexCharts.exec("area-datetime", "zoomX", range.start, range.end);
   };
 
+  // Get data
   const {
     data: consumptionsDatesData,
     // isLoading: consumptionsDatesIsLoading,
@@ -243,6 +299,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
     ],
   });
 
+  // Get Time (in Sec) and Value for consumption data
   useEffect(() => {
     if (consumptionsDatesData && Array.isArray(consumptionsDatesData.data)) {
       const formattedData = consumptionsDatesData.data.map((item: any) => [
@@ -257,6 +314,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
     }
   }, [consumptionsDatesData]);
 
+  // dynamically update chart type
   useEffect(() => {
     setState((prev) => ({
       ...prev,
@@ -264,11 +322,13 @@ const ApexChart: React.FC<ApexChartProps> = ({
         ...prev.options,
         chart: {
           ...prev.options.chart,
-          type: chart_type, // dynamically update chart type
+          type: chart_type,
         },
       },
     }));
   }, [chart_type]);
+
+ 
 
   return (
     <div>
@@ -312,31 +372,3 @@ const ApexChart: React.FC<ApexChartProps> = ({
 };
 
 export default ApexChart;
-
-// generate annotations:
-
-// const generateDayStartAnnotations = (start: number, end: number) => {
-//   const dayMs = 24 * 60 * 60 * 1000;
-//   let annotations = [];
-
-//   let current = moment(start).startOf("day");
-//   while (current.valueOf() < end) {
-//     annotations.push({
-//       x: current.valueOf(),
-//       borderColor: "#e0e0e0",
-//       label: {
-//         text: current.format("jMM/jDD"),
-//         style: {
-//           fontSize: "10px",
-//         },
-//       },
-//     });
-//     current = current.add(1, "day");
-//   }
-
-//   return annotations;
-// };
-// in options
-// annotations: {
-//   xaxis: [...generateDayStartAnnotations(timeRange.start, timeRange.end)],
-// },

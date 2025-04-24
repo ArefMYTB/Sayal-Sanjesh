@@ -106,13 +106,13 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
           </div>
         ) : null}
 
-        {/* Chart Types for ApexChart */}
+        {/* Chart Types and Start Time for ApexChart */}
         {chartType === "range" && (
           <div className="flex items-center justify-between gap-4 pb-4">
             <DateInput
-              label="تاریخ شروع"
-              value={fromDate}
-              onChange={setFromDate}
+              label="تاریخ پایان"
+              value={tillDate}
+              onChange={setTillDate}
             />
             <div className="flex gap-2">
               <button
@@ -160,6 +160,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
 
             {chartType === "range" ? (
               <ApexChart
+                key={apexChartType}
                 project_id={
                   deviceInfo[0].water_meter_project_info?.project_id ?? null
                 }
@@ -168,6 +169,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
                 type_id={null}
                 chart_type={apexChartType}
                 tag_id={deviceInfo[0].water_meter_tag_info.water_meter_tag_id}
+                tillDate={tillDate}
               />
             ) : null}
           </div>
