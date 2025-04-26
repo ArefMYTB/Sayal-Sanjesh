@@ -19,6 +19,8 @@ interface ApexChartProps {
   chart_type?: "line" | "bar";
   tag_id: string;
   tillDate: any;
+  apexSelection: "one_day" | "one_week";
+  setApexSelection: React.Dispatch<React.SetStateAction<"one_day" | "one_week">>;
 }
 
 const parseDate = (dateStr: string): number => {
@@ -29,13 +31,13 @@ const parseDate = (dateStr: string): number => {
 
 // Time Range for Chart Data
 const getTimeRange = (range: "1D" | "1W" | "1M" | "6M" | "1Y", baseDate: Date) => {
-  const now = new Date();
+  const now = new Date(baseDate);
   const end = now.getTime();
 
   const start = new Date(now);
   if (range === "1D") start.setDate(now.getDate() - 1);
   if (range === "1W") start.setDate(now.getDate() - 7);
-  if (range === "1M") start.setMonth(now.getMonth() - 1);
+  // if (range === "1M") start.setMonth(now.getMonth() - 1);
   // if (range === "6M") start.setMonth(now.getMonth() - 6);
   // if (range === "1Y") start.setFullYear(now.getFullYear() - 1);
 
@@ -55,8 +57,10 @@ const ApexChart: React.FC<ApexChartProps> = ({
   chart_type,
   tag_id,
   tillDate,
+  apexSelection, 
+  setApexSelection,
 }) => {
-  const [timeRange, setTimeRange] = useState(getTimeRange("1W", tillDate)); // default to 1 week
+  const [timeRange, setTimeRange] = useState(getTimeRange(apexSelection === "one_day" ? "1D" : "1W", tillDate));
   const [isZoomedIn, setIsZoomedIn] = useState(false);
   // Yaxis annotations for separating dates
   const generateDayStartAnnotations = (start: number, end: number) => {
@@ -86,6 +90,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
       },
     ],
     options: {
+      
       chart: {
         id: "area-datetime",
         type: chart_type, // line or bar
@@ -239,7 +244,8 @@ const ApexChart: React.FC<ApexChartProps> = ({
   }, [isZoomedIn]);
 
   // Data per Time Range
-  const updateData = (timeline: string) => {
+  const updateData = (timeline: "one_day" | "one_week") => {
+    setApexSelection(timeline);
     setState((prev) => ({
       ...prev,
       selection: timeline,
@@ -253,9 +259,9 @@ const ApexChart: React.FC<ApexChartProps> = ({
       case "one_week":
         range = getTimeRange("1W", tillDate);
         break;
-      case "one_month":
-        range = getTimeRange("1M", tillDate);
-        break;
+      // case "one_month":
+      //   range = getTimeRange("1M", tillDate);
+      //   break;
       // case "six_months":
       //   range = getTimeRange("6M");
       //   break;
@@ -269,6 +275,12 @@ const ApexChart: React.FC<ApexChartProps> = ({
     setTimeRange(range); // ← triggers refetch
     ApexCharts.exec("area-datetime", "zoomX", range.start, range.end);
   };
+
+  // remember my choice
+  useEffect(() => {
+    const range = getTimeRange(apexSelection === "one_day" ? "1D" : "1W", tillDate);
+    setTimeRange(range);
+  }, [tillDate, apexSelection]);  
 
   // Get data
   const {
@@ -313,7 +325,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
       }));
     }
   }, [consumptionsDatesData]);
-
+  
   // dynamically update chart type
   useEffect(() => {
     setState((prev) => ({
@@ -328,7 +340,61 @@ const ApexChart: React.FC<ApexChartProps> = ({
     }));
   }, [chart_type]);
 
- 
+  // make sure all data in xaxix and yaxix are shown
+  useEffect(() => {
+    if (consumptionsDatesData && Array.isArray(consumptionsDatesData.data)) {
+      const formattedData = consumptionsDatesData.data.map((item: any) => [
+        parseDate(item.create_time),
+        item.value,
+      ]);
+  
+      if (formattedData.length === 0) return;
+  
+      // Find min and max for x and y axis
+      const allX = formattedData.map((item: any) => item[0]);
+      const allY = formattedData.map((item: any) => item[1]);
+      const minX = Math.min(...allX);
+      const maxX = Math.max(...allX);
+      const minY = Math.min(...allY);
+      const maxY = Math.max(...allY);
+  
+      setState((prev) => ({
+        ...prev,
+        series: [{ data: formattedData }],
+        options: {
+          ...prev.options,
+          xaxis: {
+            ...prev.options.xaxis,
+            min: Math.min(timeRange.start, minX) - 1000 * 60, // add small padding (1 min)
+            max: Math.max(timeRange.end, maxX) + 1000 * 60,   // add small padding (1 min)
+          },
+          yaxis: {
+            ...prev.options.yaxis,
+            min: Math.floor(minY * 0.9),  // 10% margin at bottom
+            max: Math.ceil(maxY * 1.1),   // 10% margin at top
+            forceNiceScale: true,
+          },
+        },
+      }));
+    }
+  }, [consumptionsDatesData]);
+
+  // re-render annotations
+  useEffect(() => {
+    if (!state.series[0].data || state.series[0].data.length === 0) return;
+  
+    const allX = state.series[0].data.map((item: any) => item[0]);
+    const minX = Math.min(...allX);
+    const maxX = Math.max(...allX);
+  
+    ApexCharts.exec("area-datetime", "updateOptions", {
+      annotations: {
+        xaxis: generateDayStartAnnotations(minX, maxX),
+      },
+    }, false, true);
+  }, [state.series]);
+  
+  
 
   return (
     <div>
@@ -344,7 +410,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
             ].map(([key, label]) => (
               <button
                 key={key}
-                onClick={() => updateData(key)}
+                onClick={() => updateData(key as "one_day" | "one_week")}
                 className={`ml-2 rounded-md px-4 py-2 text-white ${
                   state.selection === key
                     ? "bg-blue-500"

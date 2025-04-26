@@ -7,6 +7,7 @@ import MixChart from "components/charts/MixChart";
 import { useParams } from "react-router-dom";
 import { OneDeviceObj } from ".";
 import ApexChart from "components/charts/ApexChart";
+import CustomButton from "components/button";
 import {
   renderComplexChartData,
   renderComplexChartOptions,
@@ -25,6 +26,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
   const { deviceInfo, fromDate, setFromDate, tillDate, setTillDate } = props;
 
   const [chartType, setChartType] = useState<"daily" | "range">("daily"); // default: daily
+  const [apexSelection, setApexSelection] = useState<"one_day" | "one_week">("one_week");
   const [apexChartType, setApexChartType] = useState<"bar" | "line">("bar");
 
   const {
@@ -51,7 +53,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
         "post"
       ),
     queryKey: ["consumptionsDates", deviceSerial],
-  });
+  });  
 
   return (
     <>
@@ -160,7 +162,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
 
             {chartType === "range" ? (
               <ApexChart
-                key={apexChartType}
+                key={`${apexChartType}-${tillDate.format("YYYY-MM-DD")}`}
                 project_id={
                   deviceInfo[0].water_meter_project_info?.project_id ?? null
                 }
@@ -170,6 +172,8 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
                 chart_type={apexChartType}
                 tag_id={deviceInfo[0].water_meter_tag_info.water_meter_tag_id}
                 tillDate={tillDate}
+                apexSelection={apexSelection}
+                setApexSelection={setApexSelection}
               />
             ) : null}
           </div>
