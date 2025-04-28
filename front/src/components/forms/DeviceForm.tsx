@@ -224,102 +224,106 @@ const DeviceForm = (props: DeviceFormProps) => {
     }
   };
   return (
-    <div className=" flex flex-col space-y-4">
-      <InputField
-        id="device-type-name"
-        label="نام دستگاه"
-        placeholder="نام نوع دستگاه را وارد کنید"
-        type="text"
-        state={deviceName}
-        setState={setDeviceName}
-        border={nameBorder}
-      />
-      {/* {isEditForm ? (
-        
-      ) : (
-        <></>
-      )} */}
-      <InputField
-        id="device-type-name"
-        label="سریال دستگاه"
-        placeholder="سریال دستگاه را وارد کنید"
-        type="text"
-        disabled={isEditForm}
-        state={deviceSerial}
-        setState={setDeviceSerial}
-        border={serialBorder}
-      />
-      <SelectInput
-        label=" نوع دستگاه"
-        placeholder="نوع دستگاه مورد نظر را انتخاب کنید"
-        dynamicOptions={deviceTypesOptions}
-        state={deviceType}
-        setState={setDeviceType}
-        disabled={isEditForm}
-      />
-      <SelectInput
-        label=" ماژول دستگاه"
-        placeholder="ماژول مورد نظر را انتخاب کنید"
-        dynamicOptions={deviceModuleOptions}
-        state={deviceModule}
-        setState={setDeviceModule}
-        // disabled={isEditForm}
-      />
-      <SelectInput
-        label=" پروژه دستگاه"
-        placeholder="پروژه مورد نظر را انتخاب کنید"
-        dynamicOptions={deviceProjectOptions}
-        state={deviceProject}
-        setState={setDeviceProject}
-      />
-      <SelectInput
-        label=" مالک دستگاه"
-        placeholder="مالک دستگاه مورد نظر را انتخاب کنید"
-        dynamicOptions={deviceUserOptions}
-        state={deviceUser}
-        setState={setDeviceUser}
-      />
-      {/* <SelectInput
-        label=" قابلیت دستور"
-        placeholder="قابلیت دستور پذیری دستگاه مورد نظر را انتخاب کنید"
-        dynamicOptions={deviceOrderModesSelectData}
-        state={deviceOrderMode}
-        setState={setDeviceOrderMode}
-      /> */}
-      <InputField
-        id="device-type-name"
-        label={`عدد مکانیکی (${renderUnit(
-          selectedDevice.water_meter_type__water_meter_tag__water_meter_tag_name,
-          false
-        )})`}
-        placeholder="عدد مکانیکی دستگاه را وارد کنید"
-        type="number"
-        state={deviceManualNumber}
-        setState={setDeviceManualNumber}
-        // border={serialBorder}
-      />
-      <CheckInput
-        inputsData={[
-          { id: "manual-location", name: "ایجاد موقعیت مکانی به صورت دستی" },
-        ]}
-        checkedData={hasManualLocation}
-        setCheckedData={setHasManualLocation}
-      />
-      {hasManualLocation.length > 0 ? (
-        <GetLocationMap lat={lat} setLat={setLat} lng={lng} setLng={setLng} />
-      ) : (
-        <></>
-      )}
-      <div
-        className={`form-actions !mt-2 flex flex-row items-center justify-end `}
-      >
-        <CustomButton onClick={onClose} text="بستن" color="red" />
-        <CustomButton
-          onClick={() => (isEditForm ? editDevice() : createDevice())}
-          text={`${isEditForm ? "تغییر" : "ایجاد"}`}
-          color="green"
-          extra="!ml-0"
+    <div className="flex flex-col lg:flex-row lg:gap-12 p-4">
+      <div className="flex-1 flex flex-col gap-4">
+        <InputField
+          id="device-type-name"
+          label="نام دستگاه"
+          placeholder="نام نوع دستگاه را وارد کنید"
+          type="text"
+          state={deviceName}
+          setState={setDeviceName}
+          border={nameBorder}
         />
+        {/* {isEditForm ? (
+          
+        ) : (
+          <></>
+        )} */}
+        <InputField
+          id="device-type-name"
+          label="سریال دستگاه"
+          placeholder="سریال دستگاه را وارد کنید"
+          type="text"
+          disabled={isEditForm}
+          state={deviceSerial}
+          setState={setDeviceSerial}
+          border={serialBorder}
+        />
+        <SelectInput
+          label=" نوع دستگاه"
+          placeholder="نوع دستگاه مورد نظر را انتخاب کنید"
+          dynamicOptions={deviceTypesOptions}
+          state={deviceType}
+          setState={setDeviceType}
+          disabled={isEditForm}
+        />
+        <SelectInput
+          label=" ماژول دستگاه"
+          placeholder="ماژول مورد نظر را انتخاب کنید"
+          dynamicOptions={deviceModuleOptions}
+          state={deviceModule}
+          setState={setDeviceModule}
+          // disabled={isEditForm}
+        />
+        <SelectInput
+          label=" پروژه دستگاه"
+          placeholder="پروژه مورد نظر را انتخاب کنید"
+          dynamicOptions={deviceProjectOptions}
+          state={deviceProject}
+          setState={setDeviceProject}
+        />
+        <SelectInput
+          label=" مالک دستگاه"
+          placeholder="مالک دستگاه مورد نظر را انتخاب کنید"
+          dynamicOptions={deviceUserOptions}
+          state={deviceUser}
+          setState={setDeviceUser}
+        />
+        {/* <SelectInput
+          label=" قابلیت دستور"
+          placeholder="قابلیت دستور پذیری دستگاه مورد نظر را انتخاب کنید"
+          dynamicOptions={deviceOrderModesSelectData}
+          state={deviceOrderMode}
+          setState={setDeviceOrderMode}
+        /> */}
+        <InputField
+          id="device-type-name"
+          label={`عدد مکانیکی (${renderUnit(
+            selectedDevice.water_meter_type__water_meter_tag__water_meter_tag_name,
+            false
+          )})`}
+          placeholder="عدد مکانیکی دستگاه را وارد کنید"
+          type="number"
+          state={deviceManualNumber}
+          setState={setDeviceManualNumber}
+          // border={serialBorder}
+        />
+      </div>
+      <div className="flex-1 flex flex-col gap-4">
+        <CheckInput
+          inputsData={[
+            { id: "manual-location", name: "ایجاد موقعیت مکانی" },
+          ]}
+          checkedData={hasManualLocation}
+          setCheckedData={setHasManualLocation}
+        />
+        {hasManualLocation.length > 0 ? (
+          <GetLocationMap lat={lat} setLat={setLat} lng={lng} setLng={setLng} />
+        ) : (
+          <></>
+        )}
+        <div
+          className={`form-actions !mt-2 flex flex-row items-center justify-end `}
+        >
+          <CustomButton onClick={onClose} text="بستن" color="red" />
+          <CustomButton
+            onClick={() => (isEditForm ? editDevice() : createDevice())}
+            text={`${isEditForm ? "تغییر" : "ایجاد"}`}
+            color="green"
+            extra="!ml-0"
+          />
+        </div>
       </div>
     </div>
   );
