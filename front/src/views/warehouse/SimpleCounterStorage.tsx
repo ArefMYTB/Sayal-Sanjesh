@@ -177,7 +177,11 @@ const SimpleCounterStorage = () => {
         )}
         {AdminPermissions.includes("MeterDelete") ? (
           <CustomButton
-            onClick={() => deleteSimpleCounterClicked(deviceInfo)}
+            onClick={() => {
+              if (window.confirm("آیا از حذف این کنتور غیر هوشمند اطمینان دارید؟")) {
+                deleteSimpleCounterClicked(deviceInfo)
+              }
+            }}
             icon={<MdDelete />}
             color="red"
             extra="!p-2"

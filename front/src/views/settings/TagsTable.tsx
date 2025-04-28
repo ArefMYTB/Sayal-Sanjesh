@@ -1,5 +1,5 @@
 import Card from "components/card";
-import { MdAdd, MdDelete } from "react-icons/md";
+import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import { useDisclosure } from "@chakra-ui/hooks";
 import CustomModal from "components/modals";
 import CustomButton from "components/button";
@@ -47,9 +47,13 @@ const TagsTable = () => {
     return (
       <div className=" flex items-center justify-center">
         <CustomButton
-          onClick={() => editProjectClick(adminId)}
-          icon={<MdDelete />}
-          color="red"
+          onClick={() => {
+            if (window.confirm("غیر فعال")) {
+              editProjectClick(adminId)
+            }
+          }}
+          icon={<MdEdit />}
+          color="blue"
           extra="!p-2"
         />
       </div>

@@ -119,7 +119,11 @@ const PermissionsCategory = () => {
           extra="!p-2"
         />
         <CustomButton
-          onClick={() => deleteRole(obj.permission_category_id)}
+          onClick={() => {
+            if (window.confirm("آیا از حذف این نقش اطمینان دارید؟")) {
+              deleteRole(obj.permission_category_id)
+            }
+          }}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"

@@ -209,7 +209,10 @@ const ProjectsView = () => {
         )}
         {AdminPermissions.includes("ProjectDelete") ? (
           <CustomButton
-            onClick={() => deleteProjectClicked(projectId)}
+            onClick={() => {
+              if (window.confirm("آیا از حذف این پروژه اطمینان دارید؟")) {
+                deleteProjectClicked(projectId)}
+            }}
             icon={<MdDelete />}
             color="red"
             extra="!p-2"

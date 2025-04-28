@@ -98,7 +98,11 @@ const DeviceTypesTable = () => {
           extra="!p-2"
         />
         <CustomButton
-          onClick={() => deleteDeviceType(typeId)}
+          onClick={() => {
+            if (window.confirm("آیا از حذف این نوع دستگاه اطمینان دارید؟")) {
+              deleteDeviceType(typeId)
+            }
+          }}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"

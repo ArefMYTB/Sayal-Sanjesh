@@ -71,7 +71,11 @@ const EventTypesTable = () => {
     return (
       <div className=" flex items-center justify-center">
         <CustomButton
-          onClick={() => deleteEventTypeClick(eventId)}
+          onClick={() =>{
+            if (window.confirm("آیا از حذف این نوع رخداد اطمینان دارید؟")) {
+               deleteEventTypeClick(eventId)
+            }
+          }}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"

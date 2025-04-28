@@ -85,10 +85,14 @@ const AssignProjectForm = (props: AssignProjectFormProps) => {
               <span className="">
                 <CustomButton
                   onClick={() =>
-                    deleteMiddleProject(
-                      p.water_meter_project_id,
-                      selectedMiddle[0].middel_admin_projects
-                    )
+                    {
+                      if (window.confirm("آیا از حذف این مورد اطمینان دارید؟")) {
+                        deleteMiddleProject(
+                          p.water_meter_project_id,
+                          selectedMiddle[0].middel_admin_projects
+                        )
+                      }
+                    }
                   }
                   icon={<MdDelete />}
                   color="red"

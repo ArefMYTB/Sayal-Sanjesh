@@ -101,7 +101,11 @@ const UsersTable = () => {
       <div className=" flex items-center justify-center">
         {AdminPermissions.includes("UserDelete") ? (
           <CustomButton
-            onClick={() => deleteUserClick(userId)}
+            onClick={() => {
+              if (window.confirm("آیا از حذف این بهره بردار اطمینان دارید؟")) {
+                deleteUserClick(userId)
+              }
+            }}
             icon={<MdDelete />}
             color="red"
             extra="!p-2"

@@ -1,5 +1,5 @@
 import Card from "components/card";
-import { MdEdit, MdRemoveRedEye } from "react-icons/md";
+import { MdEdit, MdRemoveRedEye, MdDelete } from "react-icons/md";
 import { useDisclosure } from "@chakra-ui/hooks";
 
 import CustomModal from "components/modals";
@@ -409,16 +409,20 @@ const CountersView = () => {
         ) : (
           <></>
         )}
-        {/* {AdminPermissions.includes("MeterDelete") ? (
+        {AdminPermissions.includes("MeterDelete") ? (
           <CustomButton
-            onClick={() => deleteCounter(deviceSerial)}
+            onClick={() => {
+              if (window.confirm("غیر فعال")) {
+                // deleteCounter(deviceSerial)
+              }
+            }}
             icon={<MdDelete />}
             color="red"
             extra="!p-2"
           />
         ) : (
           <></>
-        )} */}
+        )}
       </div>
     );
   };

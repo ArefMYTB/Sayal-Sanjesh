@@ -212,7 +212,11 @@ const AdminsTable = () => {
         )}
         {ADMINPERMISSIONS.includes("DeleteMiddleAdmin") ? (
           <CustomButton
-            onClick={() => deleteAdminClick(adminId)}
+            onClick={() => {
+              if (window.confirm("آیا از حذف این ادمین اطمینان دارید؟")) {
+                deleteAdminClick(adminId)
+              }
+            }}
             icon={<MdDelete />}
             color="red"
             extra="!p-2"

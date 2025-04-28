@@ -73,10 +73,11 @@ const PatternFrom = (props: PatternFormFormProps) => {
       <div className=" flex items-center justify-end pb-2">
         <CustomButton
           onClick={() => {
-            let new_list = [...patternList];
-            new_list.pop();
-            setPatternList(new_list);
-          }}
+            if (window.confirm("آیا از حذف این الگو اطمینان دارید؟")) {
+              let new_list = [...patternList];
+              new_list.pop();
+              setPatternList(new_list);
+          }}}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"

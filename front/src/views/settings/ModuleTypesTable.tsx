@@ -67,7 +67,11 @@ const Moduletypes = () => {
           extra="!p-2"
         />
         <CustomButton
-          onClick={() => deleteModuleTypeClicked(moduleId)}
+          onClick={() => {
+            if (window.confirm("آیا از حذف این نوع ماژول اطمینان دارید؟")) {
+              deleteModuleTypeClicked(moduleId)
+            }
+          }}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"

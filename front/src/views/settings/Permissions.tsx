@@ -108,7 +108,11 @@ const Permissions = () => {
           extra="!p-2"
         />
         <CustomButton
-          onClick={() => deletePermissionClick(permission)}
+          onClick={() => {
+            if (window.confirm("آیا از حذف این نوع دسترسی اطمینان دارید؟")) {
+              deletePermissionClick(permission)
+            }
+          }}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"
