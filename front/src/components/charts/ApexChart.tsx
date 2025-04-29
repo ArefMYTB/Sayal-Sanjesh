@@ -18,7 +18,8 @@ interface ApexChartProps {
   type_id?: number | null;
   chart_type?: "line" | "bar";
   tag_id: string;
-  tillDate: any;
+  endDate: any;
+  setStartDate: (value: any) => void;
   apexSelection: "one_day" | "one_week";
   setApexSelection: React.Dispatch<React.SetStateAction<"one_day" | "one_week">>;
 }
@@ -56,11 +57,12 @@ const ApexChart: React.FC<ApexChartProps> = ({
   type_id = null,
   chart_type,
   tag_id,
-  tillDate,
+  endDate,
+  setStartDate,
   apexSelection, 
   setApexSelection,
 }) => {
-  const [timeRange, setTimeRange] = useState(getTimeRange(apexSelection === "one_day" ? "1D" : "1W", tillDate));
+  const [timeRange, setTimeRange] = useState(getTimeRange(apexSelection === "one_day" ? "1D" : "1W", endDate));
   const [isZoomedIn, setIsZoomedIn] = useState(false);
   // Yaxis annotations for separating dates
   const generateDayStartAnnotations = (start: number, end: number) => {
@@ -180,6 +182,9 @@ const ApexChart: React.FC<ApexChartProps> = ({
         // },
         min: timeRange.start,
         max: timeRange.end,
+        
+        tickAmount: 24,
+          
       },
       yaxis: {
         labels: {
@@ -254,13 +259,13 @@ const ApexChart: React.FC<ApexChartProps> = ({
     let range;
     switch (timeline) {
       case "one_day":
-        range = getTimeRange("1D", tillDate);
+        range = getTimeRange("1D", endDate);
         break;
       case "one_week":
-        range = getTimeRange("1W", tillDate);
+        range = getTimeRange("1W", endDate);
         break;
       // case "one_month":
-      //   range = getTimeRange("1M", tillDate);
+      //   range = getTimeRange("1M", endDate);
       //   break;
       // case "six_months":
       //   range = getTimeRange("6M");
@@ -273,14 +278,20 @@ const ApexChart: React.FC<ApexChartProps> = ({
     }
 
     setTimeRange(range); // ← triggers refetch
+    setStartDate(moment(range.start).add(1, "day"));
     ApexCharts.exec("area-datetime", "zoomX", range.start, range.end);
   };
 
   // remember my choice
+  // useEffect(() => {
+  //   const range = getTimeRange(apexSelection === "one_day" ? "1D" : "1W", endDate);
+  //   setTimeRange(range);
+  // }, [endDate, apexSelection]);  
   useEffect(() => {
-    const range = getTimeRange(apexSelection === "one_day" ? "1D" : "1W", tillDate);
-    setTimeRange(range);
-  }, [tillDate, apexSelection]);  
+    // ensure correct time range is applied when endDate changes
+    updateData(apexSelection); 
+  }, [endDate]);
+  
 
   // Get data
   const {
@@ -363,10 +374,15 @@ const ApexChart: React.FC<ApexChartProps> = ({
         series: [{ data: formattedData }],
         options: {
           ...prev.options,
+          // xaxis: {
+          //   ...prev.options.xaxis,
+          //   min: Math.min(timeRange.start, minX) - 1000 * 60, // add small padding (1 min)
+          //   max: Math.max(timeRange.end, maxX) + 1000 * 60,   // add small padding (1 min)
+          // },
           xaxis: {
             ...prev.options.xaxis,
-            min: Math.min(timeRange.start, minX) - 1000 * 60, // add small padding (1 min)
-            max: Math.max(timeRange.end, maxX) + 1000 * 60,   // add small padding (1 min)
+            min: minX,
+            max: maxX,
           },
           yaxis: {
             ...prev.options.yaxis,
@@ -399,7 +415,7 @@ const ApexChart: React.FC<ApexChartProps> = ({
   return (
     <div>
       <div id="chart">
-        <div className="toolbar mt-4 flex justify-end space-x-2">
+        <div className="toolbar mt-4 mb-4 flex justify-start space-x-2">
           <div>
             {[
               ["one_day", "1D"],

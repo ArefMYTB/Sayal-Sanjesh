@@ -7,7 +7,8 @@ import MixChart from "components/charts/MixChart";
 import { useParams } from "react-router-dom";
 import { OneDeviceObj } from ".";
 import ApexChart from "components/charts/ApexChart";
-import CustomButton from "components/button";
+// import CustomButton from "components/button";
+import { getToday } from "utils/TimeUtiles";
 import {
   renderComplexChartData,
   renderComplexChartOptions,
@@ -28,6 +29,9 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
   const [chartType, setChartType] = useState<"daily" | "range">("daily"); // default: daily
   const [apexSelection, setApexSelection] = useState<"one_day" | "one_week">("one_week");
   const [apexChartType, setApexChartType] = useState<"bar" | "line">("bar");
+  // Start & End Dates
+  const [endDate, setEndDate] = useState(getToday());
+  const [startDate, setStartDate] = useState(endDate);
 
   const {
     data: consumptionsDatesData,
@@ -111,11 +115,20 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
         {/* Chart Types and Start Time for ApexChart */}
         {chartType === "range" && (
           <div className="flex items-center justify-between gap-4 pb-4">
-            <DateInput
-              label="تاریخ پایان"
-              value={tillDate}
-              onChange={setTillDate}
-            />
+            <div className="flex gap-2">
+              <DateInput
+                label="تاریخ شروع"
+                value={startDate}
+                onChange={() => {}}
+                disabled={true}
+              />
+
+              <DateInput
+                label="تاریخ پایان"
+                value={endDate}
+                onChange={setEndDate}
+              />
+            </div>
             <div className="flex gap-2">
               <button
                 className={`rounded-lg px-4 py-2 ${
@@ -162,7 +175,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
 
             {chartType === "range" ? (
               <ApexChart
-                key={`${apexChartType}-${tillDate.format("YYYY-MM-DD")}`}
+                key={`${apexChartType}-${endDate.format("YYYY-MM-DD")}`}
                 project_id={
                   deviceInfo[0].water_meter_project_info?.project_id ?? null
                 }
@@ -171,7 +184,8 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
                 type_id={null}
                 chart_type={apexChartType}
                 tag_id={deviceInfo[0].water_meter_tag_info.water_meter_tag_id}
-                tillDate={tillDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
                 apexSelection={apexSelection}
                 setApexSelection={setApexSelection}
               />

@@ -3,9 +3,10 @@ interface DateInputProps {
   label: string;
   value: any;
   onChange: Function;
+  disabled?: boolean;
 }
 const DateInput = (props: DateInputProps) => {
-  const { label, value, onChange } = props;
+  const { label, value, onChange, disabled = false } = props;
   return (
     <div className="">
       <label
@@ -14,12 +15,16 @@ const DateInput = (props: DateInputProps) => {
       >
         {label}
       </label>
-      <DatePicker
-        isGregorian={false}
-        timePicker={false}
-        value={value}
-        onChange={(value) => onChange(value)}
-      />
+      <div
+        className={`${disabled ? "pointer-events-none opacity-50" : ""}`}
+      >
+        <DatePicker
+          isGregorian={false}
+          timePicker={false}
+          value={value}
+          onChange={(value) => onChange(value)}
+        />
+      </div>
     </div>
   );
 };
