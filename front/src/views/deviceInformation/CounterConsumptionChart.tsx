@@ -29,7 +29,7 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
   const [chartType, setChartType] = useState<"daily" | "range">("daily"); // default: daily
   const [apexSelection, setApexSelection] = useState<"one_day" | "one_week">("one_week");
   const [apexChartType, setApexChartType] = useState<"bar" | "line">("bar");
-  // Start & End Dates
+  // Start & End Dates for ApexChart
   const [endDate, setEndDate] = useState(getToday());
   const [startDate, setStartDate] = useState(endDate);
 

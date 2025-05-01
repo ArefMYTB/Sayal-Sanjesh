@@ -5,6 +5,7 @@ import UsersView from "./views/users";
 import BillsView from "views/bills";
 import OrdersView from "views/orders";
 import SettingsView from "views/settings";
+import VerificationView from "views/verification"
 import SystemReportsView from "views/systemReports";
 // Auth Imports
 import SignIn from "views/auth/SignIn";
@@ -21,6 +22,7 @@ import {
   MdReceiptLong,
   MdViewList,
   MdWarehouse,
+  MdVerified,
 } from "react-icons/md";
 import ProjectDetailsView from "views/projectInformation";
 import DeviceDetailsView from "views/deviceInformation";
@@ -109,6 +111,14 @@ const routes = [
     path: "settings",
     icon: <MdOutlineSettings className="h-6 w-6" />,
     component: <SettingsView />,
+    role: "SuperAdmin",
+  },
+  {
+    name: "صحت سنجی",
+    layout: "/admin",
+    path: "verification",
+    icon: <MdVerified className="h-6 w-6" />,
+    component: <VerificationView />,
     role: "SuperAdmin",
   },
 
