@@ -6,6 +6,7 @@ import SimpleTable from "components/tables/SimpleTable";
 import { DynamicOption } from "components/fields/SelectInput";
 import { DeviceObj } from "views/counters";
 import { ProjectObject } from "views/projects";
+import CustomButton from "components/button";
 
 type CreateSnapshotTableData = Array<{
   counterName: string;
@@ -56,7 +57,27 @@ const CreateSnapshotView = () => {
     enabled: !!project || !!serialSearch?.trim(),
   });
   
+  const selectedDevice = projectDeviceData?.data?.find(
+    (device: DeviceObj) => device.water_meter_serial === counter?.value
+  );
   
+  // Fetch snapshot list 
+  const {
+    data: snapshotData,
+    isLoading: snapshotLoading,
+    status: snapshotStatus,
+  } = useQuery({
+    queryFn: () =>
+      reqFunction("snapshots/admin/getAll", {
+        page: 1,
+        count: 100,
+        user_id: null,
+        water_meter_serial: serialSearch || selectedDevice?.water_meter_serial || null,
+      }),
+      queryKey: ["snapshots", serialSearch, counter?.value],
+      enabled: !!serialSearch || !!counter?.value,
+  });  
+  console.log("snapshots", selectedDevice?.water_meter_serial)
 
   const renderProjectSelectData = () => {
     let selectData: DynamicOption[] = [];
@@ -87,32 +108,41 @@ const CreateSnapshotView = () => {
 
   // table data
   const createSnapshotTableHeader = [
-    { title: "نام کنتور", headerKey: "counterName" },
-    { title: "شماره سریال", headerKey: "counterSerial" },
-    { title: "مالک کنتور", headerKey: "owner" },
-  ];
+    // { title: "نام کنتور", headerKey: "counterName" },
+    // { title: "شماره سریال", headerKey: "counterSerial" },
+    // { title: "مالک کنتور", headerKey: "owner" },
+    { title: "مقدار مکانیکی", headerKey: "mechanicValue" },
+    { title: "مقدار تجمیعی", headerKey: "cumulativeValue" },
+    { title: "تاریخ", headerKey: "createTime" },
+    { title: "ادمین", headerKey: "admin" },
+  ];  
 
   const tableData = () => {
-    let createSnapshotTableData: CreateSnapshotTableData = [];
-    if (!projectDeviceIsLoading && projectDeviceStatus === "success") {
-      const devicesToDisplay = counter
-        ? projectDeviceData.data.filter(
-            (device: DeviceObj) => device.water_meter_serial === counter.value
-          )
-        : projectDeviceData.data;
+    let createSnapshotTableData: any[] = [];
   
-      devicesToDisplay.forEach((device: DeviceObj) => {
-        createSnapshotTableData.push({
-          counterName: device.water_meter_name,
-          counterSerial: device.water_meter_serial,
-          owner: `${device.water_meter_user__user_name ?? "_"} ${
-            device.water_meter_user__user_lastname ?? "_"
-          }`,
-        });
+    if (
+      snapshotStatus === "success" &&
+      snapshotData?.data &&
+      counter || serialSearch &&
+      projectDeviceStatus === "success"
+    ) {
+  
+      createSnapshotTableData.push({
+        // counterName: selectedDevice?.water_meter_name ?? "-",
+        // counterSerial: selectedDevice?.water_meter_serial ?? "-",
+        // owner: `${selectedDevice?.water_meter_user__user_name ?? "_"} ${
+        //   selectedDevice?.water_meter_user__user_lastname ?? "_"
+        // }`,
+        mechanicValue: snapshotData.data.mechanic_value ?? "-",
+        cumulativeValue: snapshotData.data.cumulative_value ?? "-",
+        createTime: snapshotData.data.create_time ?? "-",
+        admin: snapshotData.data.admin ?? "-",
       });
     }
+  
     return createSnapshotTableData;
   };
+  
   
 
   return (
@@ -129,16 +159,29 @@ const CreateSnapshotView = () => {
         setSerialSearch={setSerialSearch}
       />
 
+      <div className="mt-4 moldal-btns flex items-center justify-end">
+        <CustomButton
+          text="افزودن برداشت"
+          onClick={null}
+          icon={<></>}
+          color="green"
+          extra="ml-0"
+        />
+      </div>
 
       <div className="relative flex items-center justify-between p-4">
         <div className="py-2 text-xl font-bold text-navy-700 dark:text-white">
-          {` دستگاه ها ${
+          {` برداشت ها ${
             counter && projectDeviceStatus === "success" ? "(1 عدد)" : ""
           }`}
         </div>
       </div>
 
-      {(counter || serialSearch) && !projectDeviceIsLoading && projectDeviceStatus === "success" ? (
+      {(counter || serialSearch) &&
+        !projectDeviceIsLoading &&
+        projectDeviceStatus === "success" &&
+        !snapshotLoading &&
+        snapshotStatus === "success" ? (
 
         <SimpleTable
           header={createSnapshotTableHeader}
@@ -150,8 +193,8 @@ const CreateSnapshotView = () => {
           extra="h-[53vh]"
         />
       ) : (
-        <div className="py-2 text-navy-700 dark:text-white">
-          پروژه و دستگاه را انتخاب کنید !!!
+        <div className="mr-4 py-2 text-navy-700 dark:text-white">
+           دستگاه را انتخاب کنید !!!
         </div>
       )}
     </div>

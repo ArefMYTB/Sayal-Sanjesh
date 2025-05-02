@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include, re_path
-from SayalSanjesh.URLs import NoticeCategoriesURLs, NoticeURLs, WaterMeterURL, BillsURL, \
+from SayalSanjesh.URLs import NoticeCategoriesURLs, NoticeURLs, WaterMeterURL, SnapShotURL, BillsURL, \
     WaterMeterTypesURL, WaterMeterProjectsURL, WaterMeterTagsURL, WaterMeterModulesURL, \
     WaterMeterRequestsURL, CalculateUnitsURL, CitiesURLs, EventTypeURLs, EventURLs, PattrenURLs, \
     SendDataURLs, OrderTypeURLS, OrderURLS , ModuleType
@@ -32,6 +32,7 @@ urlpatterns = [
     path('categories/', include(NoticeCategoriesURLs)),
     path('notice/', include(NoticeURLs)),
     path('watermeters/', include(WaterMeterURL)),
+    path('snapshots/', include(SnapShotURL)), # برداشت ها
     path('bills/', include(BillsURL)),
     path('WaterMeterTypes/', include(WaterMeterTypesURL)),
     path('WaterMeterTags/', include(WaterMeterTagsURL)),
