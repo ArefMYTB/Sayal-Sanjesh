@@ -2,17 +2,19 @@ import Card from "components/card";
 import CustomTabs from "components/tabs";
 import DeviceTypesTable from "./DeviceTypesTable";
 import CreateSnapshotView from "./CreateSnapshot";
-import { useQuery } from "@tanstack/react-query";
-import { reqFunction } from "utils/API";
 const VerificationView = () => {
-    
+  //   const tabsData = [
+  //     { label: "برداشت", content: <CreateSnapshotView /> },
+  //     { label: "مقایسه", content: <DeviceTypesTable /> },
+  //   ];
 
-    return (
-        <div className=" ">
-        <Card>
-            <CreateSnapshotView/>
-        </Card>
-        </div>
-    );
+  return (
+    <div className=" ">
+      <Card>
+        <CreateSnapshotView />
+        {/* <CustomTabs tabsData={tabsData} /> */}
+      </Card>
+    </div>
+  );
 };
 export default VerificationView;

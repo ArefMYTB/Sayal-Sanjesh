@@ -5,6 +5,8 @@ from Authorization.TokenManager import token_to_user_id
 from SayalSanjesh.Serializers import wrong_token_result, wrong_result
 from SayalSanjesh.models.SnapShots import Snapshots
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
+from datetime import datetime
+from django.utils import timezone
 
 class SnapShotSerializer:
 
@@ -19,18 +21,34 @@ class SnapShotSerializer:
         if not AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
             return False, wrong_token_result
         
+        print(input_data)
+        create_date_str = input_data["create_date"]  # e.g., "2025-05-05"
+        create_time_str = input_data["create_time"]  # e.g., "09:39"
+
+        # Combine them into a datetime object
+        combined_datetime_str = f"{create_date_str} {create_time_str}"
+        combined_datetime = datetime.strptime(combined_datetime_str, "%Y-%m-%d %H:%M")
+
+        mechanic_value = input_data.get("mechanic_value")
+        cumulative_value = input_data.get("cumulative_value")
+        # Handle empty strings or None by converting them to 0.0
+        mechanic_value = float(mechanic_value) if mechanic_value not in [None, ""] else 0.0
+        cumulative_value = float(cumulative_value) if cumulative_value not in [None, ""] else 0.0
+
+
         try:
             snapshot = Snapshots.objects.create(
                 snapshot_watermeter_id=input_data["watermeter_id"],
+                snapshot_create_time=combined_datetime,
                 snapshot_admin_id=admin_id,
-                snapshot_mechanic_value=input_data.get("mechanic_value", 0.0),
-                snapshot_cumulative_value=input_data.get("cumulative_value", 0.0),
+                snapshot_mechanic_value=mechanic_value,
+                snapshot_cumulative_value=cumulative_value,
                 snapshot_image=input_data.get("image", []),
                 snapshot_text=input_data.get("text", "")
             )
             return True, {"snapshot_id": str(snapshot.snapshot_id)}
         except Exception as e:
-            return False, {"farsi_message": "خطا در ایجاد عکس‌برداری", "english_message": f"Error in snapshot creation: {e}"}
+            return False, {"farsi_message": "خطا در ایجاد برداشت", "english_message": f"Error in snapshot creation: {e}"}
 
 
     @staticmethod
@@ -54,7 +72,7 @@ class SnapShotSerializer:
 
             return True, {"snapshot_id": str(snapshot.snapshot_id)}
         except Snapshots.DoesNotExist:
-            return False, {"farsi_message": "عکس‌برداری یافت نشد", "english_message": "Snapshot not found"}
+            return False, {"farsi_message": "برداشت یافت نشد", "english_message": "Snapshot not found"}
         except Exception as e:
             return False, {"farsi_message": "خطا در ویرایش", "english_message": f"Error in editing: {e}"}
 

@@ -8,6 +8,9 @@ import { DeviceObj } from "views/counters";
 import { ProjectObject } from "views/projects";
 import CustomButton from "components/button";
 import SnapshotForm from "components/forms/SnapshotForm";
+import CustomModal from "components/modals";
+import { useDisclosure } from "@chakra-ui/hooks";
+import moment from "moment-jalaali";
 
 type CreateSnapshotTableData = Array<{
   counterName: string;
@@ -21,7 +24,17 @@ const CreateSnapshotView = () => {
   const [counter, setCounter] = useState<DynamicOption>(null);
   const [selectedCounters, setSelectedCounters] = useState<string[]>([]);
   const [serialSearch, setSerialSearch] = useState<string>("");
-  const [isFormVisible, setIsFormVisible] = useState<boolean>(false);
+
+  // Form View
+  const {
+    isOpen: isSnapshotOpen,
+    onOpen: onSnapshotOpen,
+    onClose: onSnapshotClose,
+  } = useDisclosure();
+
+  const addSnapshotClick = () => {
+    onSnapshotOpen();
+  };
 
   // Fetch project list
   const {
@@ -58,15 +71,20 @@ const CreateSnapshotView = () => {
     enabled: !!project || !!serialSearch?.trim(),
   });
 
+  // Find device
   const selectedDevice = projectDeviceData?.data?.find(
-    (device: DeviceObj) => device.water_meter_serial === counter?.value
+    (device: DeviceObj) =>
+      device.water_meter_serial === counter?.value ||
+      device.water_meter_serial === serialSearch
   );
+  console.log(selectedDevice);
 
   // Fetch snapshot list
   const {
     data: snapshotData,
     isLoading: snapshotLoading,
     status: snapshotStatus,
+    refetch: refetchSnapshots,
   } = useQuery({
     queryFn: () =>
       reqFunction("snapshots/admin/getAll", {
@@ -112,7 +130,8 @@ const CreateSnapshotView = () => {
     // { title: "نام کنتور", headerKey: "counterName" },
     // { title: "شماره سریال", headerKey: "counterSerial" },
     // { title: "مالک کنتور", headerKey: "owner" },
-    { title: "تاریخ", headerKey: "createTime" },
+    { title: "تاریخ", headerKey: "createDate" },
+    { title: "زمان", headerKey: "createTime" },
     { title: "مقدار مکانیکی", headerKey: "mechanicValue" },
     { title: "مقدار تجمیعی", headerKey: "cumulativeValue" },
     { title: "توضیح", headerKey: "text" },
@@ -126,25 +145,20 @@ const CreateSnapshotView = () => {
       (snapshotStatus === "success" && snapshotData?.data && counter) ||
       (serialSearch && projectDeviceStatus === "success")
     ) {
-      // createSnapshotTableData.push({
-      //   // counterName: selectedDevice?.water_meter_name ?? "-",
-      //   // counterSerial: selectedDevice?.water_meter_serial ?? "-",
-      //   // owner: `${selectedDevice?.water_meter_user__user_name ?? "_"} ${
-      //   //   selectedDevice?.water_meter_user__user_lastname ?? "_"
-      //   // }`,
-      //   createTime: snapshotData.data.create_time ?? "-",
-      //   mechanicValue: snapshotData.data.mechanic_value ?? "-",
-      //   cumulativeValue: snapshotData.data.cumulative_value ?? "-",
-      //   text: snapshotData.data.text ?? "-",
-      //   admin: snapshotData.data.admin ?? "-",
-      // });
-      (snapshotData.data.snapshots || []).forEach((snap: any) => {
+      (snapshotData.data.snapshots || []).forEach((snapshot: any) => {
         createSnapshotTableData.push({
-          createTime: snap.create_time ?? "-",
-          mechanicValue: snap.mechanic_value ?? "-",
-          cumulativeValue: snap.cumulative_value ?? "-",
-          text: snap.text ?? "-",
-          admin: snap.admin ?? "-",
+          createDate:
+            moment(snapshot.create_time, "YYYY-M-D HH:mm:ss").format(
+              "jYYYY/jM/jD"
+            ) ?? "-",
+          createTime:
+            moment(snapshot.create_time, "YYYY-M-D HH:mm:ss").format(
+              "HH:mm:ss"
+            ) ?? "-",
+          mechanicValue: snapshot.mechanic_value ?? "-",
+          cumulativeValue: snapshot.cumulative_value ?? "-",
+          text: snapshot.text ?? "-",
+          admin: snapshot.admin ?? "-",
         });
       });
     }
@@ -154,6 +168,22 @@ const CreateSnapshotView = () => {
 
   return (
     <div className="py-4">
+      <CustomModal
+        isOpen={isSnapshotOpen}
+        onClose={onSnapshotClose}
+        title={"برداشت"}
+        modalType="form"
+        modalForm={
+          <SnapshotForm
+            onClose={onSnapshotClose}
+            serialnumber={
+              serialSearch || selectedDevice?.water_meter_serial || null
+            } // default
+            refetchSnapshots={refetchSnapshots}
+          />
+        }
+      />
+
       <SnapshotSelectFilter
         filterPage="createSnapshot"
         projectSelect={renderProjectSelectData()}
@@ -169,18 +199,31 @@ const CreateSnapshotView = () => {
       <div className="moldal-btns mt-4 flex items-center justify-end">
         <CustomButton
           text="افزودن برداشت"
-          onClick={() => setIsFormVisible(true)}
+          onClick={() => addSnapshotClick()}
           icon={<></>}
           color="green"
           extra="ml-0"
         />
       </div>
 
-      {isFormVisible && (
-        <div className="mt-6">
-          <SnapshotForm />
+      <div className="mr-4 mt-1 space-y-1 py-2 font-bold text-navy-700 md:col-span-3 dark:text-white">
+        <div>
+          <span className="text-gray-500 dark:text-gray-300">نام پروژه: </span>
+          <span>
+            {selectedDevice?.water_meter_project__water_meter_project_name}
+          </span>
         </div>
-      )}
+        <div>
+          <span className="text-gray-500 dark:text-gray-300">نام دستگاه: </span>
+          <span>{selectedDevice?.water_meter_name}</span>
+        </div>
+        <div>
+          <span className="text-gray-500 dark:text-gray-300">
+            سریال دستگاه:{" "}
+          </span>
+          <span>{serialSearch || selectedDevice?.water_meter_serial}</span>
+        </div>
+      </div>
 
       <div className="relative flex items-center justify-between p-4">
         <div className="py-2 text-xl font-bold text-navy-700 dark:text-white">
