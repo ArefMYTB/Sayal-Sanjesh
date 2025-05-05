@@ -7,9 +7,10 @@ interface FileUploaderProps {
   preview: string | null;
   setPreview: React.Dispatch<string | null>;
   uploaderType: "projectImage" | "profilePicture";
+  uploadEndpoint: string;
 }
 const FileUploader = (props: FileUploaderProps) => {
-  const { preview, setPreview, uploaderType } = props;
+  const { preview, setPreview, uploaderType, uploadEndpoint } = props;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -31,7 +32,7 @@ const FileUploader = (props: FileUploaderProps) => {
       } else {
         let data = new FormData();
         data.append("file", file);
-        const response = await reqFunction("Updload/admin", data);
+        const response = await reqFunction(uploadEndpoint, data);
         // console.log(response);
         if (response.code === 200) {
           // console.log(response.data.fileurl);

@@ -158,6 +158,7 @@ const ProjectForm = (props: ProjectFormProps) => {
         preview={previewUrl}
         setPreview={setPreviewUrl}
         uploaderType="projectImage"
+        uploadEndpoint="Updload/admin"
       />
       <InputField
         id="project-name"

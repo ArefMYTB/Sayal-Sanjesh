@@ -7,6 +7,7 @@ import { DynamicOption } from "components/fields/SelectInput";
 import { DeviceObj } from "views/counters";
 import { ProjectObject } from "views/projects";
 import CustomButton from "components/button";
+import SnapshotForm from "components/forms/SnapshotForm";
 
 type CreateSnapshotTableData = Array<{
   counterName: string;
@@ -20,9 +21,9 @@ const CreateSnapshotView = () => {
   const [counter, setCounter] = useState<DynamicOption>(null);
   const [selectedCounters, setSelectedCounters] = useState<string[]>([]);
   const [serialSearch, setSerialSearch] = useState<string>("");
+  const [isFormVisible, setIsFormVisible] = useState<boolean>(false);
 
-
-  // Fetch project list 
+  // Fetch project list
   const {
     data: projectsData,
     isLoading: projectsIsLoading,
@@ -39,7 +40,7 @@ const CreateSnapshotView = () => {
     queryKey: ["projectList"],
   });
 
-  // Fetch device list 
+  // Fetch device list
   const {
     data: projectDeviceData,
     isLoading: projectDeviceIsLoading,
@@ -56,12 +57,12 @@ const CreateSnapshotView = () => {
     queryKey: ["projectDevice", project?.value, serialSearch],
     enabled: !!project || !!serialSearch?.trim(),
   });
-  
+
   const selectedDevice = projectDeviceData?.data?.find(
     (device: DeviceObj) => device.water_meter_serial === counter?.value
   );
-  
-  // Fetch snapshot list 
+
+  // Fetch snapshot list
   const {
     data: snapshotData,
     isLoading: snapshotLoading,
@@ -72,12 +73,12 @@ const CreateSnapshotView = () => {
         page: 1,
         count: 100,
         user_id: null,
-        water_meter_serial: serialSearch || selectedDevice?.water_meter_serial || null,
+        water_meter_serial:
+          serialSearch || selectedDevice?.water_meter_serial || null,
       }),
-      queryKey: ["snapshots", serialSearch, counter?.value],
-      enabled: !!serialSearch || !!counter?.value,
-  });  
-  console.log("snapshots", selectedDevice?.water_meter_serial)
+    queryKey: ["snapshots", serialSearch, counter?.value],
+    enabled: !!serialSearch || !!counter?.value,
+  });
 
   const renderProjectSelectData = () => {
     let selectData: DynamicOption[] = [];
@@ -111,39 +112,45 @@ const CreateSnapshotView = () => {
     // { title: "نام کنتور", headerKey: "counterName" },
     // { title: "شماره سریال", headerKey: "counterSerial" },
     // { title: "مالک کنتور", headerKey: "owner" },
+    { title: "تاریخ", headerKey: "createTime" },
     { title: "مقدار مکانیکی", headerKey: "mechanicValue" },
     { title: "مقدار تجمیعی", headerKey: "cumulativeValue" },
-    { title: "تاریخ", headerKey: "createTime" },
-    { title: "ادمین", headerKey: "admin" },
-  ];  
+    { title: "توضیح", headerKey: "text" },
+    { title: "برداشت کننده", headerKey: "admin" },
+  ];
 
   const tableData = () => {
     let createSnapshotTableData: any[] = [];
-  
+
     if (
-      snapshotStatus === "success" &&
-      snapshotData?.data &&
-      counter || serialSearch &&
-      projectDeviceStatus === "success"
+      (snapshotStatus === "success" && snapshotData?.data && counter) ||
+      (serialSearch && projectDeviceStatus === "success")
     ) {
-  
-      createSnapshotTableData.push({
-        // counterName: selectedDevice?.water_meter_name ?? "-",
-        // counterSerial: selectedDevice?.water_meter_serial ?? "-",
-        // owner: `${selectedDevice?.water_meter_user__user_name ?? "_"} ${
-        //   selectedDevice?.water_meter_user__user_lastname ?? "_"
-        // }`,
-        mechanicValue: snapshotData.data.mechanic_value ?? "-",
-        cumulativeValue: snapshotData.data.cumulative_value ?? "-",
-        createTime: snapshotData.data.create_time ?? "-",
-        admin: snapshotData.data.admin ?? "-",
+      // createSnapshotTableData.push({
+      //   // counterName: selectedDevice?.water_meter_name ?? "-",
+      //   // counterSerial: selectedDevice?.water_meter_serial ?? "-",
+      //   // owner: `${selectedDevice?.water_meter_user__user_name ?? "_"} ${
+      //   //   selectedDevice?.water_meter_user__user_lastname ?? "_"
+      //   // }`,
+      //   createTime: snapshotData.data.create_time ?? "-",
+      //   mechanicValue: snapshotData.data.mechanic_value ?? "-",
+      //   cumulativeValue: snapshotData.data.cumulative_value ?? "-",
+      //   text: snapshotData.data.text ?? "-",
+      //   admin: snapshotData.data.admin ?? "-",
+      // });
+      (snapshotData.data.snapshots || []).forEach((snap: any) => {
+        createSnapshotTableData.push({
+          createTime: snap.create_time ?? "-",
+          mechanicValue: snap.mechanic_value ?? "-",
+          cumulativeValue: snap.cumulative_value ?? "-",
+          text: snap.text ?? "-",
+          admin: snap.admin ?? "-",
+        });
       });
     }
-  
+
     return createSnapshotTableData;
   };
-  
-  
 
   return (
     <div className="py-4">
@@ -159,30 +166,37 @@ const CreateSnapshotView = () => {
         setSerialSearch={setSerialSearch}
       />
 
-      <div className="mt-4 moldal-btns flex items-center justify-end">
+      <div className="moldal-btns mt-4 flex items-center justify-end">
         <CustomButton
           text="افزودن برداشت"
-          onClick={null}
+          onClick={() => setIsFormVisible(true)}
           icon={<></>}
           color="green"
           extra="ml-0"
         />
       </div>
 
+      {isFormVisible && (
+        <div className="mt-6">
+          <SnapshotForm />
+        </div>
+      )}
+
       <div className="relative flex items-center justify-between p-4">
         <div className="py-2 text-xl font-bold text-navy-700 dark:text-white">
           {` برداشت ها ${
-            counter && projectDeviceStatus === "success" ? "(1 عدد)" : ""
+            counter && projectDeviceStatus === "success"
+              ? `(${snapshotData?.data?.snapshots?.length || 0} عدد)`
+              : ""
           }`}
         </div>
       </div>
 
       {(counter || serialSearch) &&
-        !projectDeviceIsLoading &&
-        projectDeviceStatus === "success" &&
-        !snapshotLoading &&
-        snapshotStatus === "success" ? (
-
+      !projectDeviceIsLoading &&
+      projectDeviceStatus === "success" &&
+      !snapshotLoading &&
+      snapshotStatus === "success" ? (
         <SimpleTable
           header={createSnapshotTableHeader}
           data={tableData()}
@@ -194,7 +208,7 @@ const CreateSnapshotView = () => {
         />
       ) : (
         <div className="mr-4 py-2 text-navy-700 dark:text-white">
-           دستگاه را انتخاب کنید !!!
+          دستگاه را انتخاب کنید !!!
         </div>
       )}
     </div>

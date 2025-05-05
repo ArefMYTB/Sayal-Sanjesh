@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from datetime import datetime
 from Authorization.models.Admins import Admins
 from SayalSanjesh.models.Meters import WaterMeters
@@ -11,6 +12,8 @@ class Snapshots(models.Model):
     snapshot_create_time = models.DateTimeField(default=datetime.now, blank=True)
     snapshot_mechanic_value = models.FloatField(default=0.0)
     snapshot_cumulative_value = models.FloatField(default=0.0)
+    snapshot_image = ArrayField(models.CharField(max_length=400), default=list, null=True)
+    snapshot_text = models.CharField(max_length=1000) # admin explains about their snapshots
 
     class Meta:
         db_table = 'Snapshots'
@@ -25,4 +28,6 @@ class Snapshots(models.Model):
             "create_time": self.snapshot_create_time,
             "mechanic_value": self.snapshot_mechanic_value,
             "cumulative_value": self.snapshot_cumulative_value,
+            "image": self.snapshot_image,
+            "text": self.snapshot_text,
         }
