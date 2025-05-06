@@ -20,21 +20,20 @@ class SnapShotSerializer:
 
         if not AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
             return False, wrong_token_result
-        
-        print(input_data)
+
+        # Date & Time
         create_date_str = input_data["create_date"]  # e.g., "2025-05-05"
         create_time_str = input_data["create_time"]  # e.g., "09:39"
-
         # Combine them into a datetime object
         combined_datetime_str = f"{create_date_str} {create_time_str}"
         combined_datetime = datetime.strptime(combined_datetime_str, "%Y-%m-%d %H:%M")
 
+        # Numeric Values
         mechanic_value = input_data.get("mechanic_value")
         cumulative_value = input_data.get("cumulative_value")
         # Handle empty strings or None by converting them to 0.0
         mechanic_value = float(mechanic_value) if mechanic_value not in [None, ""] else 0.0
         cumulative_value = float(cumulative_value) if cumulative_value not in [None, ""] else 0.0
-
 
         try:
             snapshot = Snapshots.objects.create(
@@ -78,7 +77,7 @@ class SnapShotSerializer:
 
 
     @staticmethod
-    def admin_get_all_snap_shots_serializer(token, page, count, user_id, water_meter_serial):
+    def admin_get_all_snap_shots_serializer(request, token, page, count, user_id, water_meter_serial):
         """
             param : [token, page, count, user_id, water_meter_serial]
             return :
@@ -113,7 +112,10 @@ class SnapShotSerializer:
                                 'create_time': item.snapshot_create_time,
                                 'mechanic_value': item.snapshot_mechanic_value,
                                 'cumulative_value': item.snapshot_cumulative_value,
-                                'image': item.snapshot_image if item.snapshot_image else None,
+                                'image': [
+                                    request.build_absolute_uri(settings.MEDIA_URL + img_path.replace('/media/', '')) 
+                                    for img_path in item.snapshot_image if img_path
+                                ] if item.snapshot_image else None,
                                 'text': item.snapshot_text,
                             })
 

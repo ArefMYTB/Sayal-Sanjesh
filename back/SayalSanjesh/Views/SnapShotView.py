@@ -74,7 +74,7 @@ class SnapShotView:
             water_meter_serial = input_data["water_meter_serial"]
 
         result, data = SnapShotSerializer.admin_get_all_snap_shots_serializer(
-            token=token, page=page, count=count, user_id=user_id,
+            request=request, token=token, page=page, count=count, user_id=user_id,
             water_meter_serial=water_meter_serial)
         if result:
             return result_creator(data=data)

@@ -11,30 +11,39 @@ import SnapshotForm from "components/forms/SnapshotForm";
 import CustomModal from "components/modals";
 import { useDisclosure } from "@chakra-ui/hooks";
 import moment from "moment-jalaali";
+import { MdRemoveRedEye } from "react-icons/md";
 
-type CreateSnapshotTableData = Array<{
-  counterName: string;
-  counterSerial: string;
-  counterProject?: string;
-  owner: string;
-}>;
+// type CreateSnapshotTableData = Array<{
+//   counterName: string;
+//   counterSerial: string;
+//   counterProject?: string;
+//   owner: string;
+// }>;
 
 const CreateSnapshotView = () => {
   const [project, setProject] = useState<DynamicOption>(null);
   const [counter, setCounter] = useState<DynamicOption>(null);
   const [selectedCounters, setSelectedCounters] = useState<string[]>([]);
   const [serialSearch, setSerialSearch] = useState<string>("");
+  const [selectedSnapshot, setSelectedSnapshot] = useState<any>(null);
 
   // Form View
+  const {
+    isOpen: isSnapshotFormOpen,
+    onOpen: onSnapshotFormOpen,
+    onClose: onSnapshotFormClose,
+  } = useDisclosure();
+
+  const addSnapshotClick = () => {
+    onSnapshotFormOpen();
+  };
+
+  // Snapshot View
   const {
     isOpen: isSnapshotOpen,
     onOpen: onSnapshotOpen,
     onClose: onSnapshotClose,
   } = useDisclosure();
-
-  const addSnapshotClick = () => {
-    onSnapshotOpen();
-  };
 
   // Fetch project list
   const {
@@ -136,6 +145,7 @@ const CreateSnapshotView = () => {
     { title: "مقدار تجمیعی", headerKey: "cumulativeValue" },
     { title: "توضیح", headerKey: "text" },
     { title: "برداشت کننده", headerKey: "admin" },
+    { title: "عملیات", headerKey: "snapshotAction" },
   ];
 
   const tableData = () => {
@@ -157,8 +167,12 @@ const CreateSnapshotView = () => {
             ) ?? "-",
           mechanicValue: snapshot.mechanic_value ?? "-",
           cumulativeValue: snapshot.cumulative_value ?? "-",
-          text: snapshot.text ?? "-",
+          text:
+            snapshot.text?.length > 30
+              ? snapshot.text.slice(0, 30) + "..."
+              : snapshot.text ?? "-",
           admin: snapshot.admin ?? "-",
+          snapshotAction: renderSnapshotAction(snapshot),
         });
       });
     }
@@ -166,22 +180,109 @@ const CreateSnapshotView = () => {
     return createSnapshotTableData;
   };
 
+  const renderSnapshotAction = (snapshot: any) => {
+    return (
+      <div className=" flex items-center justify-center">
+        <CustomButton
+          onClick={() => renderSnapshot(snapshot)}
+          icon={<MdRemoveRedEye />}
+          color="blue"
+          extra="!p-2"
+        />
+        {/* <CustomButton
+          onClick={() => deleteLogClick(logId)}
+          icon={<MdDelete />}
+          color="red"
+          extra="!p-2"
+        /> */}
+      </div>
+    );
+  };
+  // Snapshot View
+  const renderSnapshot = (snapshot: any) => {
+    setSelectedSnapshot(snapshot);
+    onSnapshotOpen();
+  };
+  // Snapshot View
+  const renderSnapshotDetails = () => {
+    if (!selectedSnapshot) return <p>موردی برای نمایش وجود ندارد.</p>;
+
+    return (
+      <div className="space-y-2 text-right">
+        <div>
+          <span className="font-bold text-gray-600">تاریخ:</span>{" "}
+          {moment(selectedSnapshot.create_time).format("jYYYY/jM/jD")}
+        </div>
+        <div>
+          <span className="font-bold text-gray-600">زمان:</span>{" "}
+          {moment(selectedSnapshot.create_time, "YYYY-M-D HH:mm:ss").format(
+            "HH:mm:ss"
+          )}
+        </div>
+        <div>
+          <span className="font-bold text-gray-600">مقدار مکانیکی:</span>{" "}
+          {selectedSnapshot.mechanic_value ?? "-"}
+        </div>
+        <div>
+          <span className="font-bold text-gray-600">مقدار تجمیعی:</span>{" "}
+          {selectedSnapshot.cumulative_value ?? "-"}
+        </div>
+        <div>
+          <span className="font-bold text-gray-600">توضیح:</span>
+          <div className="mt-1 max-w-[400px] rounded p-3 text-justify leading-6 text-gray-800">
+            {selectedSnapshot.text ?? "-"}
+          </div>
+        </div>
+
+        <div>
+          <span className="font-bold text-gray-600">برداشت کننده:</span>{" "}
+          {selectedSnapshot.admin ?? "-"}
+        </div>
+        <div>
+          <span className="font-bold text-gray-600">عکس:</span>
+          {selectedSnapshot.image && selectedSnapshot.image.length > 0 ? (
+            <div className="mt-2 flex flex-wrap justify-center gap-2">
+              {selectedSnapshot.image.map((imgUrl: string, idx: number) => (
+                <img
+                  key={idx}
+                  src={imgUrl}
+                  alt={`snapshot-${idx}`}
+                  className="h-80 w-80 rounded border object-cover"
+                />
+              ))}
+            </div>
+          ) : (
+            "-"
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="py-4">
       <CustomModal
-        isOpen={isSnapshotOpen}
-        onClose={onSnapshotClose}
+        isOpen={isSnapshotFormOpen}
+        onClose={onSnapshotFormClose}
         title={"برداشت"}
         modalType="form"
         modalForm={
           <SnapshotForm
-            onClose={onSnapshotClose}
+            onClose={onSnapshotFormClose}
             serialnumber={
               serialSearch || selectedDevice?.water_meter_serial || null
             } // default
             refetchSnapshots={refetchSnapshots}
           />
         }
+      />
+
+      <CustomModal
+        isOpen={isSnapshotOpen}
+        onClose={onSnapshotClose}
+        title={"اطلاعات برداشت"}
+        modalType="confirmation"
+        information={renderSnapshotDetails()}
       />
 
       <SnapshotSelectFilter
