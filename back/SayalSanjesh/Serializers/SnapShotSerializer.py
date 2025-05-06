@@ -6,7 +6,7 @@ from SayalSanjesh.Serializers import wrong_token_result, wrong_result
 from SayalSanjesh.models.SnapShots import Snapshots
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
 from datetime import datetime
-from django.utils import timezone
+import jdatetime
 
 class SnapShotSerializer:
 
@@ -62,18 +62,75 @@ class SnapShotSerializer:
             return False, wrong_token_result
 
         try:
-            snapshot = Snapshots.objects.get(snapshot_id=input_data["snapshot_id"])
-            snapshot.snapshot_mechanic_value = input_data.get("mechanic_value", snapshot.snapshot_mechanic_value)
-            snapshot.snapshot_cumulative_value = input_data.get("cumulative_value", snapshot.snapshot_cumulative_value)
-            snapshot.snapshot_image = input_data.get("image", snapshot.snapshot_image)
-            snapshot.snapshot_text = input_data.get("text", snapshot.snapshot_text)
-            snapshot.save()
+            # Date & Time
+            create_date_str = input_data["create_date"]  # e.g., "2025-05-05"
+            create_time_str = input_data["create_time"]  # e.g., "09:39"
+            # Combine them into a datetime object
+            combined_datetime_str = f"{create_date_str} {create_time_str}"
+            combined_datetime = datetime.strptime(combined_datetime_str, "%Y-%m-%d %H:%M")
+            
+            # Find the snapshot
+            snapshot = Snapshots.objects.filter(
+                snapshot_watermeter_id=input_data["watermeter_id"],
+                snapshot_create_time=combined_datetime
+            ).first()
 
-            return True, {"snapshot_id": str(snapshot.snapshot_id)}
-        except Snapshots.DoesNotExist:
-            return False, {"farsi_message": "برداشت یافت نشد", "english_message": "Snapshot not found"}
+            if not snapshot:
+                return False, {"farsi_message": "برداشت یافت نشد", "english_message": "Snapshot not found"}
+            
+            # Update fields if provided
+            if "mechanic_value" in input_data:
+                snapshot.snapshot_mechanic_value = input_data["mechanic_value"]
+            if "text" in input_data:
+                snapshot.snapshot_text = input_data["text"]
+
+            snapshot.save()
+            return True, {"farsi_message": "با موفقیت ویرایش شد", "english_message": "Snapshot updated successfully"}
+
         except Exception as e:
-            return False, {"farsi_message": "خطا در ویرایش", "english_message": f"Error in editing: {e}"}
+            return False, {"farsi_message": "خطا در ویرایش", "english_message": f"Error during update: {e}"}
+
+
+    @staticmethod
+    def admin_remove_snap_shot_serializer(token, input_data):
+
+        token_result = token_to_user_id(token)
+        if token_result["status"] != "OK":
+            return False, wrong_token_result
+
+        admin_id = token_result["data"]["user_id"]
+
+        if not AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+            return False, wrong_token_result
+
+        # Get watermeter ID and datetime from input
+        watermeter_id = input_data["watermeter_id"]
+        create_date_str = input_data["create_date"] # e.g., "2025-05-05"
+        create_time_str = input_data["create_time"]  # e.g., "09:39"
+
+        if not watermeter_id or not create_date_str or not create_time_str:
+            return False, {"farsi_message": "اطلاعات ناقص است", "english_message": "Missing data for deletion"}
+        
+        try:
+            # convert Jalali date string to Gregorian datetime
+            j_date = jdatetime.datetime.strptime(create_date_str, "%Y/%m/%d")
+            g_date = j_date.togregorian()
+            combined_datetime_str = f"{g_date.strftime('%Y-%m-%d')} {create_time_str}"
+            combined_datetime = datetime.strptime(combined_datetime_str, "%Y-%m-%d %H:%M:%S")
+
+            snapshot = Snapshots.objects.filter(
+                snapshot_watermeter_id=watermeter_id,
+                snapshot_create_time=combined_datetime
+            ).first()
+
+            if not snapshot:
+                return False, {"farsi_message": "یافت نشد", "english_message": "Snapshot not found"}
+
+            snapshot.delete()
+            return True, {"farsi_message": "با موفقیت حذف شد", "english_message": "Snapshot deleted successfully"}
+        except Exception as e:
+            return False, {"farsi_message": "خطا در حذف", "english_message": f"Error in deletion: {e}"}
+
 
 
     @staticmethod

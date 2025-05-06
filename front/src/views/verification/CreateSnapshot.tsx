@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { reqFunction } from "utils/API";
+import { renderToast } from "utils/globalUtils";
 import SnapshotSelectFilter from "./SnapshotSelectFilter";
 import SimpleTable from "components/tables/SimpleTable";
 import { DynamicOption } from "components/fields/SelectInput";
@@ -11,7 +12,7 @@ import SnapshotForm from "components/forms/SnapshotForm";
 import CustomModal from "components/modals";
 import { useDisclosure } from "@chakra-ui/hooks";
 import moment from "moment-jalaali";
-import { MdRemoveRedEye } from "react-icons/md";
+import { MdRemoveRedEye, MdEdit, MdDelete } from "react-icons/md";
 
 // type CreateSnapshotTableData = Array<{
 //   counterName: string;
@@ -40,9 +41,16 @@ const CreateSnapshotView = () => {
 
   // Snapshot View
   const {
-    isOpen: isSnapshotOpen,
-    onOpen: onSnapshotOpen,
-    onClose: onSnapshotClose,
+    isOpen: isSnapshotViewOpen,
+    onOpen: onSnapshotViewOpen,
+    onClose: onSnapshotViewClose,
+  } = useDisclosure();
+
+  // Snapshot Edit
+  const {
+    isOpen: isSnapshotEditOpen,
+    onOpen: onSnapshotEditOpen,
+    onClose: onSnapshotEditClose,
   } = useDisclosure();
 
   // Fetch project list
@@ -86,7 +94,6 @@ const CreateSnapshotView = () => {
       device.water_meter_serial === counter?.value ||
       device.water_meter_serial === serialSearch
   );
-  console.log(selectedDevice);
 
   // Fetch snapshot list
   const {
@@ -136,9 +143,6 @@ const CreateSnapshotView = () => {
 
   // table data
   const createSnapshotTableHeader = [
-    // { title: "نام کنتور", headerKey: "counterName" },
-    // { title: "شماره سریال", headerKey: "counterSerial" },
-    // { title: "مالک کنتور", headerKey: "owner" },
     { title: "تاریخ", headerKey: "createDate" },
     { title: "زمان", headerKey: "createTime" },
     { title: "مقدار مکانیکی", headerKey: "mechanicValue" },
@@ -168,8 +172,8 @@ const CreateSnapshotView = () => {
           mechanicValue: snapshot.mechanic_value ?? "-",
           cumulativeValue: snapshot.cumulative_value ?? "-",
           text:
-            snapshot.text?.length > 30
-              ? snapshot.text.slice(0, 30) + "..."
+            snapshot.text?.length > 100
+              ? snapshot.text.slice(0, 100) + "..."
               : snapshot.text ?? "-",
           admin: snapshot.admin ?? "-",
           snapshotAction: renderSnapshotAction(snapshot),
@@ -180,6 +184,7 @@ const CreateSnapshotView = () => {
     return createSnapshotTableData;
   };
 
+  // Actions
   const renderSnapshotAction = (snapshot: any) => {
     return (
       <div className=" flex items-center justify-center">
@@ -189,19 +194,32 @@ const CreateSnapshotView = () => {
           color="blue"
           extra="!p-2"
         />
-        {/* <CustomButton
-          onClick={() => deleteLogClick(logId)}
+        <CustomButton
+          onClick={() => {
+            setSelectedSnapshot(snapshot);
+            onSnapshotEditOpen();
+          }}
+          icon={<MdEdit />}
+          color="orange"
+          extra="!p-2"
+        />
+        <CustomButton
+          onClick={() => {
+            if (window.confirm("آیا از حذف این برداشت اطمینان دارید؟")) {
+              snapshotdelete(snapshot);
+            }
+          }}
           icon={<MdDelete />}
           color="red"
           extra="!p-2"
-        /> */}
+        />
       </div>
     );
   };
   // Snapshot View
   const renderSnapshot = (snapshot: any) => {
     setSelectedSnapshot(snapshot);
-    onSnapshotOpen();
+    onSnapshotViewOpen();
   };
   // Snapshot View
   const renderSnapshotDetails = () => {
@@ -259,6 +277,31 @@ const CreateSnapshotView = () => {
     );
   };
 
+  // Snapshot Delete
+  const snapshotdelete = async (snapshot: any) => {
+    const response = await reqFunction("snapshots/admin/delete", {
+      watermeter_id: serialSearch || selectedDevice?.water_meter_serial || null,
+      create_date:
+        moment(snapshot.create_time, "YYYY-M-D HH:mm:ss").format(
+          "jYYYY/jM/jD"
+        ) ?? "-",
+      create_time:
+        moment(snapshot.create_time, "YYYY-M-D HH:mm:ss").format("HH:mm:ss") ??
+        "-",
+    });
+    if (response.code === 200) {
+      renderToast("برداشت با موفقیت حذف شد.", "success");
+      refetchSnapshots();
+    } else {
+      renderToast(
+        response?.farsi_message
+          ? response.farsi_message
+          : "در حذف برداشت مشکلی رخ داده",
+        "err"
+      );
+    }
+  };
+
   return (
     <div className="py-4">
       <CustomModal
@@ -278,8 +321,26 @@ const CreateSnapshotView = () => {
       />
 
       <CustomModal
-        isOpen={isSnapshotOpen}
-        onClose={onSnapshotClose}
+        isOpen={isSnapshotEditOpen}
+        onClose={onSnapshotEditClose}
+        title={"ویرایش برداشت"}
+        modalType="form"
+        modalForm={
+          <SnapshotForm
+            onClose={onSnapshotEditClose}
+            serialnumber={
+              serialSearch || selectedDevice?.water_meter_serial || ""
+            }
+            refetchSnapshots={refetchSnapshots}
+            isEditMode={true}
+            snapshot={selectedSnapshot}
+          />
+        }
+      />
+
+      <CustomModal
+        isOpen={isSnapshotViewOpen}
+        onClose={onSnapshotViewClose}
         title={"اطلاعات برداشت"}
         modalType="confirmation"
         information={renderSnapshotDetails()}
