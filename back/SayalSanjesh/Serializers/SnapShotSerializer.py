@@ -109,7 +109,7 @@ class SnapShotSerializer:
                 return False, {"farsi_message": "برداشت یافت نشد", "english_message": "Snapshot not found"}
             
             # Update fields if provided
-            if "mechanic_value" in input_data:
+            if "mechanic_value" in input_data and input_data["mechanic_value"] != None:
                 snapshot.snapshot_mechanic_value = input_data["mechanic_value"]
             if "text" in input_data:
                 snapshot.snapshot_text = input_data["text"]
