@@ -32,9 +32,9 @@ const SnapshotForm = (props: SnapshotFormProps) => {
   const [mechanicValue, setMechanicValue] = useState(
     snapshot?.mechanic_value || ""
   );
-  const [cumulativeValue, setCumulativeValue] = useState(
-    snapshot?.cumulative_value || ""
-  );
+  // const [cumulativeValue, setCumulativeValue] = useState(
+  //   snapshot?.cumulative_value || ""
+  // );
   const [text, setText] = useState(snapshot?.text || "");
   const [imageUrl, setImageUrl] = useState<string | null>(
     snapshot?.image?.[0] || null
@@ -73,7 +73,7 @@ const SnapshotForm = (props: SnapshotFormProps) => {
       create_date: create_date,
       create_time: create_time,
       mechanic_value: parseFloat(mechanicValue),
-      cumulative_value: parseFloat(cumulativeValue),
+      // cumulative_value: parseFloat(cumulativeValue),
       text,
       image: [imageUrl], // Expecting array in backend
     };
@@ -91,7 +91,7 @@ const SnapshotForm = (props: SnapshotFormProps) => {
       // setCreateDate("");
       setCreateTime("");
       setMechanicValue("");
-      setCumulativeValue("");
+      // setCumulativeValue("");
       setText("");
       setImageUrl(null);
       // Close form and refresh table
@@ -114,25 +114,28 @@ const SnapshotForm = (props: SnapshotFormProps) => {
           disabled={isEditMode}
         />
       </div>
-      <div>
-        <label className="block">مقدار مکانیکی</label>
-        <input
-          type="number"
-          value={mechanicValue}
-          onChange={(e) => setMechanicValue(e.target.value)}
-          className="w-full rounded border p-2"
-        />
-      </div>
-      <div>
-        <label className="block">تاریخ ایجاد</label>
-        <DatePicker
-          isGregorian={false}
-          value={createDate}
-          onChange={(value) => setCreateDate(value)}
-          timePicker={false}
-          inputFormat="jYYYY/jMM/jDD"
-        />
-      </div>
+      {!isEditMode ? (
+        <div>
+          <label className="block">تاریخ ایجاد</label>
+          <DatePicker
+            isGregorian={false}
+            value={createDate}
+            onChange={(value) => setCreateDate(value)}
+            timePicker={false}
+            inputFormat="jYYYY/jMM/jDD"
+          />
+        </div>
+      ) : (
+        <div>
+          <label className="block">تاریخ ایجاد</label>
+          <input
+            type="text"
+            value={createDate.format("jYYYY/jMM/jDD")}
+            className="w-full rounded border p-2 text-left"
+            disabled={isEditMode}
+          />
+        </div>
+      )}
       <div>
         <label className="block">زمان ایجاد</label>
         <input
@@ -144,6 +147,15 @@ const SnapshotForm = (props: SnapshotFormProps) => {
         />
       </div>
       <div>
+        <label className="block">مقدار مکانیکی</label>
+        <input
+          type="number"
+          value={mechanicValue}
+          onChange={(e) => setMechanicValue(e.target.value)}
+          className="w-full rounded border p-2"
+        />
+      </div>
+      {/* <div>
         <label className="block">مقدار تجمعی</label>
         <input
           type="number"
@@ -152,7 +164,7 @@ const SnapshotForm = (props: SnapshotFormProps) => {
           className="w-full rounded border p-2"
           disabled={isEditMode}
         />
-      </div>
+      </div> */}
       <div>
         <label className="block">توضیحات</label>
         <textarea
