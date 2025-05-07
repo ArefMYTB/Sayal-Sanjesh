@@ -1,6 +1,5 @@
 import Card from "components/card";
 import CustomTabs from "components/tabs";
-import DeviceTypesTable from "./DeviceTypesTable";
 import CreateSnapshotView from "./CreateSnapshot";
 const VerificationView = () => {
   //   const tabsData = [

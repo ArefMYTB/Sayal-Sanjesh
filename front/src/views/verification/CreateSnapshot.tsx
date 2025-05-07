@@ -13,6 +13,7 @@ import CustomModal from "components/modals";
 import { useDisclosure } from "@chakra-ui/hooks";
 import moment from "moment-jalaali";
 import { MdRemoveRedEye, MdEdit, MdDelete } from "react-icons/md";
+import ComparisonContent from "./ComparisonContent";
 
 // type CreateSnapshotTableData = Array<{
 //   counterName: string;
@@ -52,6 +53,14 @@ const CreateSnapshotView = () => {
     onOpen: onSnapshotEditOpen,
     onClose: onSnapshotEditClose,
   } = useDisclosure();
+
+  const {
+    isOpen: isCompareOpen,
+    onOpen: onCompareOpen,
+    onClose: onCompareClose,
+  } = useDisclosure();
+  
+  const [comparedSnapshots, setComparedSnapshots] = useState<any[]>([]);  
 
   // Fetch project list
   const {
@@ -161,6 +170,7 @@ const CreateSnapshotView = () => {
     ) {
       (snapshotData.data.snapshots || []).forEach((snapshot: any) => {
         createSnapshotTableData.push({
+          counterSerial: snapshot.create_time,
           createDate:
             moment(snapshot.create_time, "YYYY-M-D HH:mm:ss").format(
               "jYYYY/jM/jD"
@@ -302,6 +312,50 @@ const CreateSnapshotView = () => {
     }
   };
 
+  const handleCompareSnapshots = () => {
+    if (selectedCounters.length !== 2) {
+      renderToast("لطفاً فقط دو مورد را برای مقایسه انتخاب کنید.", "err");
+      return;
+    }
+  
+    const selected = snapshotData?.data?.snapshots?.filter((snapshot: any) =>
+      selectedCounters.includes(snapshot.create_time)
+    );
+  
+    if (selected.length !== 2) {
+      renderToast("مقادیر انتخاب شده نامعتبر هستند.", "err");
+      return;
+    }
+  
+    setComparedSnapshots(selected);
+    onCompareOpen();
+  };  
+
+  const renderSnapshotComparison = () => {
+    if (comparedSnapshots.length !== 2) return <p>موردی برای مقایسه وجود ندارد.</p>;
+  
+    const [a, b] = comparedSnapshots;
+    const diffDays = Math.abs(
+      moment(a.create_time).startOf("day").diff(moment(b.create_time).startOf("day"), "days")
+    );
+    const diffMechanicValue = Math.abs(a.mechanic_value - b.mechanic_value);
+    const diffCumulativeValue = Math.abs(a.cumulative_value - b.cumulative_value);
+    const percentageError = (((diffCumulativeValue / diffMechanicValue) - 1) * 100).toFixed(2);
+  
+    return(
+      <ComparisonContent
+        itemA={b} // changed their position so the old snapshot be the first one
+        itemB={a}
+        diffDays={diffDays}
+        diffMechanicValue={diffMechanicValue}
+        diffCumulativeValue={diffCumulativeValue}
+        percentageError={percentageError}
+      />
+    )
+  };
+  
+  
+
   return (
     <div className="py-4">
       <CustomModal
@@ -346,6 +400,15 @@ const CreateSnapshotView = () => {
         information={renderSnapshotDetails()}
       />
 
+      <CustomModal
+        isOpen={isCompareOpen}
+        onClose={onCompareClose}
+        title={""}
+        modalType="confirmation"
+        information={renderSnapshotComparison()}
+      />
+
+
       <SnapshotSelectFilter
         filterPage="createSnapshot"
         projectSelect={renderProjectSelectData()}
@@ -358,7 +421,7 @@ const CreateSnapshotView = () => {
         setSerialSearch={setSerialSearch}
       />
 
-      <div className="moldal-btns mt-4 flex items-center justify-end">
+      <div className="moldal-btns mt-4 flex items-center justify-end gap-2">
         <CustomButton
           text="افزودن برداشت"
           onClick={() => addSnapshotClick()}
@@ -366,8 +429,17 @@ const CreateSnapshotView = () => {
           color="green"
           extra="ml-0"
         />
+        <CustomButton
+          text="مقایسه برداشت"
+          onClick={handleCompareSnapshots}
+          icon={<></>}
+          color="blue"
+          extra="ml-0"
+        />
       </div>
 
+
+      {/* Device Information */}
       <div className="mr-4 mt-1 space-y-1 py-2 font-bold text-navy-700 md:col-span-3 dark:text-white">
         <div>
           <span className="text-gray-500 dark:text-gray-300">نام پروژه: </span>
