@@ -5,8 +5,11 @@ from Authorization.TokenManager import token_to_user_id
 from SayalSanjesh.Serializers import wrong_token_result, wrong_result
 from SayalSanjesh.models.SnapShots import Snapshots
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
+from SayalSanjesh.models import WaterMeters, WaterMetersConsumptions
 from datetime import datetime
 import jdatetime
+from django.utils import timezone
+from datetime import timedelta
 
 class SnapShotSerializer:
 
@@ -30,18 +33,45 @@ class SnapShotSerializer:
 
         # Numeric Values
         mechanic_value = input_data.get("mechanic_value")
-        cumulative_value = input_data.get("cumulative_value")
-        # Handle empty strings or None by converting them to 0.0
         mechanic_value = float(mechanic_value) if mechanic_value not in [None, ""] else 0.0
-        cumulative_value = float(cumulative_value) if cumulative_value not in [None, ""] else 0.0
+
+        watermeter_id = input_data["watermeter_id"]
+        watermeter_object = WaterMeters.objects.get(water_meter_serial=watermeter_id)
+        # Combine date and time
+        combined_datetime_str = f"{create_date_str} {create_time_str}"
+        naive_datetime = datetime.strptime(combined_datetime_str, "%Y-%m-%d %H:%M")
+        aware_datetime = timezone.make_aware(naive_datetime, timezone.get_current_timezone())
+        # Add 3.5 hours
+        snapshot_time = aware_datetime - timedelta(hours=3, minutes=30)
+        # Get the first consumption (before snapshot)
+        before_snapshot_consumption = WaterMetersConsumptions.objects.filter(water_meters=watermeter_object,
+                                                                    create_time__lte=snapshot_time).order_by(
+            'create_time').last()
+        
+        # Get the second consumption (after snapshot)
+        after_snapshot_consumption = WaterMetersConsumptions.objects.filter(water_meters=watermeter_object,
+                                                                create_time__gte=snapshot_time).order_by(
+            'create_time').first()
+
+
+
+        # Calculating Interpolated Value
+        V1 = before_snapshot_consumption.cumulative_value
+        V2 = after_snapshot_consumption.cumulative_value
+        t1 = before_snapshot_consumption.create_time
+        t2 = after_snapshot_consumption.create_time
+        t = snapshot_time
+
+        interpolated_value = round(V1 + (V2 - V1) * ((t - t1).total_seconds() / (t2 - t1).total_seconds()))
+
 
         try:
             snapshot = Snapshots.objects.create(
-                snapshot_watermeter_id=input_data["watermeter_id"],
+                snapshot_watermeter_id=watermeter_id,
                 snapshot_create_time=combined_datetime,
                 snapshot_admin_id=admin_id,
                 snapshot_mechanic_value=mechanic_value,
-                snapshot_cumulative_value=cumulative_value,
+                snapshot_cumulative_value=interpolated_value,
                 snapshot_image=input_data.get("image", []),
                 snapshot_text=input_data.get("text", "")
             )
@@ -126,11 +156,22 @@ class SnapShotSerializer:
             if not snapshot:
                 return False, {"farsi_message": "یافت نشد", "english_message": "Snapshot not found"}
 
+            # Delete associated image files
+            image_paths = snapshot.snapshot_image or []
+            if not isinstance(image_paths, list):
+                image_paths = [image_paths]
+
+            for img_path in image_paths:
+                if img_path:
+                    full_img_path = os.path.join(settings.MEDIA_ROOT, img_path.replace('/media/', ''))
+                    if os.path.exists(full_img_path):
+                        os.remove(full_img_path)
+
+
             snapshot.delete()
             return True, {"farsi_message": "با موفقیت حذف شد", "english_message": "Snapshot deleted successfully"}
         except Exception as e:
             return False, {"farsi_message": "خطا در حذف", "english_message": f"Error in deletion: {e}"}
-
 
 
     @staticmethod
@@ -191,6 +232,7 @@ class SnapShotSerializer:
                 return False, wrong_token_result
         else:
             return False, wrong_token_result
+
 
     @staticmethod
     def admin_upload_snap_shot_serializer(token, file):
