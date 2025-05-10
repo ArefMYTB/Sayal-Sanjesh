@@ -44,7 +44,6 @@ urlpatterns = [
     path('admin/getAll/consumption/date/meter', consumption_view.admin_get_all_consumptions_by_date__per_meter_view),
     path('admin/getAll/consumption/date/app', consumption_view.admin_get_all_consumptions_by_date_app_view),
     path('admin/delete/consumption', consumption_view.admin_remove_consumption_view),
-    path('admin/delete/event', consumption_view.admin_remove_event_view),
     path('admin/edit/consumption', consumption_view.admin_edit_consumption_view),
     path('admin/cumulative/consumption', consumption_view.admin_get_cumulative_consumptions_view),
     path('admin/getLast/consumption', consumption_view.admin_get_last_consumption_data_by_water_meter_view),

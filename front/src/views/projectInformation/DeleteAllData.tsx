@@ -60,9 +60,8 @@ const DeleteAllData = (props: DeleteAllDataProps) => {
     }
   };
   const deleteAllEvents = async (serial: string) => {
-    const response = await reqFunction("watermeters/admin/delete/event", {
-      mode: "all",
-      water_meter_serial: serial,
+    const response = await reqFunction("Event/admin/delete/all", {
+      meter_serial: serial,
     });
     if (response.code === 200) {
       renderToast("رخدادها با موفقیت حذف شدند.", "success");
