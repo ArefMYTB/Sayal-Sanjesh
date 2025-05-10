@@ -157,7 +157,7 @@ const CreateSnapshotView = () => {
     { title: "زمان", headerKey: "createTime" },
     {
       title: `مقدار مکانیکی (${
-        snapshotData.data.snapshots
+        snapshotData?.data?.snapshots
           ? renderUnit(
               snapshotData.data.snapshots[0]?.tag_info?.water_meter_tag_name,
               false
@@ -168,7 +168,7 @@ const CreateSnapshotView = () => {
     },
     {
       title: `مقدار تجمیعی (${
-        snapshotData.data.snapshots
+        snapshotData?.data?.snapshots
           ? renderUnit(
               snapshotData.data.snapshots[0]?.tag_info?.water_meter_tag_name,
               false
