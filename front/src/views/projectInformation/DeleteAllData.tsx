@@ -23,6 +23,13 @@ const DeleteAllData = (props: DeleteAllDataProps) => {
     onOpen: onDeleteConfirmOpen,
     onClose: onDeletConfirmClose,
   } = useDisclosure();
+  // Delete Events
+  const {
+    isOpen: isDeleteEventConfirmOpen,
+    onOpen: onDeleteEventConfirmOpen,
+    onClose: onDeleteEventConfirmClose,
+  } = useDisclosure();
+
   const deviceInTag = (tag: DynamicOption) => {
     let devicesPerTag = projectDevices.filter(
       (device) =>
@@ -52,6 +59,24 @@ const DeleteAllData = (props: DeleteAllDataProps) => {
       );
     }
   };
+  const deleteAllEvents = async (serial: string) => {
+    const response = await reqFunction("watermeters/admin/delete/event", {
+      mode: "all",
+      water_meter_serial: serial,
+    });
+    if (response.code === 200) {
+      renderToast("رخدادها با موفقیت حذف شدند.", "success");
+      onDeleteEventConfirmClose();
+    } else {
+      renderToast(
+        response?.farsi_message
+          ? response.farsi_message
+          : "در حذف رخدادها مشکلی رخ داده",
+        "err"
+      );
+    }
+  };
+
   return (
     <>
       <CustomModal
@@ -69,6 +94,22 @@ const DeleteAllData = (props: DeleteAllDataProps) => {
           />
         }
       />
+      <CustomModal
+        isOpen={isDeleteEventConfirmOpen}
+        onClose={onDeleteEventConfirmClose}
+        title={""}
+        modalType="form"
+        information={null}
+        modalForm={
+          <DeleteForm
+            deleteType="event"
+            counterConsuptionDeleted={device}
+            onClose={onDeleteEventConfirmClose}
+            deleteFunction={deleteAllEvents}
+          />
+        }
+      />
+
       <div className="min-w-52 py-4 text-xl font-bold text-navy-700 dark:text-white">
         حذف مصارف کنتور
       </div>
@@ -89,13 +130,22 @@ const DeleteAllData = (props: DeleteAllDataProps) => {
           setState={setDevice}
           // isMandatory={true}
         />
-        <CustomButton
-          text="حذف مصرف"
-          color="brand"
-          onClick={() => onDeleteConfirmOpen()}
-          isDisabled={device ? false : true}
-          extra="max-h-[40px] self-end justify-self-start"
-        />
+        <div className="flex">
+          <CustomButton
+            text="حذف مصرف"
+            color="brand"
+            onClick={() => onDeleteConfirmOpen()}
+            isDisabled={device ? false : true}
+            extra="max-h-[40px] self-end justify-self-start"
+          />
+          <CustomButton
+            text="حذف رخداد"
+            color="brand"
+            onClick={() => onDeleteEventConfirmOpen()}
+            isDisabled={device ? false : true}
+            extra="max-h-[40px] self-end justify-self-start"
+          />
+        </div>
       </div>
     </>
   );

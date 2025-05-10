@@ -6,7 +6,7 @@ from jalali_date import datetime2jalali
 from persiantools.jdatetime import JalaliDate
 from Authorization.TokenManager import token_to_user_id
 from SayalSanjesh.Serializers import wrong_token_result, status_success_result, wrong_data_result, wrong_result
-from SayalSanjesh.models import WaterMeters, WaterMetersConsumptions, WaterMetersProjects, WaterMetersTags
+from SayalSanjesh.models import WaterMeters, WaterMetersConsumptions, WaterMetersProjects, WaterMetersTags, WaterMetersModules, Event
 from Authorization.models.Users import Users
 from Authorization.models.Admins import Admins
 from Authorization.models.MiddleAdmins import MiddleAdmins
@@ -391,6 +391,53 @@ class ConsumptionSerializer:
                 return False, wrong_token_result
         else:
             return False, wrong_token_result
+
+    @staticmethod
+    def admin_remove_event_serializer(token, water_meter_serial, mode):
+        """
+        param: [token, water_meter_serial, mode, time]
+        return: (success: bool, result: dict)
+        """
+        token_result = token_to_user_id(token)
+        if token_result["status"] != "OK":
+            return False, wrong_token_result
+
+        admin_id = token_result["data"]["user_id"]
+        if not AdminsSerializer.admin_check_permission(admin_id, 'Event'):
+            return False, wrong_token_result
+
+        valid_modes = ['all', 'time']
+        if mode not in valid_modes:
+            return False, {
+                "farsi_message": f"پارامتر های مجاز برای mode: {valid_modes}",
+                "english_message": f"Authorized parameters for mode: {valid_modes}"
+            }
+        
+        # Step 1: Get WaterMeter by serial
+        try:
+            meter_object = WaterMeters.objects.get(water_meter_serial=water_meter_serial)
+        except WaterMeters.DoesNotExist:
+            return False, {
+                "farsi_message": "شماره سریال کنتور اشتباه است.",
+                "english_message": "Invalid water meter serial."
+            }
+
+        # Step 2: Get related module
+        try:
+            module_object = WaterMetersModules.objects.get(watermeters=meter_object)
+        except WaterMetersModules.DoesNotExist:
+            return False, {
+                "farsi_message": "ماژول مربوط به کنتور یافت نشد.",
+                "english_message": "Module related to water meter not found."
+            }
+
+        # Step 3: Delete events based on mode
+        if mode == 'all':
+            deleted, _ = Event.objects.filter(event_module=module_object).delete()
+            return True, status_success_result
+
+        return False, wrong_data_result
+
 
     @staticmethod
     def admin_edit_consumption_serializer(token, consumption_id, value, information, create_time, from_previous_record,

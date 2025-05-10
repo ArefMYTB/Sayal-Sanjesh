@@ -13,6 +13,7 @@ interface DeleteFormProps {
     | "admin"
     | "simpleCounter"
     | "module"
+    | "event"
     | "consumptions";
   projectDeleted?: ProjectObject;
   userDeleted?: UserObject;
@@ -50,6 +51,8 @@ const DeleteForm = (props: DeleteFormProps) => {
             ? "کنتور غیرهوشمند"
             : deleteType === "module"
             ? "ماژول"
+            : deleteType === "event"
+            ? "رخدادهای"
             : "مقادیر مصرف"
         } "${
           deleteType === "project"
@@ -78,6 +81,8 @@ const DeleteForm = (props: DeleteFormProps) => {
           ? "کنتور غیرهوشمند"
           : deleteType === "module"
           ? "ماژول"
+          : deleteType === "event"
+          ? "رخدادها"
           : "مقادیر مصرف"}{" "}
         اطمینان دارید؟!{" "}
       </div>
