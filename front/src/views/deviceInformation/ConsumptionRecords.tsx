@@ -117,16 +117,50 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
       ),
     queryKey: ["consumptionRecords", deviceSerial, page, count],
   });
+
+  // Liter or Cubic Meter
+  const [unitFilter, setUnitFilter] = useState(false);
+
   let tableHeader = [
     // { title: "سریال دستگاه", headerKey: "deviceSerial" },
     { title: "دیتا کانتر", headerKey: "dataCounter" },
     { title: "زمان ایجاد", headerKey: "recordDate" },
     { title: "زمان دریافت", headerKey: "logDate" },
     { title: "بکاپ | سیگنال | باتری و برق", headerKey: "counterStatus" },
-    { title: "آخرین مصرف ارسالی", headerKey: "recordValue" },
+    {
+      title: `آخرین مصرف ارسالی (${
+        recordsData
+          ? renderUnit(
+              recordsData[0]?.tag_info?.water_meter_tag_name,
+              unitFilter
+            )
+          : ""
+      })`,
+      headerKey: "recordValue",
+    },
     { title: "بازه ارسال", headerKey: "recordTimeSpan" },
-    { title: "مصرف در بازه ارسال", headerKey: "consumptionInPeriod" },
-    { title: "مصرف تجمعی", headerKey: "cumulativeValue" },
+    {
+      title: `مصرف در بازه ارسال (${
+        recordsData
+          ? renderUnit(
+              recordsData[0]?.tag_info?.water_meter_tag_name,
+              unitFilter
+            )
+          : ""
+      })`,
+      headerKey: "consumptionInPeriod",
+    },
+    {
+      title: `مصرف تجمعی (${
+        recordsData
+          ? renderUnit(
+              recordsData[0]?.tag_info?.water_meter_tag_name,
+              unitFilter
+            )
+          : ""
+      })`,
+      headerKey: "cumulativeValue",
+    },
   ];
   if (deviceInfo[0]?.water_meter_tag_info?.water_meter_tag_name === "برق") {
     tableHeader = [
@@ -247,25 +281,23 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
 
         recordValue:
           record.device_value || record.device_value === 0
-            ? `${Math.round(record.device_value).toLocaleString()} ${renderUnit(
-                record.tag_info.water_meter_tag_name,
-                false
-              )}`
+            ? `${(unitFilter
+                ? record.device_value / 1000
+                : record.device_value
+              ).toLocaleString()}`
             : "__",
         recordTimeSpan: getDiffrenceInHours(
           record.from_previous_record,
           record.create_time
         ),
-        consumptionInPeriod: `${Math.round(
-          record.value
-        ).toLocaleString()} ${renderUnit(
-          record.tag_info.water_meter_tag_name,
-          false
-        )}`,
-        cumulativeValue: `${record.cumulative_value.toLocaleString()} ${renderUnit(
-          record.tag_info.water_meter_tag_name,
-          false
-        )}`,
+        consumptionInPeriod: `${(unitFilter
+          ? record.value / 1000
+          : record.value
+        ).toLocaleString()}`, //  ${renderUnit(record.tag_info.water_meter_tag_name, false)}
+        cumulativeValue: `${(unitFilter
+          ? record.cumulative_value / 1000
+          : record.cumulative_value
+        ).toLocaleString()}`,
         recordActions: renderActions(record.consumption_id),
         messageAction: renderLogAction(record.log_message),
       });
@@ -361,7 +393,12 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
               tab="records"
             />
           </div>
-          <div className=" moldal-btns flex items-end justify-end md:col-span-2">
+          <div className="moldal-btns flex items-end justify-end gap-2 md:col-span-2">
+            <CustomButton
+              text={`تغییر واحد`}
+              onClick={() => setUnitFilter(!unitFilter)}
+              color="blue"
+            />
             <CustomButton
               text="دریافت اکسل"
               onClick={() => getExcelFile()}

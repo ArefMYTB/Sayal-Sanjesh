@@ -147,7 +147,7 @@ const SnapshotForm = (props: SnapshotFormProps) => {
         />
       </div>
       <div>
-        <label className="block">مقدار مکانیکی</label>
+        <label className="block">مقدار مکانیکی (لیتر)</label>
         <input
           type="number"
           value={mechanicValue}

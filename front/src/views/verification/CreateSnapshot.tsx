@@ -14,6 +14,7 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import moment from "moment-jalaali";
 import { MdRemoveRedEye, MdEdit, MdDelete } from "react-icons/md";
 import ComparisonContent from "./ComparisonContent";
+import { renderUnit } from "utils/CommonFunctions";
 
 // type CreateSnapshotTableData = Array<{
 //   counterName: string;
@@ -59,8 +60,8 @@ const CreateSnapshotView = () => {
     onOpen: onCompareOpen,
     onClose: onCompareClose,
   } = useDisclosure();
-  
-  const [comparedSnapshots, setComparedSnapshots] = useState<any[]>([]);  
+
+  const [comparedSnapshots, setComparedSnapshots] = useState<any[]>([]);
 
   // Fetch project list
   const {
@@ -154,8 +155,28 @@ const CreateSnapshotView = () => {
   const createSnapshotTableHeader = [
     { title: "تاریخ", headerKey: "createDate" },
     { title: "زمان", headerKey: "createTime" },
-    { title: "مقدار مکانیکی", headerKey: "mechanicValue" },
-    { title: "مقدار تجمیعی", headerKey: "cumulativeValue" },
+    {
+      title: `مقدار مکانیکی (${
+        snapshotData.data.snapshots
+          ? renderUnit(
+              snapshotData.data.snapshots[0]?.tag_info?.water_meter_tag_name,
+              false
+            )
+          : ""
+      })`,
+      headerKey: "mechanicValue",
+    },
+    {
+      title: `مقدار تجمیعی (${
+        snapshotData.data.snapshots
+          ? renderUnit(
+              snapshotData.data.snapshots[0]?.tag_info?.water_meter_tag_name,
+              false
+            )
+          : ""
+      })`,
+      headerKey: "cumulativeValue",
+    },
     { title: "توضیح", headerKey: "text" },
     { title: "برداشت کننده", headerKey: "admin" },
     { title: "عملیات", headerKey: "snapshotAction" },
@@ -317,32 +338,40 @@ const CreateSnapshotView = () => {
       renderToast("لطفاً فقط دو مورد را برای مقایسه انتخاب کنید.", "err");
       return;
     }
-  
+
     const selected = snapshotData?.data?.snapshots?.filter((snapshot: any) =>
       selectedCounters.includes(snapshot.create_time)
     );
-  
+
     if (selected.length !== 2) {
       renderToast("مقادیر انتخاب شده نامعتبر هستند.", "err");
       return;
     }
-  
+
     setComparedSnapshots(selected);
     onCompareOpen();
-  };  
+  };
 
   const renderSnapshotComparison = () => {
-    if (comparedSnapshots.length !== 2) return <p>موردی برای مقایسه وجود ندارد.</p>;
-  
+    if (comparedSnapshots.length !== 2)
+      return <p>موردی برای مقایسه وجود ندارد.</p>;
+
     const [a, b] = comparedSnapshots;
     const diffDays = Math.abs(
-      moment(a.create_time).startOf("day").diff(moment(b.create_time).startOf("day"), "days")
+      moment(a.create_time)
+        .startOf("day")
+        .diff(moment(b.create_time).startOf("day"), "days")
     );
     const diffMechanicValue = Math.abs(a.mechanic_value - b.mechanic_value);
-    const diffCumulativeValue = Math.abs(a.cumulative_value - b.cumulative_value);
-    const percentageError = (((diffCumulativeValue / diffMechanicValue) - 1) * 100).toFixed(2);
-  
-    return(
+    const diffCumulativeValue = Math.abs(
+      a.cumulative_value - b.cumulative_value
+    );
+    const percentageError = (
+      (diffCumulativeValue / diffMechanicValue - 1) *
+      100
+    ).toFixed(2);
+
+    return (
       <ComparisonContent
         itemA={b} // changed their position so the old snapshot be the first one
         itemB={a}
@@ -351,10 +380,8 @@ const CreateSnapshotView = () => {
         diffCumulativeValue={diffCumulativeValue}
         percentageError={percentageError}
       />
-    )
+    );
   };
-  
-  
 
   return (
     <div className="py-4">
@@ -408,7 +435,6 @@ const CreateSnapshotView = () => {
         information={renderSnapshotComparison()}
       />
 
-
       <SnapshotSelectFilter
         filterPage="createSnapshot"
         projectSelect={renderProjectSelectData()}
@@ -437,7 +463,6 @@ const CreateSnapshotView = () => {
           extra="ml-0"
         />
       </div>
-
 
       {/* Device Information */}
       <div className="mr-4 mt-1 space-y-1 py-2 font-bold text-navy-700 md:col-span-3 dark:text-white">

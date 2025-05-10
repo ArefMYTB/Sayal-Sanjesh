@@ -5,33 +5,34 @@ interface ProjectCountersFilterProps {
   sortValueSelect: DynamicOption[] | null;
   reversedSelect: DynamicOption[] | null;
   countSelect: DynamicOption[] | null;
+  counterUnitSelect: DynamicOption[] | null;
   sortValue: DynamicOption | null;
   setSortValue: React.Dispatch<any>;
   tag: DynamicOption | null;
   setTag: React.Dispatch<any>;
   reversed: DynamicOption | null;
   setReversed: React.Dispatch<any>;
-  // count: DynamicOption | null;
-  // setCount: React.Dispatch<any>;
+  unitFilter: DynamicOption;
+  setUnitFilter: React.Dispatch<any>;
 }
 const ProjectCountersFilter = (props: ProjectCountersFilterProps) => {
   const {
     sortValueSelect,
     tagSelect,
     reversedSelect,
-    // countSelect,
+    counterUnitSelect,
     sortValue,
     setSortValue,
     tag,
     setTag,
     reversed,
     setReversed,
-    // count,
-    // setCount,
+    unitFilter,
+    setUnitFilter,
   } = props;
 
   return (
-    <div className={`grid grid-cols-1 gap-4 md:grid-cols-3  `}>
+    <div className={`grid grid-cols-1 gap-4 md:grid-cols-4  `}>
       <SelectInput
         label="دسته بندی"
         placeholder="دسته بندی مورد نظر را انتخاب کنید"
@@ -57,14 +58,14 @@ const ProjectCountersFilter = (props: ProjectCountersFilterProps) => {
         setState={setReversed}
         isMandatory={true}
       />
-      {/* <SelectInput
-        label="تعداد نمایش"
-        placeholder="تعداد نمایش را انتخاب کنید"
-        dynamicOptions={countSelect}
-        state={count}
-        setState={setCount}
+      <SelectInput
+        label="واحد"
+        placeholder="واحد مورد نظر را انتخاب کنید"
+        dynamicOptions={counterUnitSelect}
+        state={unitFilter}
+        setState={setUnitFilter}
         isMandatory={true}
-      /> */}
+      />
     </div>
   );
 };

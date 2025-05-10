@@ -19,6 +19,10 @@ export const counterTagSelect: DynamicOption[] = [
    { label: "برق" ,value:"ac32c39a-c371-4936-a802-37ead17f8301"},
    { label: "گاز" ,value:"3d5fd998-2637-4a61-a469-4bb344417cc5"},
 ] 
+export const counterUnitSelect: DynamicOption[] = [
+  { label: "لیتر", value: "liter" },
+  { label: "متر مکعب", value: "cubic_meter" },
+];
 export const simOprators: DynamicOption[] = [
     { label: "همراه اول" ,value:"mci"},
    { label: "ایرانسل" ,value:"mtn"},

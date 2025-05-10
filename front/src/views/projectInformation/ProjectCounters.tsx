@@ -4,6 +4,7 @@ import {
   counterTagSelect,
   reversedSelect,
   sortValueSelect,
+  counterUnitSelect,
 } from "variables";
 import ProjectCountersFilter from "./ProjectCountersFilter";
 // import { useState } from "react";
@@ -23,6 +24,7 @@ import {
   renderSendingStatus,
   renderUnit,
 } from "utils/CommonFunctions";
+import { useState } from "react";
 type CumulativeConsumption = {
   year: [number | null, string];
   month: [number | null, string];
@@ -129,7 +131,12 @@ const ProjectCounters = (props: ProjectCountersProps) => {
       reversed,
     ],
   });
-  // console.log(consumptionData);
+
+  const [unitFilter, setUnitFilter] = useState<DynamicOption>({
+    label: "متر مکعب",
+    value: "cubic_meter",
+  });
+
   const tableHeader: HeaderObject[] = [
     { title: "نام کنتور", headerKey: "counterName" },
     { title: "شماره سریال", headerKey: "counterSerial" },
@@ -137,11 +144,11 @@ const ProjectCounters = (props: ProjectCountersProps) => {
     { title: "ثبت آخرین مصرف", headerKey: "lastConsumptionTime" },
     { title: "وضعیت ارسال", headerKey: "sendingStatus" },
     {
-      title: `آخرین مصرف (${tag ? renderUnit(tag.label, true) : ""})`,
+      title: `آخرین مصرف`, // (${tag ? renderUnit(tag.label, true) : ""})
       headerKey: "lastConsumptionValue",
     },
     {
-      title: `مصرف ماه جاری (${tag ? renderUnit(tag.label, true) : ""})`,
+      title: `مصرف ماه جاری`, // (${tag ? renderUnit(tag.label, true) : ""})
       headerKey: "monthConsumptionValue",
     },
     { title: "آخرین صدور قبض", headerKey: "lastBillDate" },
@@ -217,52 +224,52 @@ const ProjectCounters = (props: ProjectCountersProps) => {
           consumption[1]?.last_consumption?.create_time
         ),
         lastConsumptionValue: consumption[1]?.last_consumption?.value
-          ? tag.label === "آب" || tag.label === "برق"
+          ? unitFilter.value === "cubic_meter"
             ? `${(
                 consumption[1]?.last_consumption?.value / 1000
               ).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
+                minimumFractionDigits: 3,
+                maximumFractionDigits: 3,
               })}`
             : `${(consumption[1]?.last_consumption?.value).toLocaleString(
                 undefined,
                 {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
                 }
               )}`
           : consumption[1]?.last_consumption?.value === 0
           ? "0,00"
           : "__",
         monthConsumptionValue: consumption[1]?.cumulative_consumptions?.month[0]
-          ? tag.label === "آب" || tag.label === "برق"
+          ? unitFilter.value === "cubic_meter"
             ? `${(
                 consumption[1]?.cumulative_consumptions?.month[0] / 1000
               ).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
+                minimumFractionDigits: 3,
+                maximumFractionDigits: 3,
               })}`
             : `${(consumption[1]?.cumulative_consumptions?.month[0]).toLocaleString(
                 undefined,
                 {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
                 }
               )} `
           : "__",
         yearConsumptionValue: consumption[1]?.cumulative_consumptions?.year[0]
-          ? tag.label === "آب" || tag.label === "برق"
+          ? unitFilter.value === "cubic_meter"
             ? `${(
                 consumption[1].cumulative_consumptions.year[0] / 1000
               ).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
+                minimumFractionDigits: 3,
+                maximumFractionDigits: 3,
               })} `
             : `${consumption[1].cumulative_consumptions.year[0].toLocaleString(
                 undefined,
                 {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
                 }
               )} `
           : "__",
@@ -292,14 +299,15 @@ const ProjectCounters = (props: ProjectCountersProps) => {
             sortValueSelect={sortValueSelect}
             reversedSelect={reversedSelect}
             countSelect={countSelect}
+            counterUnitSelect={counterUnitSelect}
             tag={tag}
             setTag={setTag}
             sortValue={sortValue}
             setSortValue={setSortValue}
             reversed={reversed}
             setReversed={setReversed}
-            // count={count}
-            // setCount={setCount}
+            unitFilter={unitFilter}
+            setUnitFilter={setUnitFilter}
           />
         </div>
       </div>
