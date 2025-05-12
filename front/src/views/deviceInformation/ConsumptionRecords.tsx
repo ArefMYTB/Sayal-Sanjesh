@@ -37,6 +37,7 @@ export type ConsumptionRecordObject = {
   from_previous_record: string;
   to_current_record: string;
   consumption_id: string;
+  counter: string;
   log_time: string;
   log_message: string;
   information: LastConsumptionInfo;
@@ -247,23 +248,12 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
   };
   const tableData = () => {
     let tableData: RecordsTableData[] = [];
+    console.log(recordsData.data);
     recordsData.data?.forEach((record: ConsumptionRecordObject) => {
       tableData.push({
         // projectName: record.project_info.water_meter_project_name,
         // deviceSerial: record.water_meters_info.water_meter_serial,
-        dataCounter: (() => {
-          try {
-            const parsed = JSON.parse(
-              record.log_message
-                ?.replace(/\s/g, "")
-                .replace(/\?/g, "")
-                .replace(/\bnan\b/g, "null")
-            );
-            return parsed?.DevInfo?.DataCounter?.toString() ?? "__";
-          } catch (e) {
-            return "__";
-          }
-        })(),
+        dataCounter: record?.counter?.toString(),
 
         recordDate: renderTimeJalali(record.create_time, "chart"),
         logDate: (() => {

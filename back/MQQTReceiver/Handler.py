@@ -177,7 +177,7 @@ class Validation(DataBaseConnection):
         logger = Logger(status='receive', message=message, topic=topic)
         log_id = logger.log.log_id if logger.log else None  # Get log_id
         try:
-            data = message
+            data = json.loads(message)
             prepared_data = {
                 "water_meters": data.get('DevInfo').get('SerialNum'),
                 "create_time": data.get('DevInfo').get('DateTime'),

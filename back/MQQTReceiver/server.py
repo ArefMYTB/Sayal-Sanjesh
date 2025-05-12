@@ -27,7 +27,8 @@ def decrypt_payload(encrypted_payload_str, key):
     cipher = AES.new(key, AES.MODE_GCM, nonce=nonce)
     decrypted_data = cipher.decrypt_and_verify(ciphertext, tag)
 
-    return json.loads(decrypted_data.decode())
+    data = json.loads(decrypted_data.decode())
+    return json.dumps(data, indent=2)
 
 handler_object = Handler()
 Connected = False
