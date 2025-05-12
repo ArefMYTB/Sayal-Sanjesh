@@ -59,9 +59,6 @@ def write_to_file(text):
         message = f"{current_time}  , {str(text)} \n"
         file.write(message)
     
-    test_log = os.path.join(log_dir, "test_log.txt")
-    with open(test_log, 'a') as file:
-        file.write("Aref Edit")
 
 
 def on_message(client, userdata, message):

@@ -9,7 +9,7 @@ import django
 import paho.mqtt.client as mqttClient
 from pathlib import Path
 from datetime import datetime
-from MQQTReceiver.publisher import ResponsePublisher
+from publisher import ResponsePublisher
 
 # ------------------------------------define django setting to access project model-------------------------------------
 base_dir = os.getcwd()
@@ -41,7 +41,6 @@ class DataBaseConnection:
         data['token'] = self.static_token
         response = self.meter_related_class.add_consumptions_from_mqtt_broker(**data)
 
-        # print("this is response  : ", response)
         meter_serial = data.get('water_meters')
         try:
             last_counter = self.meter_related_class.get_last_consumptions_(
@@ -177,9 +176,8 @@ class Validation(DataBaseConnection):
         # write every message t logger file
         logger = Logger(status='receive', message=message, topic=topic)
         log_id = logger.log.log_id if logger.log else None  # Get log_id
-
         try:
-            data = json.loads(message)
+            data = message
             prepared_data = {
                 "water_meters": data.get('DevInfo').get('SerialNum'),
                 "create_time": data.get('DevInfo').get('DateTime'),
@@ -213,7 +211,7 @@ class Validation(DataBaseConnection):
             if temperature_detail is not None and temperature_detail != {}:
                 prepared_data['information']['temperature_detail'] = temperature_detail
             # send prepared_data to add to database
-
+            
             self.add_meter_data(data=prepared_data)
             # t = threading.Thread(target=self.add_meter_data, args=(prepared_data,))
             # t.start()
