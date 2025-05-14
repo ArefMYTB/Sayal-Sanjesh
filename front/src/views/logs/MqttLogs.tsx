@@ -149,21 +149,29 @@ const MqttLogs = () => {
     );
   };
   const showSerial = (message: string) => {
-    let correctMessage = message
-      .replace(/\s/g, "")
-      .replace(/\?/g, "")
-      .replace(/\bnan\b/g, "null");
-    let m: MessageObject = JSON.parse(correctMessage);
-    return m ? m?.DevInfo?.SerialNum : "";
+    try {
+      let correctMessage = message
+        .replace(/\s/g, "")
+        .replace(/\?/g, "")
+        .replace(/\bnan\b/g, "null");
+      console.log(correctMessage);
+      let m: MessageObject = JSON.parse(correctMessage);
+      return m ? m?.DevInfo?.SerialNum : "";
+    } catch (error) {
+      return "";
+    }
   };
   const renderMessage = (message: string) => {
-    let correctMessage = message
-      .replace(/\s/g, "")
-      .replace(/\?/g, "")
-      .replace(/\bnan\b/g, "null");
-    let parsed = JSON.parse(correctMessage) ?? null;
-    setMessage(parsed ? parsed : message);
-    // setMessage(message);
+    try {
+      let correctMessage = message
+        .replace(/\s/g, "")
+        .replace(/\?/g, "")
+        .replace(/\bnan\b/g, "null");
+      let parsed = JSON.parse(correctMessage) ?? null;
+      setMessage(parsed ? parsed : message);
+    } catch (error) {
+      setMessage("");
+    }
     onLogOpen();
   };
   return (
