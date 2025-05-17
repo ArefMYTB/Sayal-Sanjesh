@@ -36,8 +36,9 @@ class LogViews:
         page = input_data['page']
         count = input_data['count']
         message__icontains = input_data['message__icontains']
+        topic_name__icontains = input_data['topic_name']
         result, data = LogSerializers.admin_get_all_mqtt_log_serializer(
-            token=token, page=page, count=count, message__icontains=message__icontains)
+            token=token, page=page, count=count, message__icontains=message__icontains, topic_name__icontains=topic_name__icontains)
         if result:
             return result_creator(data=data)
         else:

@@ -45,7 +45,7 @@ class LogSerializers:
 
     # -------------------------------------------------MqttLoger--------------------------------------------------------
     @staticmethod
-    def admin_get_all_mqtt_log_serializer(token, page, count, message__icontains):
+    def admin_get_all_mqtt_log_serializer(token, page, count, message__icontains, topic_name__icontains):
         """
                     param : [token]
 
@@ -60,7 +60,7 @@ class LogSerializers:
             limit = int(count)
             filters = {
                 "message__icontains": message__icontains, #"SWMM-0240023"
-                # "topic_name__icontains": "data",
+                "topic_name__icontains": topic_name__icontains,
             }
             filters = {k: v for k, v in filters.items() if v is not None}
             queryset = MqttLoger.objects.filter(**filters).order_by('-create_date')[offset:offset + limit]

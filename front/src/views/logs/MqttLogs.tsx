@@ -59,6 +59,8 @@ const MqttLogs = () => {
   const [count, setCount] = useState<CountOption>(countSelect[0]);
   const [message, setMessage] = useState<string | null>(null);
   const [searchInput, setSearchinput] = useState<string>("");
+  const [topicFilter, setTopicFilter] = useState<string | null>(null);
+
   const {
     data: MqttLogData,
     isLoading: MqttLogIsLoading,
@@ -70,8 +72,9 @@ const MqttLogs = () => {
         page: page,
         count: count.value,
         message__icontains: searchInput ? searchInput : null,
+        topic_name: topicFilter ? topicFilter : null,
       }),
-    queryKey: ["MqttLogsList", page, count, searchInput],
+    queryKey: ["MqttLogsList", page, count, searchInput, topicFilter],
   });
   const {
     isOpen: isLogOpen,
@@ -89,7 +92,7 @@ const MqttLogs = () => {
   const tableData = () => {
     let logTableData: MqttLogTable = [];
     if (!MqttLogIsLoading && MqttLogStatus === "success") {
-      MqttLogData.data.forEach((obj: MqttLogObject) => {
+      MqttLogData?.data?.forEach((obj: MqttLogObject) => {
         logTableData.push({
           deviceSerial: showSerial(obj.message),
           // deviceSerial: "",
@@ -154,7 +157,6 @@ const MqttLogs = () => {
         .replace(/\s/g, "")
         .replace(/\?/g, "")
         .replace(/\bnan\b/g, "null");
-      console.log(correctMessage);
       let m: MessageObject = JSON.parse(correctMessage);
       return m ? m?.DevInfo?.SerialNum : "";
     } catch (error) {
@@ -180,15 +182,27 @@ const MqttLogs = () => {
         <div className="text-xl font-bold text-navy-700 dark:text-white">
           پیام ها
         </div>
-        <div className=" moldal-btns flex items-center justify-end">
-          <InputField
-            id="project-name"
-            // label=""
-            placeholder="جستجو در لاگ"
-            type="text"
-            state={searchInput}
-            setState={setSearchinput}
-          />
+        <div className="moldal-btns flex items-start justify-end gap-2">
+          <div className="w-[200px]">
+            <InputField
+              id="project-name"
+              placeholder="جستجو در لاگ"
+              type="text"
+              state={searchInput}
+              setState={setSearchinput}
+            />
+          </div>
+          <div className="w-[200px]">
+            <select
+              value={topicFilter ?? ""}
+              onChange={(e) => setTopicFilter(e.target.value || null)}
+              className="mt-2 h-12 w-full rounded-xl border border-gray-200 bg-white/0 px-3 py-[10px] text-sm text-gray-700 outline-none dark:border-white/10 dark:bg-navy-700 dark:text-white"
+            >
+              <option value="">همه تاپیک‌ها</option>
+              <option value="meters/data">meters/data</option>
+              <option value="meters/events">meters/events</option>
+            </select>
+          </div>
         </div>
       </div>
       {!MqttLogIsLoading && MqttLogStatus === "success" ? (
