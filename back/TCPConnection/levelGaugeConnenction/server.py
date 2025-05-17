@@ -17,7 +17,7 @@ from time import sleep
 import os
 import datetime
 import collections
-from SayalSanjesh.models import EventType, Event, WaterMetersModules, StaticToken, OrderType, Order
+from SayalSanjesh.models import EventType,StaticToken, Order
 from SayalSanjesh.Serializers.WaterMeterSerializer import WaterMeterSerializer
 
 # get static_token from database .

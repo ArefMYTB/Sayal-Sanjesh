@@ -100,7 +100,7 @@ const DeviceTypesTable = () => {
         <CustomButton
           onClick={() => {
             if (window.confirm("آیا از حذف این نوع دستگاه اطمینان دارید؟")) {
-              deleteDeviceType(typeId)
+              deleteDeviceType(typeId);
             }
           }}
           icon={<MdDelete />}
@@ -121,7 +121,7 @@ const DeviceTypesTable = () => {
   const tableData = () => {
     let typesTableData: DeviceTypeTableData = [];
     if (!typesIsLoading && typesStatus !== "pending") {
-      typesData.data.forEach((obj: TypeObject) =>
+      typesData.data?.forEach((obj: TypeObject) =>
         typesTableData.push({
           typeName: obj.water_meter_type_name,
           tagName: (
@@ -184,7 +184,7 @@ const DeviceTypesTable = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`انواع دستگاه (${
-              typesIsLoading ? "loading..." : typesData?.data.length
+              typesIsLoading ? "loading..." : typesData?.data?.length
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">
