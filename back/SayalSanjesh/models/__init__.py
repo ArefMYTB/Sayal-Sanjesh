@@ -8,7 +8,7 @@ from .Notice import NoticeCategories, Notice, NoticeReplayUser, NoticeReplayAdmi
 # from .Utils import Utils
 # from .StaticToken import StaticToken
 from .Events import Event, EventType
-from .Orders import Order, OrderType, OrderGroups
+from .Orders import Order, OrderType
 from .Patterns import Pattern
 # from .Apps import App
 from .Requests import WaterMetersRequests

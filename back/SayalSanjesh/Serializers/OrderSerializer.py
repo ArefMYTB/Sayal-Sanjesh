@@ -3,7 +3,7 @@ from Authorization.TokenManager import token_to_user_id
 from Authorization.Serializers.StaticTokenSerializer import StaticTokenSerializer
 from SayalSanjesh.Serializers import wrong_token_result, status_success_result, wrong_data_result
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
-from SayalSanjesh.models import OrderType, WaterMetersModules, Order, WaterMeters, OrderGroups
+from SayalSanjesh.models import OrderType, Order, WaterMeters
 from MQQTReceiver.publisher import ResponsePublisher
 
 

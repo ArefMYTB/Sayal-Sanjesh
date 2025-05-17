@@ -22,7 +22,7 @@ from Authorization.models import StaticToken
 from SayalSanjesh.Serializers.ConsumptionSerializer import ConsumptionSerializer
 from SayalSanjesh.Serializers.EventSerializer import EventSerializer
 from SayalSanjesh.models.Events import EventType
-from SayalSanjesh.models.Orders import OrderType, OrderGroups, Order
+from SayalSanjesh.models.Orders import OrderType, Order
 from SayalSanjesh.models.Meters import WaterMeters
 from General.models.Log import MqttLoger
 

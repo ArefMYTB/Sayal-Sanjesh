@@ -137,17 +137,3 @@ class Order(models.Model):
             "order_status_time": self.order_status_time,
         }
 
-
-# ----------------------------------------------------------------------------------------------------------------------
-
-# --------------------------------------------------OrderGroups---------------------------------------------------------
-class OrderGroups(models.Model):
-    order_group_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    order_meter = models.ForeignKey(WaterMeters, on_delete=models.DO_NOTHING)
-    order_group_objects = models.JSONField()
-    order_group_create_time = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'OrderGroups'
-
-# ----------------------------------------------------------------------------------------------------------------------
