@@ -42,7 +42,6 @@ urlpatterns = [
     path('WaterMeterModules/', include(WaterMeterModulesURL)),
     path('WaterMeterRequests/', include(WaterMeterRequestsURL)),
     path('middle/', include(MiddleAdminsURLs)),
-    path('calculate/unit/', include(CalculateUnitsURL)),
     path('city/', include(CitiesURLs)),
     path('EventType/', include(EventTypeURLs)),
     path('Event/', include(EventURLs)),
