@@ -7,7 +7,7 @@ from .Tags import WaterMetersTags
 from .Notice import NoticeCategories, Notice, NoticeReplayUser, NoticeReplayAdmin
 # from .Utils import Utils
 # from .StaticToken import StaticToken
-from .Events import Event, EventType, EventView
+from .Events import Event, EventType
 from .Orders import Order, OrderType, OrderGroups
 from .Patterns import Pattern
 # from .Apps import App

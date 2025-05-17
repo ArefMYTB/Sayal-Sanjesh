@@ -167,34 +167,3 @@ class EventView:
             return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
                                   english_message=data["english_message"])
 
-    # -------------------------------------------------EventView--------------------------------------------------------
-    @csrf_exempt
-    def admin_create_event_view_view(self, request):
-        if request.method.lower() == "options":
-            return result_creator()
-        try:
-            input_data = json.loads(request.body)
-        except:
-            return result_creator(status="failure", code=406, farsi_message="وارد نشده است json",
-                                  english_message="invalid JSON error")
-        if "Token" in request.headers:
-            token = request.headers["Token"]
-        else:
-            token = ''
-
-        fields = ['event_id_list']
-        for field in fields:
-            if field not in input_data:
-                return result_creator(status="failure", code=406, farsi_message=f".وارد نشده است {field}",
-                                      english_message=f"{field} is Null.")
-        event_id_list = input_data["event_id_list"]
-
-        result, data = EventSerializer.admin_create_event_view_serializer(
-            token=token, event_id_list=event_id_list)
-        if result:
-            return result_creator(data=data)
-        else:
-            return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
-                                  english_message=data["english_message"])
-
-    # ------------------------------------------------------------------------------------------------------------------

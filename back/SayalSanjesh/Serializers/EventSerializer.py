@@ -5,7 +5,7 @@ from Authorization.Serializers.StaticTokenSerializer import StaticTokenSerialize
 from SayalSanjesh.Serializers import wrong_token_result, status_success_result, wrong_data_result
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
 from Authorization.models.Admins import Admins
-from SayalSanjesh.models import EventType, WaterMetersModules, Event, WaterMeters, EventView
+from SayalSanjesh.models import EventType, WaterMetersModules, Event, WaterMeters
 from MQQTReceiver import websockets_publisher
 from General.Serializers.LogSerializers import LogSerializers
 
@@ -203,27 +203,3 @@ class EventSerializer:
         else:
             return False, wrong_token_result
 
-    # -------------------------------------------------EventView--------------------------------------------------------
-    @staticmethod
-    def admin_create_event_view_serializer(token, event_id_list):
-        """
-                    param : [token, event_id_list]
-                    return :
-                    A tuple containing a boolean indicating the success or failure of the operation, and a list of
-                    serialized data results.  it returns a false status along with an error message.
-                """
-        token_result = token_to_user_id(token)
-        if token_result["status"] == "OK":
-            admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Event'):
-                for id in event_id_list:
-                    event_obj = Event.objects.get(event_id=id)
-                    admin_obj = Admins.objects.get(admin_id=admin_id)
-                    EventView.objects.create(admin=admin_obj, event=event_obj)
-                return True, status_success_result
-            else:
-                return False, wrong_token_result
-        else:
-
-            return False, wrong_token_result
-    # ------------------------------------------------------------------------------------------------------------------

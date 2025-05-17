@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path, include, re_path
 from SayalSanjesh.URLs import NoticeCategoriesURLs, NoticeURLs, WaterMeterURL, SnapShotURL, BillsURL, \
     WaterMeterTypesURL, WaterMeterProjectsURL, WaterMeterTagsURL, WaterMeterModulesURL, \
-    WaterMeterRequestsURL, CitiesURLs, EventTypeURLs, EventURLs, PattrenURLs, \
+    WaterMeterRequestsURL, EventTypeURLs, EventURLs, PattrenURLs, \
     SendDataURLs, OrderTypeURLS, OrderURLS , ModuleType
 from Authorization.URLs import AdminsURLs, MiddleAdminsURLs, UserURLs, StaticTokenURLs, PermissionURLs, \
     PermissionCategoryURLs
