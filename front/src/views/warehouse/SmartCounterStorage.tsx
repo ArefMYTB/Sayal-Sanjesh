@@ -11,12 +11,13 @@ import { CountOption, countSelect } from "variables";
 // import { ModuleObject } from "./ModuleStorage";
 import { DeviceObj } from "views/counters";
 import Loading from "components/loading";
-// import { MdDelete, MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import {
   renderModuleAttr,
+  renderToast,
   //  renderToast
 } from "utils/globalUtils";
-// import DeleteForm from "components/forms/DeleteForm";
+import DeleteForm from "components/forms/DeleteForm";
 import { renderTags } from "utils/CommonFunctions";
 type SmartStorageTable = {
   counterName: string;
@@ -29,17 +30,21 @@ type SmartStorageTable = {
   counterActions: JSX.Element;
 };
 const SmartCounterStorage = () => {
-  // const AdminPermissions: string[] = JSON.parse(
-  //   window.localStorage.getItem("permissions")
-  // );
+  const AdminPermissions: string[] = JSON.parse(
+    window.localStorage.getItem("permissions")
+  );
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<CountOption>(countSelect[0]);
   // const [isEdit, setIsEdit] = useState<boolean>(false);
-  // const [selectedCounter, setSelectedCounter] = useState<DeviceObj | null>(
+  const [selectedCounter, setSelectedCounter] = useState<DeviceObj | null>(
+    null
+  );
+  // const [modulesWithoutMeter, setModulesWithoutMeter] = useState<
+  //   null | ModuleObject[]
+  // >(null);
+  // const [simpleCounters, setSimpleCounters] = useState<null | DeviceObj[]>(
   //   null
   // );
-  // const[modulesWithoutMeter,setModulesWithoutMeter]=useState<null|ModuleObject[]>(null);
-  // const[simpleCounters,setSimpleCounters]=useState<null|DeviceObj[]>(null);
   const {
     data: simpleCounterData,
     // isLoading: simpleCounterIsLoading,
@@ -98,11 +103,11 @@ const SmartCounterStorage = () => {
     onOpen: onAddSmartCounterOpen,
     onClose: onAddSmartCounterClose,
   } = useDisclosure();
-  // const {
-  //   isOpen: isDeleteConfirmOpen,
-  //   onOpen: onDeleteConfirmOpen,
-  //   onClose: onDeletConfirmClose,
-  // } = useDisclosure();
+  const {
+    isOpen: isDeleteConfirmOpen,
+    onOpen: onDeleteConfirmOpen,
+    onClose: onDeletConfirmClose,
+  } = useDisclosure();
   const tableHeader = [
     { title: "نام کنتور", headerKey: "counterName" },
     { title: "سریال بدنه", headerKey: "bodySerial" },
@@ -111,95 +116,96 @@ const SmartCounterStorage = () => {
     { title: "نوع ماژول", headerKey: "moduleType" },
     { title: "کد ماژول", headerKey: "moduleCode" },
     { title: "ویژگی های ماژول", headerKey: "moduleProperties" },
-    // { title: "عملیات", headerKey: "counterActions" },
+    { title: "عملیات", headerKey: "counterActions" },
   ];
   // const editDeviceClick = (counterInfo: DeviceObj) => {
-  //   // let tagOption = counterTagSelect.filter(
-  //   //   (tag) =>
-  //   //     tag.value ===
-  //   //     counterInfo.water_meter_type__water_meter_tag__water_meter_tag_id
-  //   // )[0];
-  //   // setTag(tagOption);
-  //   // let typeSelects = renderTypeOptions();
-  //   // let typeOption = typeSelects.filter(
-  //   //   (type) =>
-  //   //     type.label === counterInfo.water_meter_type__water_meter_type_name
-  //   // )[0];
-  //   // let modelOption = counterModels.filter(
-  //   //   (model) => model.value === counterInfo.water_meter_model
-  //   // )[0];
-  //   // let sizeOption = counterSizes.filter(
-  //   //   (counter) => counter.value === counterInfo.water_meter_size
-  //   // )[0];
-  //   // setSelectedCounter(counterInfo);
-  //   // setCounterName(counterInfo.water_meter_name);
-  //   // setType(typeOption ? typeOption : null);
-  //   // setCounterModel(modelOption ? modelOption : null);
-  //   // setCounterSize(sizeOption ? sizeOption : null);
-  //   // setCounterSerial(counterInfo.water_meter_serial);
-  //   // setCounterManufacturer(
-  //   //   counterInfo.other_information?.manufacturere
-  //   //     ? counterInfo.other_information.manufacturere
-  //   //     : ""
-  //   // );
-  //   // setManualNumber(
-  //   //   counterInfo.water_meter_manual_number
-  //   //     ? counterInfo.water_meter_manual_number
-  //   //     : 0
-  //   // );
+  //   let tagOption = counterTagSelect.filter(
+  //     (tag) =>
+  //       tag.value ===
+  //       counterInfo.water_meter_type__water_meter_tag__water_meter_tag_id
+  //   )[0];
+  //   setTag(tagOption);
+  //   let typeSelects = renderTypeOptions();
+  //   let typeOption = typeSelects.filter(
+  //     (type) =>
+  //       type.label === counterInfo.water_meter_type__water_meter_type_name
+  //   )[0];
+  //   let modelOption = counterModels.filter(
+  //     (model) => model.value === counterInfo.water_meter_model
+  //   )[0];
+  //   let sizeOption = counterSizes.filter(
+  //     (counter) => counter.value === counterInfo.water_meter_size
+  //   )[0];
+  //   setSelectedCounter(counterInfo);
+  //   setCounterName(counterInfo.water_meter_name);
+  //   setType(typeOption ? typeOption : null);
+  //   setCounterModel(modelOption ? modelOption : null);
+  //   setCounterSize(sizeOption ? sizeOption : null);
+  //   setCounterSerial(counterInfo.water_meter_serial);
+  //   setCounterManufacturer(
+  //     counterInfo.other_information?.manufacturere
+  //       ? counterInfo.other_information.manufacturere
+  //       : ""
+  //   );
+  //   setManualNumber(
+  //     counterInfo.water_meter_manual_number
+  //       ? counterInfo.water_meter_manual_number
+  //       : 0
+  //   );
 
   //   setIsEdit(true);
   //   onAddSmartCounterOpen();
   // };
-  // const deleteSimpleCounterClicked = (counterInfo: DeviceObj) => {
-  //   setSelectedCounter(counterInfo);
-  //   onDeleteConfirmOpen();
-  // };
-  // const deleteSimpleCounter = async (serial: string) => {
-  //   const response = await reqFunction("watermeters/admin/remove", {
-  //     water_meter_serial: serial,
-  //   });
-  //   if (response.code === 200) {
-  //     renderToast("کنتور هوشمند با موفقیت حذف شد.", "success");
-  //     onDeletConfirmClose();
-  //     smartCounterRefetch();
-  //     // clearForm();
-  //   } else {
-  //     renderToast(
-  //       response?.farsi_message
-  //         ? response.farsi_message
-  //         : "در حذف کنتور هوشمند مشکلی رخ داده",
-  //       "err"
-  //     );
-  //   }
-  // };
+  const deleteSimpleCounterClicked = (counterInfo: DeviceObj) => {
+    setSelectedCounter(counterInfo);
+    onDeleteConfirmOpen();
+  };
+  const deleteSimpleCounter = async (serial: string) => {
+    const response = await reqFunction("watermeters/admin/remove", {
+      water_meter_serial: serial,
+    });
+    if (response.code === 200) {
+      renderToast("کنتور هوشمند با موفقیت حذف شد.", "success");
+      onDeletConfirmClose();
+      smartCounterRefetch();
+      // clearForm();
+    } else {
+      renderToast(
+        response?.farsi_message
+          ? response.farsi_message
+          : "در حذف کنتور هوشمند مشکلی رخ داده",
+        "err"
+      );
+    }
+  };
   const renderDeviceActions = (deviceInfo: DeviceObj) => {
     return (
-      // <div className=" flex items-center justify-center">
-      //   {AdminPermissions.includes("MeterEdit") ? (
-      //     <CustomButton
-      //       onClick={() => editDeviceClick(deviceInfo)}
-      //       icon={<MdEdit />}
-      //       color="orange"
-      //       extra="!p-2"
-      //     />
-      //   ) : (
-      //     // <></>
-      //     <></>
-      //   )}
-      //   {AdminPermissions.includes("MeterDelete") ? (
-      //     <CustomButton
-      //       onClick={() => deleteSimpleCounterClicked(deviceInfo)}
-      //       icon={<MdDelete />}
-      //       color="red"
-      //       extra="!p-2"
-      //     />
-      //   ) : (
-      //     // <></>
-      //     <></>
-      //   )}
-      // </div>
-      <></>
+      <>
+        <div className=" flex items-center justify-center">
+          {/* {AdminPermissions.includes("MeterEdit") ? (
+          <CustomButton
+            onClick={() => editDeviceClick(deviceInfo)}
+            icon={<MdEdit />}
+            color="orange"
+            extra="!p-2"
+          />
+        ) : (
+          // <></>
+          <></>
+        )} */}
+          {AdminPermissions.includes("MeterDelete") ? (
+            <CustomButton
+              onClick={() => deleteSimpleCounterClicked(deviceInfo)}
+              icon={<MdDelete />}
+              color="red"
+              extra="!p-2"
+            />
+          ) : (
+            // <></>
+            <></>
+          )}
+        </div>
+      </>
     );
   };
   const updateSelectsDatas = () => {
@@ -236,7 +242,7 @@ const SmartCounterStorage = () => {
   };
   return (
     <>
-      {/* <CustomModal
+      <CustomModal
         isOpen={isDeleteConfirmOpen}
         onClose={onDeletConfirmClose}
         title={""}
@@ -250,7 +256,7 @@ const SmartCounterStorage = () => {
             deleteFunction={deleteSimpleCounter}
           />
         }
-      /> */}
+      />
       <CustomModal
         title="کنتور هوشمند"
         isOpen={isAddSmartCounterOpen}

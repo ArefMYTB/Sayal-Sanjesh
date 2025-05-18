@@ -92,14 +92,13 @@ class WaterMeterView:
         else:
             return result_creator(status="failure", code=406, farsi_message=".وارد نشده است water_meter_serial",
                                 english_message="water_meter_serial is Null.")
-        try:
-            water_meter = WaterMeters.objects.get(water_meter_serial=water_meter_serial)
-        except WaterMeters.DoesNotExist:
-            return result_creator(status="failure", code=404, farsi_message="کنتور پیدا نشد",
-                                english_message="Water meter not found.")
-        water_meter.delete()
 
-        return result_creator(status="success", farsi_message="کنتور و قبض‌ها با موفقیت حذف شدند",
+        result, status = WaterMeterSerializer.admin_remove_water_meter_serializer(
+            token=token, water_meter_serial=water_meter_serial)
+        if result:
+            return result_creator(data=status)
+        else:
+            return result_creator(status="success", farsi_message="کنتور و قبض‌ها با موفقیت حذف شدند",
                             english_message="Water meter and its bills were successfully deleted.")
 
     @csrf_exempt

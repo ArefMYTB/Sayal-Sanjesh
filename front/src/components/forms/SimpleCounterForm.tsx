@@ -140,7 +140,7 @@ const SimpleCounterForm = (props: SimpleCounterFormProps) => {
       <InputField
         id="simple-counter-name"
         label="نام کنتور"
-        placeholder="نام کنتور غیرهوشمند را وارد کنید"
+        placeholder="نام کنتور مکانیکی را وارد کنید"
         type="text"
         state={counterName}
         setState={setCounterName}
@@ -205,7 +205,7 @@ const SimpleCounterForm = (props: SimpleCounterFormProps) => {
           onClick={() =>
             isEditForm ? editSimpleCounter() : createSimpleCounter()
           }
-          text={isEditForm ? "تغییر کنتور غیرهوشمند" : `ایجاد کنتور غیرهوشمند`}
+          text={isEditForm ? "تغییر کنتور مکانیکی" : `ایجاد کنتور مکانیکی`}
           color="green"
           extra="!ml-0"
         />

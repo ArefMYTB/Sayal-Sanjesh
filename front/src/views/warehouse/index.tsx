@@ -6,7 +6,7 @@ import SmartCounterStorage from "./SmartCounterStorage";
 
 const Warehouse = () => {
   const tabsData: TabData[] = [
-    { label: "کنتور غیرهوشمند", content: <SimpleCounterStorage /> },
+    { label: "کنتور مکانیکی", content: <SimpleCounterStorage /> },
     { label: "ماژول", content: <ModuleStorage /> },
     { label: "کنتور هوشمند", content: <SmartCounterStorage /> },
   ];

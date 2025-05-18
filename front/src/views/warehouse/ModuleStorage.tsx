@@ -135,9 +135,7 @@ const ModuleStorage = () => {
         />
         <CustomButton
           onClick={() => {
-            if (window.confirm("آیا از حذف این ماژول اطمینان دارید؟")) {
-              deleteModuleClicked(moduleObject)
-            }
+            deleteModuleClicked(moduleObject);
           }}
           icon={<MdDelete />}
           color="red"

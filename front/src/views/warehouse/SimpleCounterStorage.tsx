@@ -149,7 +149,7 @@ const SimpleCounterStorage = () => {
       water_meter_serial: serial,
     });
     if (response.code === 200) {
-      renderToast("کنتور غیرهوشمند با موفقیت حذف شد.", "success");
+      renderToast("کنتور مکانیکی با موفقیت حذف شد.", "success");
       onDeletConfirmClose();
       simpleCounterRefetch();
       clearForm();
@@ -157,7 +157,7 @@ const SimpleCounterStorage = () => {
       renderToast(
         response?.farsi_message
           ? response.farsi_message
-          : "در حذف کنتور غیرهوشمند مشکلی رخ داده",
+          : "در حذف کنتور مکانیکی مشکلی رخ داده",
         "err"
       );
     }
@@ -178,9 +178,7 @@ const SimpleCounterStorage = () => {
         {AdminPermissions.includes("MeterDelete") ? (
           <CustomButton
             onClick={() => {
-              if (window.confirm("آیا از حذف این کنتور غیر هوشمند اطمینان دارید؟")) {
-                deleteSimpleCounterClicked(deviceInfo)
-              }
+              deleteSimpleCounterClicked(deviceInfo);
             }}
             icon={<MdDelete />}
             color="red"
@@ -312,7 +310,7 @@ const SimpleCounterStorage = () => {
       />
       <div className="relative flex items-center justify-between p-4">
         <div className="text-xl font-bold text-navy-700 dark:text-white">
-          {`کنتورهای غیرهوشمند (${
+          {`کنتورهای مکانیکی (${
             simpleCounterIsLoading
               ? "loading..."
               : simpleCounterData?.data[0]?.all_water_meters
@@ -322,7 +320,7 @@ const SimpleCounterStorage = () => {
         </div>
         <div className=" moldal-btns flex items-center justify-end">
           <CustomButton
-            text="افزودن کنتور غیرهوشمند"
+            text="افزودن کنتور مکانیکی"
             onClick={() => {
               clearForm();
               onAddCounterOpen();
