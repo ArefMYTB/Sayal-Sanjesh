@@ -161,7 +161,7 @@ const SmartCounterStorage = () => {
     onDeleteConfirmOpen();
   };
   const deleteSimpleCounter = async (serial: string) => {
-    const response = await reqFunction("watermeters/admin/remove", {
+    const response = await reqFunction("watermeters/admin/smartRemove", {
       water_meter_serial: serial,
     });
     if (response.code === 200) {

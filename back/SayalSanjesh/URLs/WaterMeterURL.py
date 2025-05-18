@@ -9,6 +9,7 @@ urlpatterns = [
     # Admin apies
     path('admin/create', water_meter_view.admin_create_water_meter_view),
     path('admin/remove', water_meter_view.admin_remove_water_meter_view),
+    path('admin/smartRemove', water_meter_view.admin_remove_smart_water_meter_view),
     path('admin/edit', water_meter_view.admin_edit_water_meter_view),
     path('admin/getAllFilter', water_meter_view.admin_get_all_water_meters_by_filter_view),
     path('admin/getAll', water_meter_view.admin_get_all_water_meters_view),

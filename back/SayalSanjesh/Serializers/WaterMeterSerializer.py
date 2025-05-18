@@ -162,6 +162,48 @@ class WaterMeterSerializer:
             return False, wrong_token_result
 
     @staticmethod
+    def admin_remove_smart_water_meter_serializer(token, water_meter_serial):
+        """
+            param : [token, water_meter_serial]
+            return :
+            A tuple containing a boolean indicating the success or failure of the operation, and a list of
+            serialized data results.  it returns a false status along with an error message.
+        """
+        token_result = token_to_user_id(token)
+        if token_result["status"] == "OK":
+            admin_id = token_result["data"]["user_id"]
+            if AdminsSerializer.admin_check_permission(admin_id, 'MeterDelete'):
+                try:
+                    water_meter = WaterMeters.objects.get(water_meter_serial=water_meter_serial)
+                except:
+                    wrong_data_result["farsi_message"] = "اشتباه است water_meter_serial"
+                    wrong_data_result["english_message"] = "Wrong water_meter_serial"
+                    return False, wrong_data_result
+                if water_meter.water_meter_user is not None:
+                    user_phone = water_meter.water_meter_user.user_phone
+                    publish_message_to_client(phone_number=user_phone, from_where='delete_device')
+                if water_meter.water_meter_admin is not None:
+                    admin_obj = Admins.objects.get(admin_id=admin_id)
+                    admin_phone_number = admin_obj.admin_phone
+                    middle_admin_publish_data = {
+                        'admin_phone_number': admin_phone_number,
+                        'meter_serial': water_meter.water_meter_serial,
+                        'from_where': 'delete_device'
+                    }
+                    publish_message_to_client(publish_func='middle_admin', data=middle_admin_publish_data)
+                    
+                water_meter.water_meter_module_id = None
+                water_meter.save()
+
+                return True, status_success_result
+
+            else:
+                return False, wrong_token_result
+        else:
+            return False, wrong_token_result
+
+
+    @staticmethod
     def admin_edit_water_meter_serializer(
             token, water_meter_serial, water_meter_location, water_meter_validation, water_meter_activation,
             water_meter_condition, other_information, water_meter_name, water_meter_module_id, water_meter_user_id,
