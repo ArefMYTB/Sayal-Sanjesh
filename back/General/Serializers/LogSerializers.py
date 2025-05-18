@@ -59,54 +59,11 @@ class LogSerializers:
             offset = int((page - 1) * count)
             limit = int(count)
             filters = {
-                "message__icontains": message__icontains, #"SWMM-0240023"
+                "message__icontains": message__icontains,
                 "topic_name__icontains": topic_name__icontains,
             }
             filters = {k: v for k, v in filters.items() if v is not None}
             queryset = MqttLoger.objects.filter(**filters).order_by('-create_date')[offset:offset + limit]
-
-
-            # # CSV LOG - Trash Code
-            # headers = ['شماره سریال', 'تاریخ', 'ساعت', 'Datacounter','SignalQuality', 'باتری', 'بکاپ', 'مصرف تجمعی']
-            # # # Define the path for the CSV file
-            # base_dir = os.getcwd()
-            # csv_file_path = os.path.join(base_dir, 'media', 'csv', 'sanandaj.csv')
-
-            # # # Make sure the 'csv' directory exists
-            # os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
-
-            # # # Open the file in write mode
-            # with open(csv_file_path, mode='w', newline='', encoding='utf-8') as file:
-            #     writer = csv.writer(file)
-            #     writer.writerow(headers)
-
-            #     for log in queryset:
-
-            #         try:
-            #             message_data = json.loads(log.message)  # Assuming message is a JSON string
-            #             serial_num = message_data.get('DevInfo', {}).get('SerialNum', '')
-
-            #             date_time_str = message_data.get('DevInfo', {}).get('DateTime', '')
-            #             # Convert string to datetime object using the correct format
-            #             date_time = datetime.strptime(date_time_str, "%m/%d/%Y-%H:%M:%S")
-            #             jalali_time = JalaliDateTime.fromtimestamp(date_time.timestamp(), pytz.timezone("Asia/Tehran"))
-            #             jalali_time_split = str(jalali_time).split(' ')
-            #             jalali_date = jalali_time_split[0]
-            #             jalali_time = jalali_time_split[1].split('.')[0]
-
-            #             data_counter = message_data.get('DevInfo', {}).get('DataCounter', '')
-            #             signal_quality = message_data.get('DevInfo', {}).get('SignalQuality', '')
-            #             battery = message_data.get('Voltage', {}).get('Battery', '')
-            #             backup = message_data.get('Voltage', {}).get('Backup', '')
-                        
-            #             cumulative = message_data.get('Volume', {}).get('Cumulative', '')
-
-            #             # Write the row to the CSV
-            #             writer.writerow([serial_num, jalali_date, jalali_time, data_counter, signal_quality, battery, backup, cumulative])
-            #         except json.JSONDecodeError:
-            #             continue  # Skip the log if JSON parsing fails
-
-
 
             response = MqttLoger.objects.serialize(queryset=queryset)
             return True, response

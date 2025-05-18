@@ -188,7 +188,10 @@ const AdminForm = (props: AdminFormProps) => {
   };
   const renderRolePermissions = () => {
     let rolePermissions: PermissionObject[] =
-      rolesData.data[0]?.permissions_with_this_category;
+      Array.isArray(rolesData?.data) && rolesData.data.length > 0
+        ? rolesData.data[0].permissions_with_this_category
+        : [];
+
     let modifiedPermissions: PermissionObject[] = [];
     if (rolePermissions) {
       rolePermissions.forEach((p) => {

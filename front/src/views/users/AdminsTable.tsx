@@ -136,7 +136,7 @@ const AdminsTable = () => {
   const renderOptions = (data: PermissionCategory[]) => {
     let options: DynamicOption[] = [];
 
-    data.forEach((d) => {
+    data?.forEach((d) => {
       if (d.permission_category_english_name !== "DefaultPermissions") {
         options.push({
           label: d.permission_category_persian_name,
@@ -214,7 +214,7 @@ const AdminsTable = () => {
           <CustomButton
             onClick={() => {
               if (window.confirm("آیا از حذف این ادمین اطمینان دارید؟")) {
-                deleteAdminClick(adminId)
+                deleteAdminClick(adminId);
               }
             }}
             icon={<MdDelete />}
@@ -299,14 +299,20 @@ const AdminsTable = () => {
     }
     return projectTableData;
   };
-  const renderDefault = (categories: PermissionCategory[]) => {
-    return Array.from(
-      categories.filter(
-        (c) => c.permission_category_english_name === "DefaultPermissions"
-      )[0].permissions_with_this_category,
-      (p) => p.permission_english_name
+  const renderDefault = (categories: PermissionCategory[] | undefined) => {
+    if (!categories) return [];
+
+    const defaultCategory = categories.find(
+      (c) => c.permission_category_english_name === "DefaultPermissions"
+    );
+
+    return (
+      defaultCategory?.permissions_with_this_category?.map(
+        (p) => p.permission_english_name
+      ) ?? []
     );
   };
+
   return (
     <>
       {!rolesIsLoading &&
@@ -376,7 +382,9 @@ const AdminsTable = () => {
                 }
                 role={role}
                 setRole={setRole}
-                defaultPermissions={renderDefault(rolesData?.data)}
+                defaultPermissions={
+                  rolesData?.data ? renderDefault(rolesData.data) : []
+                }
                 selectedPermissions={selectedPermissions}
                 setSelectedPermissions={setSelectedPermissions}
                 setIsEditForm={setIsEditForm}

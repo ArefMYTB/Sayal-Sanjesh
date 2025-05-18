@@ -102,6 +102,34 @@ class WaterMeterView:
                             english_message="Water meter and its bills were successfully deleted.")
 
     @csrf_exempt
+    def admin_remove_smart_water_meter_view(self, request):
+        try:
+            input_data = json.loads(request.body)
+        except:
+            return result_creator(status="failure", code=406, farsi_message="وارد نشده است json",
+                                english_message="invalid JSON error")
+
+        if "Token" in request.headers:
+            token = request.headers["Token"]
+        else:
+            token = ''
+            
+        if 'water_meter_serial' in input_data:
+            water_meter_serial = input_data["water_meter_serial"]
+        else:
+            return result_creator(status="failure", code=406, farsi_message=".وارد نشده است water_meter_serial",
+                                english_message="water_meter_serial is Null.")
+
+        result, status = WaterMeterSerializer.admin_remove_smart_water_meter_serializer(
+            token=token, water_meter_serial=water_meter_serial)
+        if result:
+            return result_creator(data=status)
+        else:
+            return result_creator(status="success", farsi_message="کنتور و قبض‌ها با موفقیت حذف شدند",
+                            english_message="Water meter and its bills were successfully deleted.")
+
+
+    @csrf_exempt
     def admin_edit_water_meter_view(self, request):
         try:
             input_data = json.loads(request.body)
