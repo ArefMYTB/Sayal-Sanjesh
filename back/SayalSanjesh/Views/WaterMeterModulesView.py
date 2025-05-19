@@ -4,7 +4,6 @@ import json
 from SayalSanjesh.Views import result_creator
 from SayalSanjesh.Serializers.WaterMeterModulesSerializer import WaterMeterModulesSerializer
 
-from SayalSanjesh.models import NoticeCategories
 
 
 class WaterMeterModulesView:

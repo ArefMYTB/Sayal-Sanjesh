@@ -2,10 +2,7 @@ from itertools import count
 from django.views.decorators.csrf import csrf_exempt
 import json
 from SayalSanjesh.Views import result_creator
-from SayalSanjesh.Serializers.NoticeCategoriesSerializer import NoticeCategoriesSerializer
 from SayalSanjesh.Serializers.WaterMeterTagsSerializer import WaterMeterTagsSerializer
-
-from SayalSanjesh.models import NoticeCategories
 
 
 class WaterMeterTagsView():
