@@ -170,7 +170,7 @@ export const renderComplexChartData = (
   tillDate: any
 ) => {
   let new_data = { ...data };
-  let totalConsumption = data.total;
+  let totalConsumption = data?.total;
 
   delete new_data.total;
   delete new_data.average;

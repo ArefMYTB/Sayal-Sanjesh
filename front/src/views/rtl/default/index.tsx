@@ -152,7 +152,7 @@ const Dashboard = () => {
   });
   const renderDonutData = (data: any) => {
     const chartData: string[] = [];
-    delete data.all_water_meters_count;
+    delete data?.all_water_meters_count;
     for (const property in data) {
       chartData.push(data[property]);
     }
@@ -160,7 +160,7 @@ const Dashboard = () => {
   };
   const renderDonutOptions = (data: any) => {
     const chartOptions: ChartOptions = { labels: [] };
-    delete data.all_water_meters_count;
+    delete data?.all_water_meters_count;
     for (const property in data) {
       chartOptions.labels.push(property);
     }
@@ -235,31 +235,31 @@ const Dashboard = () => {
             <Widget
               icon={<MdViewList className="h-7 w-7" />}
               title={"پروژه ها"}
-              subtitle={`${dashboardData.data.water_meter_project} عدد`}
+              subtitle={`${dashboardData?.data?.water_meter_project} عدد`}
               link={"/admin/projects"}
             />
             <Widget
               icon={<MdGasMeter className="h-6 w-6" />}
               title={"دستگاه ها"}
-              subtitle={`${dashboardData.data.all_water_meter} عدد`}
+              subtitle={`${dashboardData?.data?.all_water_meter} عدد`}
               link={"/admin/counters"}
             />
             <Widget
               icon={<MdPeopleAlt className="h-7 w-7" />}
               title={"بهره برداران"}
-              subtitle={`${dashboardData.data.all_users} نفر`}
+              subtitle={`${dashboardData?.data?.all_users} نفر`}
               link={"/admin/users"}
             />
             <Widget
               icon={<MdCategory className="h-7 w-7" />}
               title={"انواع دستگاه ها"}
-              subtitle={`${dashboardData.data.water_meter_type} نوع`}
+              subtitle={`${dashboardData?.data?.water_meter_type} نوع`}
               link={null}
             />
             <Widget
               icon={<MdCategory className="h-7 w-7" />}
               title={"تعداد دستگاه فعال"}
-              subtitle={`${dashboardData.data.water_meter_activation} عدد`}
+              subtitle={`${dashboardData?.data?.water_meter_activation} عدد`}
               link={null}
             />
           </>
@@ -282,8 +282,8 @@ const Dashboard = () => {
                   تفکیک دستگاه ها
                 </div>
                 <DonutChart
-                  chartOptions={renderDonutOptions(devicesData.data)}
-                  chartData={renderDonutData(devicesData.data)}
+                  chartOptions={renderDonutOptions(devicesData?.data)}
+                  chartData={renderDonutData(devicesData?.data)}
                 />
               </div>
               <div className="pie h-[29vh]">
