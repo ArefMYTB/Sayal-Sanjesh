@@ -82,12 +82,12 @@ const CreateBillView = (props: CreateBillProps) => {
   const tableData = () => {
     let createBillTableData: CreateBillTableData = [];
     if (!projectDeviceIsLoading && projectDeviceStatus === "success") {
-      let filteredTag = projectDeviceData.data.filter(
+      let filteredTag = projectDeviceData?.data?.filter(
         (device: DeviceObj) =>
           device.water_meter_type__water_meter_tag__water_meter_tag_id ===
           tag.value
       );
-      filteredTag.forEach((device: DeviceObj) => {
+      filteredTag?.forEach((device: DeviceObj) => {
         createBillTableData.push({
           counterName: device.water_meter_name,
           counterSerial: device.water_meter_serial,
@@ -135,7 +135,7 @@ const CreateBillView = (props: CreateBillProps) => {
           {` دستگاه ها ${
             tag && !projectDeviceIsLoading && projectDeviceStatus === "success"
               ? `(${
-                  projectDeviceData.data.filter(
+                  projectDeviceData?.data?.filter(
                     (device: DeviceObj) =>
                       device.water_meter_type__water_meter_tag__water_meter_tag_id ===
                       tag.value

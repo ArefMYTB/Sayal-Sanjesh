@@ -38,7 +38,7 @@ const ConsumptionComparison = () => {
   });
   const renderProjectSelect = (projectList: ProjectObject[]) => {
     let projectSelect: DynamicOption[] = [];
-    projectList.forEach((project) => {
+    projectList?.forEach((project) => {
       projectSelect.push({
         value: project.water_meter_project_id,
         label: project.water_meter_project_name,
@@ -66,13 +66,13 @@ const ConsumptionComparison = () => {
   const renderCounterSelectData = () => {
     let selectData: DynamicOption[] = [];
     if (!devicesIsLoading && devicesStatus === "success" && project) {
-      let filteredCounter = devicesData.data.filter(
+      let filteredCounter = devicesData?.data?.filter(
         (device: DeviceObj) =>
           device.water_meter_type__water_meter_tag__water_meter_tag_id ===
           tag.value
       );
-      filteredCounter.length > 0
-        ? filteredCounter.forEach((counter: DeviceObj) => {
+      filteredCounter?.length > 0
+        ? filteredCounter?.forEach((counter: DeviceObj) => {
             selectData.push({
               label: counter.water_meter_name,
               value: counter.water_meter_serial,

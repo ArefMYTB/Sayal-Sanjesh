@@ -52,20 +52,20 @@ const ProjectsReport = () => {
           <div className=" mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             <Widget
               title={"تعداد پروژه ها"}
-              subtitle={`${projectsData.data.all_projects} عدد`}
+              subtitle={`${projectsData?.data?.all_projects} عدد`}
             />
             <Widget
               title={"شهرهای پروژه"}
-              subtitle={`${projectsData.data.all_cities} شهر`}
+              subtitle={`${projectsData?.data?.all_cities} شهر`}
             />
             <Widget
               title={"شهر با بیشترین پروژه"}
-              subtitle={`${projectsData.data.city_with_max_projects[0][0]} با ${projectsData.data.city_with_max_projects[0][1]} پروژه`}
+              subtitle={`${projectsData?.data?.city_with_max_projects[0][0]} با ${projectsData?.data?.city_with_max_projects[0][1]} پروژه`}
             />
 
             <Widget
               title={"پروژه با بیشترین دستگاه"}
-              subtitle={`${projectsData.data.project_with_max_counters[0].water_meter_project_name} با ${projectsData.data.project_with_max_counters[0].number_of_counter} پروژه`}
+              subtitle={`${projectsData?.data?.project_with_max_counters[0].water_meter_project_name} با ${projectsData?.data?.project_with_max_counters[0].number_of_counter} پروژه`}
             />
           </div>
           <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">

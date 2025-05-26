@@ -109,8 +109,9 @@ const Permissions = () => {
         />
         <CustomButton
           onClick={() => {
+            // need to render delete confimation form
             if (window.confirm("آیا از حذف این نوع دسترسی اطمینان دارید؟")) {
-              deletePermissionClick(permission)
+              deletePermissionClick(permission);
             }
           }}
           icon={<MdDelete />}

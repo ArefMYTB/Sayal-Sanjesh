@@ -27,7 +27,9 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
   const { deviceInfo, fromDate, setFromDate, tillDate, setTillDate } = props;
 
   const [chartType, setChartType] = useState<"daily" | "range">("daily"); // default: daily
-  const [apexSelection, setApexSelection] = useState<"one_day" | "one_week">("one_week");
+  const [apexSelection, setApexSelection] = useState<"one_day" | "one_week">(
+    "one_week"
+  );
   const [apexChartType, setApexChartType] = useState<"bar" | "line">("bar");
   // Start & End Dates for ApexChart
   const [endDate, setEndDate] = useState(getToday());
@@ -57,13 +59,15 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
         "post"
       ),
     queryKey: ["consumptionsDates", deviceSerial],
-  });  
+  });
 
   return (
     <>
       <div className="projects-overview pt-2">
         <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
-          {`نمودار مصرف ${deviceInfo[0].water_meter_name}`}
+          {deviceInfo && deviceInfo.length > 0
+            ? `نمودار مصرف ${deviceInfo[0].water_meter_name}`
+            : "دستگاه پیدا نشد"}
         </div>
 
         {/* Chart Type Toggle Buttons */}
@@ -99,8 +103,12 @@ const CounterConsumptionChart = (props: CounterConsumptionChartProps) => {
               setTillDate={setTillDate}
               update={consumptionDatesRefetch}
               chartTag={{
-                label: deviceInfo[0].water_meter_tag_info.water_meter_tag_name,
-                value: deviceInfo[0].water_meter_tag_info.water_meter_tag_id,
+                label:
+                  deviceInfo?.[0]?.water_meter_tag_info?.water_meter_tag_name ??
+                  "نام‌ وجود ندارد",
+                value:
+                  deviceInfo?.[0]?.water_meter_tag_info?.water_meter_tag_id ??
+                  "",
               }}
               total={
                 consumptionsDatesData?.data

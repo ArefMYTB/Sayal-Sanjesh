@@ -242,7 +242,8 @@ const MqttLogs = () => {
                 page={page}
                 pageSize={count}
                 totalData={
-                  MqttLogData?.data[0]?.all_mqtt_logs
+                  Array.isArray(MqttLogData?.data) &&
+                  MqttLogData.data.length > 0
                     ? MqttLogData.data[0].all_mqtt_logs
                     : 0
                 }

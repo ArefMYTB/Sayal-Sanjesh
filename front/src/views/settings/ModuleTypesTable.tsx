@@ -9,6 +9,7 @@ import SimpleTable from "components/tables/SimpleTable";
 import { toPersianDate } from "utils/TimeUtiles";
 import { useState } from "react";
 import ModuleTypeForm from "components/forms/ModuleTypeForm";
+import { renderToast } from "utils/globalUtils";
 export type ModuleTypeObject = {
   admin_info?: string;
   module_type_id: string;
@@ -54,9 +55,25 @@ const Moduletypes = () => {
     setModuleTypeName(selectedModule.module_type_name);
     onModuleTypeOpen();
   };
-  const deleteModuleTypeClicked = (id: string) => {
-    console.log(id);
+  const deleteModuleTypeClicked = async (id: string) => {
+    const uploadEndpoint = "ModuleType/admin/delete";
+    const data = {
+      module_type_id: id,
+    };
+
+    const response = await reqFunction(uploadEndpoint, data);
+
+    if (response.code === 200) {
+      renderToast("ماژول با موفقیت حذف شد.", "success");
+      moduleTypesRefetch();
+    } else {
+      renderToast(
+        response?.farsi_message || "در حذف ماژول خطایی رخ داده",
+        "err"
+      );
+    }
   };
+
   const renderTagActions = (moduleId: string) => {
     return (
       <div className=" flex items-center justify-center">
@@ -68,8 +85,9 @@ const Moduletypes = () => {
         />
         <CustomButton
           onClick={() => {
+            // need to render delete confimation form
             if (window.confirm("آیا از حذف این نوع ماژول اطمینان دارید؟")) {
-              deleteModuleTypeClicked(moduleId)
+              deleteModuleTypeClicked(moduleId);
             }
           }}
           icon={<MdDelete />}

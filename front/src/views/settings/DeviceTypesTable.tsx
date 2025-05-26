@@ -99,6 +99,7 @@ const DeviceTypesTable = () => {
         />
         <CustomButton
           onClick={() => {
+            // need to render delete confimation form
             if (window.confirm("آیا از حذف این نوع دستگاه اطمینان دارید؟")) {
               deleteDeviceType(typeId);
             }

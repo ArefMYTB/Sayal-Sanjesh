@@ -71,9 +71,10 @@ const EventTypesTable = () => {
     return (
       <div className=" flex items-center justify-center">
         <CustomButton
-          onClick={() =>{
+          onClick={() => {
+            // need to render delete confimation form
             if (window.confirm("آیا از حذف این نوع رخداد اطمینان دارید؟")) {
-               deleteEventTypeClick(eventId)
+              deleteEventTypeClick(eventId);
             }
           }}
           icon={<MdDelete />}
@@ -108,7 +109,7 @@ const EventTypesTable = () => {
   const tableData = () => {
     let eventTypesTableData: EventTypeTableData = [];
     if (!eventTypeIsLoading && eventTypeStatus !== "pending") {
-      eventTypeData.data.forEach((obj: EventType) =>
+      eventTypeData?.data?.forEach((obj: EventType) =>
         eventTypesTableData.push({
           eventTypeName: obj.event_type_keyword,
           eventTypeCode: obj.event_type_code,
@@ -144,7 +145,7 @@ const EventTypesTable = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`انواع رخداد (${
-              eventTypeIsLoading ? "loading..." : eventTypeData?.data.length
+              eventTypeIsLoading ? "loading..." : eventTypeData?.data?.length
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">

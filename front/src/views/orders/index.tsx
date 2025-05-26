@@ -149,7 +149,7 @@ const OrdersView = () => {
   const renderDeviceSelectData = () => {
     let selectData: DynamicOption[] = [];
     if (!deviceIsLoading && deviceStatus === "success") {
-      devicesData.data.forEach((device: Device) =>
+      devicesData?.data?.forEach((device: Device) =>
         selectData.push({
           label: device.water_meter_name,
           value: device.water_meter_serial,
@@ -161,7 +161,7 @@ const OrdersView = () => {
   const renderOrderTypeSelectData = () => {
     let orderTypes: { label: string; value: string }[] = [];
     if (!orderTypeIsLoading && orderTypeStatus !== "pending") {
-      orderType.data.forEach((type: OrderType) =>
+      orderType?.data?.forEach((type: OrderType) =>
         orderTypes.push({
           label: type.order_type_name,
           value: type.order_type_id,

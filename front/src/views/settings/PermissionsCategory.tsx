@@ -120,8 +120,9 @@ const PermissionsCategory = () => {
         />
         <CustomButton
           onClick={() => {
+            // need to render delete confimation form
             if (window.confirm("آیا از حذف این نقش اطمینان دارید؟")) {
-              deleteRole(obj.permission_category_id)
+              deleteRole(obj.permission_category_id);
             }
           }}
           icon={<MdDelete />}
@@ -141,7 +142,7 @@ const PermissionsCategory = () => {
   const tableData = () => {
     let permissionCategoryTableData: PermissionCategoryTableData = [];
     if (!rolesIsLoading && rolesStatus === "success") {
-      rolesData.data.forEach((obj: PermissionCategory) =>
+      rolesData?.data?.forEach((obj: PermissionCategory) =>
         permissionCategoryTableData.push({
           roleEnglishName: obj.permission_category_english_name,
           roleFarsiName: obj.permission_category_persian_name,
@@ -183,7 +184,7 @@ const PermissionsCategory = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`نقش های سیستم (${
-              rolesIsLoading ? "loading..." : rolesData?.data.length
+              rolesIsLoading ? "loading..." : rolesData?.data?.length
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">

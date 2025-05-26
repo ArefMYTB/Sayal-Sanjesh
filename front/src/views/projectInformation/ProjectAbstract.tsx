@@ -45,17 +45,17 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
   const renderTagsChartData = (data: ProjectObject) => {
     let containTagsId: string[] = [];
     const chartData: number[] = [];
-    data.types.forEach((type: TypeObject) => {
+    data?.types?.forEach((type: TypeObject) => {
       if (!containTagsId.includes(type.water_meter_tag.water_meter_tag_id)) {
         containTagsId.push(type.water_meter_tag.water_meter_tag_id);
       }
     });
-    containTagsId.forEach((tag: string) => {
+    containTagsId?.forEach((tag: string) => {
       chartData.push(
-        projectDevices.filter(
+        projectDevices?.filter(
           (device: DeviceObj) =>
             device.water_meter_type__water_meter_tag__water_meter_tag_id === tag
-        ).length
+        )?.length
       );
     });
     return chartData;
@@ -63,7 +63,7 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
   const renderTagsChartOptions = (data: ProjectObject) => {
     let containTags: string[] = [];
     const chartOptions: ChartOptions = { labels: [] };
-    data.types.forEach((type: TypeObject) => {
+    data?.types?.forEach((type: TypeObject) => {
       if (!containTags.includes(type.water_meter_tag.water_meter_tag_name)) {
         containTags.push(type.water_meter_tag.water_meter_tag_name);
       }
@@ -75,15 +75,15 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
   const renderTypesChartData = (data: ProjectObject) => {
     let containTypes: string[] = [];
     const chartData: number[] = [];
-    data.types.forEach((type: TypeObject) => {
+    data?.types?.forEach((type: TypeObject) => {
       containTypes.push(type.water_meter_type_name);
     });
-    containTypes.forEach((type: string) => {
+    containTypes?.forEach((type: string) => {
       chartData.push(
-        projectDevices.filter(
+        projectDevices?.filter(
           (device: DeviceObj) =>
             device.water_meter_type__water_meter_type_name === type
-        ).length
+        )?.length
       );
     });
     return chartData;
@@ -100,10 +100,10 @@ const ProjectAbstract = (props: ProjectAbstractProps) => {
     let options: DynamicOption[] = [];
     let projectTypes = projectInfo.types;
     let projectTypesName: string[] = [];
-    projectTypes.forEach((type) =>
+    projectTypes?.forEach((type) =>
       projectTypesName.push(type.water_meter_type_name)
     );
-    allTypes.forEach((type) =>
+    allTypes?.forEach((type) =>
       options.push({
         label: type.water_meter_type_name,
         value: type.water_meter_type_id,

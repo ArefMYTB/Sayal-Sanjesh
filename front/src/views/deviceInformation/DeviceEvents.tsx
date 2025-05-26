@@ -88,7 +88,7 @@ const DeviceEvents = (props: DeviceEventsProps) => {
 
   const tableData = () => {
     let tableData: EventsTableData[] = [];
-    eventsData.data.forEach((event: EventRecordObject) => {
+    eventsData?.data?.forEach((event: EventRecordObject) => {
       tableData.push({
         eventName: event.event_type.event_type_keyword,
         eventCode: event.event_type.event_type_code,
@@ -137,7 +137,10 @@ const DeviceEvents = (props: DeviceEventsProps) => {
                     {`رکوردها (${
                       eventsIsLoading
                         ? 0
-                        : eventsData?.data[0]?.all_event_numbers
+                        : Array.isArray(eventsData?.data) &&
+                          eventsData.data.length > 0
+                        ? eventsData.data[0].all_event_numbers
+                        : 0
                     })`}
                   </div>
                   <div className=" moldal-btns flex items-center justify-end"></div>
@@ -155,7 +158,7 @@ const DeviceEvents = (props: DeviceEventsProps) => {
                     page={page}
                     pageSize={count}
                     totalData={
-                      eventsData?.data.length > 0
+                      eventsData?.data?.length > 0
                         ? eventsData.data[0].all_event_numbers
                         : 0
                     }

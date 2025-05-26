@@ -119,7 +119,7 @@ const ProjectForm = (props: ProjectFormProps) => {
   const addProject = async () => {
     let json: ProjectObject = {
       water_meter_project_name: projectName,
-      water_meter_project_title: projectCity.label,
+      water_meter_project_title: projectCity?.label,
       water_meter_project_other_information: {
         description: projectDescription,
       },

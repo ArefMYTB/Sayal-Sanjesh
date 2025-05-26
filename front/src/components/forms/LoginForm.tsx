@@ -19,23 +19,6 @@ const LoginForm = (props: LoginFormProps) => {
     "err" | "success" | "dis" | "normal"
   >("normal");
   const routeChange = () => {
-    // let permissions: string[] = JSON.parse(
-    //   window.localStorage.getItem("permissions")
-    // );
-
-    // permissions.includes("SuperAdmin")
-    //   ? navigate(path)
-    //   : permissions.includes("ProjectMenu")
-    //   ? navigate("/admin/projects")
-    //   : permissions.includes("UserMenu")
-    //   ? navigate("/admin/users")
-    //   : permissions.includes("MeterMenu")
-    //   ? navigate("/admin/counters")
-    //   : permissions.includes("Bills")
-    //   ? navigate("/admin/bills")
-    //   : permissions.includes("Reports")
-    //   ? navigate("/admin/reposrts")
-    //   : navigate("/auth/login");
     navigate(path);
   };
   const userLogin = async () => {

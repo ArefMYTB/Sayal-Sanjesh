@@ -56,9 +56,6 @@ const DeviceDetailsView = () => {
   const { deviceSerial } = useParams();
   const [fromDate, setFromDate] = useState(getToday().jDate(1));
   const [tillDate, setTillDate] = useState(getToday().add(1, "day"));
-  const AdminPermissions: string[] = JSON.parse(
-    window.localStorage.getItem("permissions")
-  );
   const {
     data: deviceData,
     isLoading: deviceIsLoading,
@@ -70,79 +67,45 @@ const DeviceDetailsView = () => {
       }),
     queryKey: ["tagsList", deviceSerial],
   });
-  const tabsData = AdminPermissions.includes("Bills")
-    ? [
-        {
-          label: "نمودار مصرف",
-          content: (
-            <CounterConsumptionChart
-              deviceInfo={deviceData?.data}
-              fromDate={fromDate}
-              setFromDate={setFromDate}
-              tillDate={tillDate}
-              setTillDate={setTillDate}
-            />
-          ),
-        },
-        {
-          label: "رکوردهای مصرف",
-          content: (
-            <ConsumptionRecords
-              deviceInfo={deviceData?.data}
-              fromDate={fromDate}
-              setFromDate={setFromDate}
-              tillDate={tillDate}
-              setTillDate={setTillDate}
-            />
-          ),
-        },
-        {
-          label: "مشخصات دستگاه",
-          content: <DeviceInformation deviceInfo={deviceData?.data} />,
-        },
-        {
-          label: "رخدادها",
-          content: <DeviceEvents deviceInfo={deviceData?.data} />,
-        },
-        {
-          label: "قبوض",
-          content: <CounterBills deviceInfo={deviceData?.data} />,
-        },
-      ]
-    : [
-        {
-          label: "نمودار مصرف",
-          content: (
-            <CounterConsumptionChart
-              deviceInfo={deviceData?.data}
-              fromDate={fromDate}
-              setFromDate={setFromDate}
-              tillDate={tillDate}
-              setTillDate={setTillDate}
-            />
-          ),
-        },
-        {
-          label: "رکوردهای مصرف",
-          content: (
-            <ConsumptionRecords
-              deviceInfo={deviceData?.data}
-              fromDate={fromDate}
-              setFromDate={setFromDate}
-              tillDate={tillDate}
-              setTillDate={setTillDate}
-            />
-          ),
-        },
-        {
-          label: "مشخصات دستگاه",
-          content: <DeviceInformation deviceInfo={deviceData?.data} />,
-        },
-        {
-          label: "رخدادها",
-          content: <DeviceEvents deviceInfo={deviceData?.data} />,
-        },
-      ];
+  const tabsData = [
+    {
+      label: "نمودار مصرف",
+      content: (
+        <CounterConsumptionChart
+          deviceInfo={deviceData?.data}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          tillDate={tillDate}
+          setTillDate={setTillDate}
+        />
+      ),
+    },
+    {
+      label: "رکوردهای مصرف",
+      content: (
+        <ConsumptionRecords
+          deviceInfo={deviceData?.data}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          tillDate={tillDate}
+          setTillDate={setTillDate}
+        />
+      ),
+    },
+    {
+      label: "مشخصات دستگاه",
+      content: <DeviceInformation deviceInfo={deviceData?.data} />,
+    },
+    {
+      label: "رخدادها",
+      content: <DeviceEvents deviceInfo={deviceData?.data} />,
+    },
+    {
+      label: "قبوض",
+      content: <CounterBills deviceInfo={deviceData?.data} />,
+    },
+  ];
+
   return (
     <div className=" ">
       <Card>

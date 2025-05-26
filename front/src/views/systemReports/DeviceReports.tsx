@@ -28,7 +28,7 @@ const DevicesReport = () => {
   });
   const renderDonutData = (data: any) => {
     const chartData: string[] = [];
-    delete data.all_water_meters_count;
+    delete data?.all_water_meters_count;
     for (const property in data) {
       chartData.push(data[property]);
     }
@@ -36,7 +36,7 @@ const DevicesReport = () => {
   };
   const renderDonutOptions = (data: any) => {
     const chartOptions: ChartOptions = { labels: [] };
-    delete data.all_water_meters_count;
+    delete data?.all_water_meters_count;
     for (const property in data) {
       chartOptions.labels.push(property);
     }

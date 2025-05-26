@@ -21,7 +21,7 @@ const BillFooter = ({ info, type, patternSample }: BillFooterProps) => {
         .water_meter_tag_name,
       true
     )})`,
-    Number(patternSample[0].k).toLocaleString("fa-IR", {
+    Number(patternSample[0]?.k).toLocaleString("fa-IR", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }),

@@ -179,7 +179,7 @@ const ShowBillView = (props: ShowBillsProps) => {
   };
   const renderProjectSelectData = () => {
     let selectData: DynamicOption[] = [];
-    projects.length > 0
+    projects?.length > 0
       ? projects.forEach((project) =>
           selectData.push({
             label: project.water_meter_project_name,
@@ -204,13 +204,13 @@ const ShowBillView = (props: ShowBillsProps) => {
   const renderCounterSelectData = () => {
     let selectData: DynamicOption[] = [];
     if (!projectDeviceIsLoading && projectDeviceStatus === "success" && tag) {
-      let filteredCounter = projectDeviceData.data.filter(
+      let filteredCounter = projectDeviceData?.data?.filter(
         (device: DeviceObj) =>
           device.water_meter_type__water_meter_tag__water_meter_tag_id ===
           tag.value
       );
-      filteredCounter.length > 0
-        ? filteredCounter.forEach((counter: DeviceObj) => {
+      filteredCounter?.length > 0
+        ? filteredCounter?.forEach((counter: DeviceObj) => {
             selectData.push({
               label: counter.water_meter_name,
               value: counter.water_meter_serial,

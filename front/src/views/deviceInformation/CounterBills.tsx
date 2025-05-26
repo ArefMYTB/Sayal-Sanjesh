@@ -125,7 +125,7 @@ const CounterBills = (props: CounterBillProps) => {
   ];
   const renderBillTable = () => {
     let billTableData: BillTableData[] = [];
-    billsData.data.forEach((bill: BillObject) =>
+    billsData?.data?.forEach((bill: BillObject) =>
       billTableData.push({
         billSerial: bill.bill_serial,
         billFrom: toPersianDate(bill.bill_start_date),
@@ -195,7 +195,11 @@ const CounterBills = (props: CounterBillProps) => {
           <BillComponent
             onClose={onBillClose}
             billInfo={billInfo}
-            patternSample={patternData?.data[0]?.pattern_list}
+            patternSample={
+              Array.isArray(patternData?.data) && patternData.data.length > 0
+                ? patternData.data[0].pattern_list
+                : []
+            }
           />
         }
       />

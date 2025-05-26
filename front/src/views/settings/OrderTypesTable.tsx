@@ -48,7 +48,7 @@ const OrderTypesTable = () => {
         <CustomButton
           onClick={() => {
             if (window.confirm("غیر فعال")) {
-              editProjectClick(adminId)
+              editProjectClick(adminId);
             }
           }}
           icon={<MdEdit />}
@@ -67,7 +67,7 @@ const OrderTypesTable = () => {
   const tableData = () => {
     let orderTypesTableData: OrderTypeTableData = [];
     if (!orderTypeIsLoading && orderTypeStatus !== "pending") {
-      orderTypeData.data.forEach((obj: OrderType) =>
+      orderTypeData?.data?.forEach((obj: OrderType) =>
         orderTypesTableData.push({
           orderTypeName: obj.order_type_name,
           orderTypeCode: obj.order_type_code,
@@ -99,7 +99,7 @@ const OrderTypesTable = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`انواع دستورات (${
-              orderTypeIsLoading ? "loading..." : orderTypeData?.data.length
+              orderTypeIsLoading ? "loading..." : orderTypeData?.data?.length
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">

@@ -157,7 +157,7 @@ const ConsumptionReport = () => {
   };
   const renderProjectSelect = (projectList: ProjectObject[]) => {
     let projectSelect: DynamicOption[] = [];
-    projectList.forEach((project) => {
+    projectList?.forEach((project) => {
       projectSelect.push({
         value: project.water_meter_project_id,
         label: project.water_meter_project_name,

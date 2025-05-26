@@ -50,7 +50,7 @@ const Navbar = (props: {
   }, []);
   const getProfile = async () => {
     let profileData = await reqFunction("admins/admin/getProfile", {});
-    if (profileData.code === 200) {
+    if (profileData?.code === 200) {
       let profile = profileData.data[0];
       setUsername(profile.admin_name);
       setUserLastName(profile.admin_lastname);

@@ -224,8 +224,8 @@ const DeviceForm = (props: DeviceFormProps) => {
     }
   };
   return (
-    <div className="flex flex-col lg:flex-row lg:gap-12 p-4">
-      <div className="flex-1 flex flex-col gap-4">
+    <div className="flex flex-col p-4 lg:flex-row lg:gap-12">
+      <div className="flex flex-1 flex-col gap-4">
         <InputField
           id="device-type-name"
           label="نام دستگاه"
@@ -300,11 +300,9 @@ const DeviceForm = (props: DeviceFormProps) => {
           // border={serialBorder}
         />
       </div>
-      <div className="flex-1 flex flex-col gap-4">
+      <div className="flex flex-1 flex-col gap-4">
         <CheckInput
-          inputsData={[
-            { id: "manual-location", name: "ایجاد موقعیت مکانی" },
-          ]}
+          inputsData={[{ id: "manual-location", name: "ایجاد موقعیت مکانی" }]}
           checkedData={hasManualLocation}
           setCheckedData={setHasManualLocation}
         />

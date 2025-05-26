@@ -7,16 +7,19 @@ import { useQuery } from "@tanstack/react-query";
 import { reqFunction } from "utils/API";
 import SimpleTable from "components/tables/SimpleTable";
 import CustomButton from "components/button";
-import { MdAdd, MdEdit } from "react-icons/md";
+import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import CustomModal from "components/modals";
 import { useDisclosure } from "@chakra-ui/hooks";
 import PatternFrom from "components/forms/PatternForm";
 import { renderUnit } from "utils/CommonFunctions";
+import { title } from "process";
+import { renderToast } from "utils/globalUtils";
 // import { useParams } from "react-router-dom";
 type PatternTableData = {
   fromValue: string;
   toValue: string;
   unitPrice: string;
+  Delete: JSX.Element;
 };
 export type PatternObject = {
   all_pattern_number: number;
@@ -45,7 +48,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
   >([]);
   const renderProjectSelectData = () => {
     const projectSelected: DynamicOption[] = [];
-    projectData.data.forEach((project: ProjectObject) =>
+    projectData?.data?.forEach((project: ProjectObject) =>
       projectSelected.push({
         label: project.water_meter_project_name,
         value: project.water_meter_project_id,
@@ -122,6 +125,10 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
       title: `قیمت هر ${renderUnit(tag?.label, true)} (ریال)`,
       headerKey: "unitPrice",
     },
+    {
+      title: "حذف",
+      headerKey: "Delete",
+    },
   ];
   const renderPatternData = () => {
     let patternTableData: PatternTableData[] = [];
@@ -133,11 +140,33 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
             fromValue: pattern.v1,
             toValue: pattern.v2,
             unitPrice: pattern.k,
+            Delete: renderPatternAction({
+              ...pattern,
+              pattern_id: data.pattern_id,
+            }),
           })
         )
       : (patternTableData = []);
     return patternTableData;
   };
+
+  const renderPatternAction = (pattern: { pattern_id: string }) => {
+    return (
+      <div className="flex items-center justify-center">
+        <CustomButton
+          onClick={() => {
+            if (window.confirm("آیا از حذف این الگو اطمینان دارید؟")) {
+              deletePattern(pattern);
+            }
+          }}
+          icon={<MdDelete />}
+          color="red"
+          extra="!p-2"
+        />
+      </div>
+    );
+  };
+
   const createPattern = () => {
     setPatternId("");
     setSelectedPatternList([]);
@@ -149,6 +178,22 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
     setSelectedPatternList(patternData.data[0].pattern_list);
     onPatternOpen();
     setIsEditForm(true);
+  };
+  const deletePattern = async (pattern: any) => {
+    const response = await reqFunction("Pattern/admin/delete", {
+      pattern_id: pattern.pattern_id,
+    });
+    if (response.code === 200) {
+      renderToast("الگو با موفقیت حذف شد.", "success");
+      patternRefetch();
+    } else {
+      renderToast(
+        response?.farsi_message
+          ? response.farsi_message
+          : "در حذف الگو مشکلی رخ داده",
+        "err"
+      );
+    }
   };
   return (
     <div className=" py-4">

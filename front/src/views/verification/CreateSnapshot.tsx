@@ -106,6 +106,7 @@ const CreateSnapshotView = () => {
   );
 
   // Fetch snapshot list
+  // TODO: Should handle wrong token
   const {
     data: snapshotData,
     isLoading: snapshotLoading,
@@ -236,6 +237,7 @@ const CreateSnapshotView = () => {
         />
         <CustomButton
           onClick={() => {
+            // need to render delete confimation form
             if (window.confirm("آیا از حذف این برداشت اطمینان دارید؟")) {
               snapshotdelete(snapshot);
             }

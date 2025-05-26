@@ -72,7 +72,7 @@ const SystemLogs = () => {
   const tableData = () => {
     let logTableData: systemLogTable = [];
     if (!systemLogIsLoading && systemLogStatus === "success") {
-      systemLogData.data.forEach((obj: SystemLogObject) =>
+      systemLogData?.data?.forEach((obj: SystemLogObject) =>
         logTableData.push({
           logAction: obj.system_log_action,
           logTable: obj.system_log_action_table,
@@ -148,7 +148,7 @@ const SystemLogs = () => {
               <CustomPagination
                 page={page}
                 pageSize={count}
-                totalData={systemLogData.data[0].all_system_logs}
+                totalData={systemLogData?.data?.[0]?.all_system_logs ?? []}
                 changePageFunc={setPage}
                 changeCount={setCount}
               />
