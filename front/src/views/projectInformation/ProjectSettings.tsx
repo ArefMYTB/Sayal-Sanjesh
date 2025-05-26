@@ -132,10 +132,14 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
   ];
   const renderPatternData = () => {
     let patternTableData: PatternTableData[] = [];
-    const data: PatternObject = patternData.data[0];
+    const data: PatternObject | null =
+      Array.isArray(patternData?.data) && patternData.data.length > 0
+        ? patternData.data[0]
+        : null;
+
     const patternList = data?.pattern_list;
-    patternList && patternList.length > 0
-      ? patternList.forEach((pattern) =>
+    patternList && patternList?.length > 0
+      ? patternList?.forEach((pattern) =>
           patternTableData.push({
             fromValue: pattern.v1,
             toValue: pattern.v2,
@@ -251,7 +255,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
                 icon={<MdAdd />}
                 color="green"
                 extra="ml-4"
-                isDisabled={patternData?.data.length > 0 ? true : false}
+                isDisabled={patternData?.data?.length > 0 ? true : false}
               />
               <CustomButton
                 text="تغییرات الگوی مصرف"
@@ -259,7 +263,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
                 icon={<MdEdit />}
                 color="blue"
                 extra="!ml-0"
-                isDisabled={patternData?.data.length > 0 ? false : true}
+                isDisabled={patternData?.data?.length > 0 ? false : true}
               />
             </div>
           </div>

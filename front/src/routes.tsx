@@ -31,7 +31,7 @@ import LogsView from "views/logs";
 import Warehouse from "views/warehouse";
 // import BillDetailsView from "views/billInformation";
 
-const routes = [
+const rawRoutes = [
   {
     name: "داشبورد",
     layout: "/admin",
@@ -155,4 +155,12 @@ const routes = [
   //   role: "Admin",
   // },
 ];
+
+const Permissions: string[] = JSON.parse(
+  window.localStorage.getItem("permissions") || "[]"
+);
+
+const routes = rawRoutes.filter((route) => Permissions.includes(route.role));
+
+// export default filteredRoutes;
 export default routes;

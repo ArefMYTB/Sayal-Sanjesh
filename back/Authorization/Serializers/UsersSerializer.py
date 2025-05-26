@@ -41,7 +41,7 @@ class UsersSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
              # Admin can see all users
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Joker'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),

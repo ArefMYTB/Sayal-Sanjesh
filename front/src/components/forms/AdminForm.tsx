@@ -90,6 +90,7 @@ const AdminForm = (props: AdminFormProps) => {
     window.localStorage.getItem("permissions")
   );
   const createAdmin = async () => {
+    console.log("Role: ", role);
     if (
       adminName &&
       adminLastname &&

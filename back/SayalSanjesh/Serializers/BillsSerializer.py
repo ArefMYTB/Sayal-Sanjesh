@@ -1058,6 +1058,8 @@ class BillsSerializer:
                 }
                 return True, result
             else:
+                wrong_token_result['code'] = 444
+                wrong_token_result['farsi_message'] = "دسترسی غیرمجاز"
                 return False, wrong_token_result
         else:
             wrong_token_result['code'] = 403

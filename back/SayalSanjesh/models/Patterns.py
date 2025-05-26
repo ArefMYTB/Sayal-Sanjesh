@@ -53,7 +53,7 @@ class Pattern(models.Model):
     admin = models.ForeignKey(Admins, on_delete=models.CASCADE)
     pattern_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     pattern_tag = models.ForeignKey(WaterMetersTags, on_delete=models.DO_NOTHING)
-    pattern_project = models.ForeignKey(WaterMetersProjects, on_delete=models.DO_NOTHING, null=True, blank=True)
+    pattern_project = models.ForeignKey(WaterMetersProjects, on_delete=models.SET_NULL, null=True, blank=True)
     pattern_list = ArrayField(models.JSONField(blank=True), default=list)
     pattern_create_date = models.DateTimeField(default=datetime.now, blank=True)
     objects = CustomPatternManager()

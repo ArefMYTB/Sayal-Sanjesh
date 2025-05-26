@@ -111,8 +111,8 @@ class CustomOrderManager(models.Manager):
 
 class Order(models.Model):
     order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    order_type = models.ForeignKey(OrderType, on_delete=models.DO_NOTHING)
-    order_meter = models.ForeignKey(WaterMeters, on_delete=models.DO_NOTHING)
+    order_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)
+    order_meter = models.ForeignKey(WaterMeters, on_delete=models.CASCADE)
     order_information = models.JSONField()
     order_status = models.IntegerField(default=-1)
     order_status_time = models.DateTimeField(null=True)

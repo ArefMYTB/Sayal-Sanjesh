@@ -15,6 +15,7 @@ import BillComponent from "./BillComponent";
 import moment from "moment";
 import Loading from "components/loading";
 import { renderUnit } from "utils/CommonFunctions";
+import { renderToast } from "utils/globalUtils";
 interface ShowBillsProps {
   projects: ProjectObject[];
   tags: TagObject[];
@@ -142,6 +143,15 @@ const ShowBillView = (props: ShowBillsProps) => {
       }),
     queryKey: ["projectDevice", counter],
   });
+  if (billsData.code === 200) {
+  } else {
+    renderToast(
+      billsData?.farsi_message
+        ? billsData.farsi_message
+        : "در مشاهده قبوض خطایی رخ داده",
+      "err"
+    );
+  }
   const {
     data: patternData,
     isLoading: patternIsLoading,
@@ -253,7 +263,7 @@ const ShowBillView = (props: ShowBillsProps) => {
   ];
   const renderBillTable = () => {
     let billTableData: BillTableData[] = [];
-    billsData.data.forEach((bill: BillObject) =>
+    billsData?.data?.forEach((bill: BillObject) =>
       billTableData.push({
         billSerial: bill.bill_serial,
         billFrom: toPersianDate(bill.bill_start_date),
@@ -326,7 +336,11 @@ const ShowBillView = (props: ShowBillsProps) => {
           <BillComponent
             billInfo={billInfo}
             onClose={onBillClose}
-            patternSample={patternData?.data[0]?.pattern_list}
+            patternSample={
+              Array.isArray(patternData?.data) && patternData.data.length > 0
+                ? patternData.data[0].pattern_list
+                : []
+            }
           />
         }
       />
