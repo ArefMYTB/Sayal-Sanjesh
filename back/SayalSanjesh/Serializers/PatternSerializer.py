@@ -20,7 +20,7 @@ class PatternSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 admin = Admins.objects.get(admin_id=admin_id)
                 # valid input_tag_id
                 try:
@@ -76,7 +76,7 @@ class PatternSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
             admin_object = Admins.objects.get(admin_id =admin_id )
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 admin = Admins.objects.get(admin_id=admin_id)
                 # valid input_tag_id
                 if pattern_tag is not None:
@@ -159,7 +159,7 @@ class PatternSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 admin = Admins.objects.get(admin_id=admin_id)
 
                 # get pattern obj
@@ -195,7 +195,7 @@ class PatternSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 # admin = Admins.objects.get(admin_id=admin_id)
                 offset = int((page - 1) * count)
                 limit = int(count)
@@ -229,7 +229,7 @@ class PatternSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 # admin = Admins.objects.get(admin_id=admin_id)
 
                 try:

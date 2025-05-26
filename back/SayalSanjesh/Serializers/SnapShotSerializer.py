@@ -21,7 +21,7 @@ class SnapShotSerializer:
 
         admin_id = token_result["data"]["user_id"]
 
-        if not AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+        if not AdminsSerializer.admin_check_permission(admin_id, ['Verification']):
             return False, wrong_token_result
 
         # Date & Time
@@ -88,7 +88,7 @@ class SnapShotSerializer:
 
         admin_id = token_result["data"]["user_id"]
 
-        if not AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+        if not AdminsSerializer.admin_check_permission(admin_id, ['Verification']):
             return False, wrong_token_result
 
         try:
@@ -130,7 +130,7 @@ class SnapShotSerializer:
 
         admin_id = token_result["data"]["user_id"]
 
-        if not AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+        if not AdminsSerializer.admin_check_permission(admin_id, ['Verification']):
             return False, wrong_token_result
 
         # Get watermeter ID and datetime from input
@@ -186,7 +186,7 @@ class SnapShotSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin', 'MeterList']):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Verification'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -242,7 +242,7 @@ class SnapShotSerializer:
 
             
             print("uploading")
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Verification']):
                 # generate uuid for dont save repetitive file .
                 uuid_key = uuid.uuid4()
 

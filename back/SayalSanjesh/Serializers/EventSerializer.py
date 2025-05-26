@@ -22,7 +22,7 @@ class EventSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventList'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDDevice', 'ViewDevice']):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 filters = {
@@ -50,7 +50,7 @@ class EventSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventDetail'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDDevice', 'ViewDevice']):
 
                 try:
                     event = Event.objects.get(event_id=event_id)
@@ -76,7 +76,7 @@ class EventSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventDelete'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'CRUDDevice'):
 
                 try:
                     event = Event.objects.get(event_id=event_id)
@@ -106,7 +106,7 @@ class EventSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventDelete'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDDevice', 'ClearDeviceData']):
 
                 try:
                     meter_obj = WaterMeters.objects.get(water_meter_serial =meter_serial )

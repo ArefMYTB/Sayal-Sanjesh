@@ -12,7 +12,7 @@ class SendDataSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
 
                 response = send_message_to_node(data=data_message)
                 print(response)
@@ -34,7 +34,7 @@ class SendDataSerializer:
     #     token_result = token_to_user_id(token)
     #     if token_result["status"] == "OK":
     #         admin_id = token_result["data"]["user_id"]
-    #         if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+    #         if AdminsSerializer.admin_check_permission(admin_id, ''):
     #             SendDataSerializer.send_order_sms(phone_number=phone_number,order=order)
     #             return True, status_success_result
     #

@@ -21,7 +21,7 @@ class MiddleAdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Self'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'CRUDManager']):
                 try:
                     middle_admin = Admins.objects.get(admin_id=middle_admin_id)
                 except:
@@ -79,7 +79,7 @@ class MiddleAdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Self'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'CRUDManager']):
                 try:
                     middle_admin = MiddleAdmins.objects.get(middle_admin_id=middle_admin_id)
                 except:
@@ -145,9 +145,9 @@ class MiddleAdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'SuperAdmin'):
-
-                list_of_middle_admins = Admins.objects.filter(admin_permissions__contains=['MiddleAdmin'])
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'ViewAdmin', 'CRUDManager']):
+                # TODO: This will list all project managers. we can change it so it only shows hight level managers (CRUDManager) to admins and all managers to Joker
+                list_of_middle_admins = Admins.objects.filter(admin_permissions__contains=['CRUDManager'])
                 middle_admin_data = MiddleAdmins.objects.filter(middle_admin_id__in=list_of_middle_admins)
                 result = []
                 for obj in middle_admin_data:
@@ -166,9 +166,10 @@ class MiddleAdminsSerializer:
                     result_dict['middel_admin_projects'] = response
                     result.append(result_dict)
                 return True, result
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
                 admin_obj = Admins.objects.get(admin_id=admin_id)
-                list_of_middle_admins = Admins.objects.filter(admin_permissions__contains=['MiddleAdmin'],
+                list_of_middle_admins = Admins.objects.filter(admin_permissions__contains=['ProjectManager'],
                                                               admin_creator_id=admin_id).exclude(
                     admin_phone=admin_obj.admin_phone)
                 middle_admin_data = MiddleAdmins.objects.filter(middle_admin_id__in=list_of_middle_admins)
@@ -206,7 +207,7 @@ class MiddleAdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 try:
                     middle_admin = MiddleAdmins.objects.get(middle_admin_id=middle_admin_id)
                 except:
@@ -314,7 +315,7 @@ class MiddleAdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'MiddleAdmin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),

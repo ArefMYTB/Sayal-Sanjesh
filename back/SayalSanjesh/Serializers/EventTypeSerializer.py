@@ -17,7 +17,7 @@ class EventTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventTypeList'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 queryset = EventType.objects.all().order_by('event_type_create_time')[offset:offset + limit]
@@ -40,7 +40,7 @@ class EventTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventTypeDetail'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 filters = {
                     "event_type_id": event_type_id,
                     "event_type_code": event_type_code,
@@ -70,14 +70,15 @@ class EventTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventTypeRemove'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
 
                 try:
                     event_type = EventType.objects.get(event_type_id=event_type_id)
                     event_type.delete()
                 except:
-                    wrong_data_result["farsi_message"] = "ای دی های ورودی اشتباه است"
-                    wrong_data_result["english_message"] = "input IDs are wrong"
+                    wrong_data_result["farsi_message"] = "حذف غیرمجاز"
+                    wrong_data_result["english_message"] = "Invalid Deletion"
+                    return False, wrong_data_result
                 return True, status_success_result
             else:
                 return False, wrong_token_result
@@ -96,7 +97,7 @@ class EventTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventTypeCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 admin = Admins.objects.get(admin_id=admin_id)
                 importance_choice = ('H', 'M', 'L')
                 if event_type_importance not in importance_choice:
@@ -149,7 +150,7 @@ class EventTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'EventTypeEdit'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 admin = Admins.objects.get(admin_id=admin_id)
                 importance_choice = ('H', 'M', 'L')
                 if event_type_importance is not None and event_type_importance not in importance_choice:

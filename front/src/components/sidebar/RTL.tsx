@@ -21,7 +21,7 @@ const Sidebar = (props: {
     );
     return r;
   };
-  let decidedRoutes = permissions.includes("SuperAdmin")
+  let decidedRoutes = permissions.includes("Admin")
     ? routes
     : decidePermission();
   const { open, onClose } = props;

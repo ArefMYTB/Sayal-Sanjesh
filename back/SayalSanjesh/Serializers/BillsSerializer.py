@@ -37,7 +37,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['BillManaging', 'ViewDevice']):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 filters = {
@@ -83,7 +83,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 filters = {
                     "bill_id": bill_id,
                     "bill_serial": bill_serial,
@@ -115,7 +115,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 try:
                     bill = Bills.objects.filter(bill_id=bill_id)
                     bill.update(payment_dead_line=payment_dead_line, other_information=other_information)
@@ -139,7 +139,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 try:
                     bill = Bills.objects.get(bill_id=bill_id)
                     bill.delete()
@@ -166,7 +166,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 admin = Admins.objects.get(admin_id=admin_id)
 
                 try:
@@ -438,7 +438,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 # get_tag
                 try:
                     tag_obj = WaterMetersTags.objects.get(water_meter_tag_id=meter_tag_id)
@@ -621,7 +621,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 # get project details
                 try:
                     project_obj = WaterMetersProjects.objects.get(water_meter_project_id=project_id)
@@ -727,7 +727,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 admin = Admins.objects.get(admin_id=admin_id)
 
                 try:
@@ -833,7 +833,7 @@ class BillsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'BillManaging'):
                 admin = Admins.objects.get(admin_id=admin_id)
                 # check calculate_method
                 valid_calculate_method = ['from_project', 'from_meter', 'project_priority', 'meter_priority']

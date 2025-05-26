@@ -8,8 +8,8 @@ const UsersView = () => {
     window.localStorage.getItem("permissions")
   );
   const tabsData =
-    AdminPermissions.includes("SuperAdmin") ||
-    AdminPermissions.includes("CreateMiddleAdmin")
+    AdminPermissions.includes("ViewAdmin") ||
+    AdminPermissions.includes("CRUDManager")
       ? [
           { label: "بهره بردار", content: <UsersTable /> },
           { label: "کاربر سیستم", content: <AdminsTable /> },

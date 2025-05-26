@@ -36,14 +36,14 @@ class AdminsSerializer:
             else:
                 return False
         else:
-            counter = len(permission)
+            # counter = len(permission)
             counter_checker = 0
             for per in permission:
                 if per in admin.admin_permissions:
                     counter_checker += 1
                 else:
                     pass
-            if counter_checker == counter:
+            if counter_checker > 0:
                 return True
             else:
                 return False
@@ -89,39 +89,37 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Self'):
-                admin = Admins.objects.get(admin_id=admin_id)
-                admin_phone_number = admin.admin_phone
-                admin.admin_name = admin_name
-                admin.admin_lastname = admin_lastname
-                admin.other_information = other_information
-                if admin_password != None:
-                    admin.admin_password = admin_password
-                admin.save()
-                if filepath != "":
-                    uploader_class = UploadSerializer()
-                    file_result = uploader_class.upload(file=filepath)[1]
-                    # folder_name = str(admin.admin_phone)
-                    # file_manager = FileManager()
-                    # file_result = file_manager.File_upload_handler(file=filepath, folder_name=folder_name,
-                    #                                                owner_name='Admin')
-                    # Count the number of occurrences of the word in the URL
-                    count = len(re.findall('/media', file_result['fileurl']))
+            admin = Admins.objects.get(admin_id=admin_id)
+            admin_phone_number = admin.admin_phone
+            admin.admin_name = admin_name
+            admin.admin_lastname = admin_lastname
+            admin.other_information = other_information
+            if admin_password != None:
+                admin.admin_password = admin_password
+            admin.save()
+            if filepath != "":
+                uploader_class = UploadSerializer()
+                file_result = uploader_class.upload(file=filepath)[1]
+                # folder_name = str(admin.admin_phone)
+                # file_manager = FileManager()
+                # file_result = file_manager.File_upload_handler(file=filepath, folder_name=folder_name,
+                #                                                owner_name='Admin')
+                # Count the number of occurrences of the word in the URL
+                count = len(re.findall('/media', file_result['fileurl']))
 
-                    # If the word appears more than once, delete the first occurrence
-                    if count > 1:
-                        file_result['fileurl'] = re.sub('/media', '', file_result['fileurl'], count=1)
-                    admin.admin_images = [file_result.get('fileurl')]
-                    print(file_result.get('fileurl'))
-                    admin.save()
-                    middle_admin_publish_data = {
-                        'admin_phone_number': admin_phone_number,
-                        'from_where': 'edit_user'
-                    }
-                    publish_message_to_client(publish_func='middle_admin', data=middle_admin_publish_data)
-                return True, status_success_result
-            else:
-                return False, wrong_token_result
+                # If the word appears more than once, delete the first occurrence
+                if count > 1:
+                    file_result['fileurl'] = re.sub('/media', '', file_result['fileurl'], count=1)
+                admin.admin_images = [file_result.get('fileurl')]
+                print(file_result.get('fileurl'))
+                admin.save()
+                middle_admin_publish_data = {
+                    'admin_phone_number': admin_phone_number,
+                    'from_where': 'edit_user'
+                }
+                publish_message_to_client(publish_func='middle_admin', data=middle_admin_publish_data)
+            return True, status_success_result
+            
         else:
             return False, wrong_token_result
 
@@ -137,12 +135,12 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
-                queryset = Admins.objects.get(admin_id=admin_id)
-                response = Admins.objects.serialize(queryset=queryset)
-                return True, response
-            else:
-                return False, wrong_token_result
+            # if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            queryset = Admins.objects.get(admin_id=admin_id)
+            response = Admins.objects.serialize(queryset=queryset)
+            return True, response
+            # else:
+            #     return False, wrong_token_result
         else:
             return False, wrong_token_result
 
@@ -158,7 +156,7 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 try:
                     queryset = Admins.objects.get(admin_id=admin_id)
                     response = Admins.objects.serialize(queryset=queryset)
@@ -185,18 +183,15 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Self'):
-                admin = Admins.objects.get(admin_id=admin_id)
-                if admin.admin_password == admin_old_password:
-                    admin.admin_password = new_password
-                    admin.save()
-                else:
-                    wrong_data_result["farsi_message"] = "پسورد اشتباه است"
-                    wrong_data_result["english_message"] = "Wrong password"
-                    return False, wrong_data_result
-                return True, status_success_result
+            admin = Admins.objects.get(admin_id=admin_id)
+            if admin.admin_password == admin_old_password:
+                admin.admin_password = new_password
+                admin.save()
             else:
-                return False, wrong_token_result
+                wrong_data_result["farsi_message"] = "پسورد اشتباه است"
+                wrong_data_result["english_message"] = "Wrong password"
+                return False, wrong_data_result
+            return True, status_success_result
         else:
             return False, wrong_token_result
 
@@ -215,7 +210,8 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'CRUDManager']):
+                admin_permissions.append("Self")
                 admin_obj = Admins.objects.get(admin_id=admin_id)
                 if len(admin_phone) > 11 or len(admin_phone) < 11:
                     wrong_data_result["farsi_message"] = "لطفا یازده رقم وارد کنید "
@@ -234,7 +230,8 @@ class AdminsSerializer:
                         admin.admin_password = password_hashing
                         admin.admin_permissions = admin_permissions
                         admin.other_information = other_information
-                        if 'MiddleAdmin' in admin_permissions:
+                        
+                        if 'ProjectManager' in admin_permissions:
                             admin.admin_creator_id = str(admin_obj.admin_id)
                         admin.save()
                         admin_object = Admins.objects.get(admin_id=admin_id)
@@ -279,14 +276,14 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDManager', 'CRUDAdmin', 'ViewAdmin']):
                 filters = {
                     "admin_name__contains": admin_name,
                     "admin_lastname__contains": admin_lastname,
                     "admin_phone__contains": admin_phone
                 }
                 filters = {k: v for k, v in filters.items() if v is not None or v != ""}
-                if AdminsSerializer.admin_check_permission(admin_id, 'MiddleAdmin'):
+                if AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
                     admin_obj = Admins.objects.get(admin_id=admin_id)
                     queryset = Admins.objects.filter(Q(admin_id=admin_id) | Q(admin_creator_id=str(admin_id))).exclude(
                         admin_phone=admin_obj.admin_phone).order_by(
@@ -316,7 +313,7 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'CRUDManager']):
                 admin = Admins.objects.get(admin_id=other_admin_id)
                 first_device_state_dict = {
                     "admin_name": admin.admin_name,
@@ -377,7 +374,8 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            # TODO: But It Should Be Priortize (Joker removes Admin&ProjectManager - Project Manager removes low level Project Manager)
+            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'CRUDManager']):
                 try:
                     admin = Admins.objects.get(admin_id=other_admin_id)
 
@@ -418,7 +416,7 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 try:
                     other_admin_id = Admins.objects.get(admin_id=other_admin_id)
                 except:
@@ -462,7 +460,7 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 try:
                     other_admin_id = Admins.objects.get(admin_id=other_admin_id)
                 except:
@@ -719,17 +717,17 @@ class AdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_self_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_self_id, 'Admin'):
-                try:
-                    token_object = Token.objects.get(token=token)
-                    token_object.delete()
+            # if AdminsSerializer.admin_check_permission(admin_self_id, 'Admin'):
+            try:
+                token_object = Token.objects.get(token=token)
+                token_object.delete()
 
-                except Token.DoesNotExist:
-                    wrong_data_result["farsi_message"] = "داده نامعتبر"
-                    wrong_data_result["english_message"] = "Invalid data"
-                    return False, wrong_data_result
-                return True, status_success_result
-            else:
-                return False, wrong_token_result
+            except Token.DoesNotExist:
+                wrong_data_result["farsi_message"] = "داده نامعتبر"
+                wrong_data_result["english_message"] = "Invalid data"
+                return False, wrong_data_result
+            return True, status_success_result
+            # else:
+            #     return False, wrong_token_result
         else:
             return False, wrong_token_result

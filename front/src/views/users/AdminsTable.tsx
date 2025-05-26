@@ -12,7 +12,7 @@ import { useState } from "react";
 import { DynamicOption } from "components/fields/SelectInput";
 import { PermissionCategory } from "views/settings/PermissionsCategory";
 import AssignProjectForm, {
-  MiddleAdmins,
+  ProjectManagers,
 } from "components/forms/AssignProjectForm";
 import { ProjectObject } from "views/projects";
 import { renderToast } from "utils/globalUtils";
@@ -137,20 +137,23 @@ const AdminsTable = () => {
     let options: DynamicOption[] = [];
 
     data?.forEach((d) => {
-      if (d.permission_category_english_name !== "DefaultPermissions") {
+      const isDefault =
+        d.permission_category_english_name === "DefaultPermissions";
+      const isAdminExcluded =
+        d.permission_category_english_name === "Admin" &&
+        ADMINPERMISSIONS.includes("ProjectManager");
+
+      if (!isDefault && !isAdminExcluded) {
         options.push({
           label: d.permission_category_persian_name,
           value: d.permission_category_english_name,
-          disabled:
-            d.permission_category_english_name === "SuperAdmin" &&
-            ADMINPERMISSIONS.includes("MiddleAdmin")
-              ? true
-              : false,
         });
       }
     });
+
     return options;
   };
+
   const editAdminClick = (id: string) => {
     let selectedAdmin: AdminsObject[] = adminsData.data.filter(
       (admin: AdminsObject) => id === admin.admin_id
@@ -160,14 +163,14 @@ const AdminsTable = () => {
     setAdminName(selectedAdmin[0].admin_name);
     setAdminLastname(selectedAdmin[0].admin_lastname);
     setAdminPhoneNumber(selectedAdmin[0].admin_phone);
-    selectedAdmin[0].admin_permissions.includes("SuperAdmin")
+    selectedAdmin[0].admin_permissions.includes("Admin")
       ? setRole({
           label: "مدیر سیستم",
-          value: "SuperAdmin",
+          value: "Admin",
         })
       : setRole({
           label: "مدیر پروژه",
-          value: "MiddleAdmin",
+          value: "ProjectManager",
         });
     setSelectedPermissions(selectedAdmin[0].admin_permissions);
     onAdminOpen();
@@ -200,7 +203,8 @@ const AdminsTable = () => {
   const renderAdminActions = (adminId: string) => {
     return (
       <div className=" flex items-center justify-center">
-        {ADMINPERMISSIONS.includes("EditMiddleAdmin") ? (
+        {ADMINPERMISSIONS.includes("CRUDAdmin") ||
+        ADMINPERMISSIONS.includes("CRUDManager") ? (
           <CustomButton
             onClick={() => editAdminClick(adminId)}
             icon={<MdEdit />}
@@ -210,12 +214,12 @@ const AdminsTable = () => {
         ) : (
           <></>
         )}
-        {ADMINPERMISSIONS.includes("DeleteMiddleAdmin") ? (
+        {ADMINPERMISSIONS.includes("CRUDAdmin") ||
+        ADMINPERMISSIONS.includes("CRUDManager") ? (
           <CustomButton
             onClick={() => {
-              if (window.confirm("آیا از حذف این ادمین اطمینان دارید؟")) {
-                deleteAdminClick(adminId);
-              }
+              // need to render delete confimation form !!! This one is done
+              deleteAdminClick(adminId);
             }}
             icon={<MdDelete />}
             color="red"
@@ -231,15 +235,15 @@ const AdminsTable = () => {
     setAdminId(obj.admin_id);
     let projects = middlesProject?.data ? middlesProject.data : [];
     let selectedMiddle = projects.filter(
-      (admin: MiddleAdmins) => admin.admin_id === obj.admin_id
+      (admin: ProjectManagers) => admin.admin_id === obj.admin_id
     );
-    let middleAdminProjectIds: string[] = [];
+    let ProjectManagerProjectIds: string[] = [];
     if (selectedMiddle.length > 0) {
       selectedMiddle[0].middel_admin_projects.forEach((p: ProjectObject) =>
-        middleAdminProjectIds.push(p.water_meter_project_id)
+        ProjectManagerProjectIds.push(p.water_meter_project_id)
       );
     }
-    setMiddleProjectIds(middleAdminProjectIds);
+    setMiddleProjectIds(ProjectManagerProjectIds);
     onAssignProjectOpen();
   };
   const renderAssignBtn = (obj: AdminsObject) => {
@@ -250,30 +254,32 @@ const AdminsTable = () => {
           icon={<MdAddCircleOutline />}
           color="green"
           extra="!p-2"
-          isDisabled={obj.admin_permissions.includes("SuperAdmin")}
+          isDisabled={obj.admin_permissions.includes("Admin")}
         />
       </div>
     );
   };
-  const adminsTableHeader = ADMINPERMISSIONS.includes("AssignProject")
-    ? [
-        { title: "نام کاربر سیستم", headerKey: "adminName" },
-        { title: "شماره تماس", headerKey: "adminPhone" },
-        { title: "تاریخ عضویت", headerKey: "adminCreateDate" },
-        { title: "نقش کاربر سیستم", headerKey: "adminPermissions" },
-        { title: "افزودن پروژه", headerKey: "assignProject" },
-        { title: "عملیات", headerKey: "adminAction" },
-      ]
-    : [
-        { title: "نام کاربر سیستم", headerKey: "adminName" },
-        { title: "شماره تماس", headerKey: "adminPhone" },
-        { title: "تاریخ عضویت", headerKey: "adminCreateDate" },
-        { title: "نقش کاربر سیستم", headerKey: "adminPermissions" },
-        { title: "عملیات", headerKey: "adminAction" },
-      ];
+  const adminsTableHeader =
+    ADMINPERMISSIONS.includes("CRUDManager") ||
+    ADMINPERMISSIONS.includes("CRUDAdmin")
+      ? [
+          { title: "نام کاربر سیستم", headerKey: "adminName" },
+          { title: "شماره تماس", headerKey: "adminPhone" },
+          { title: "تاریخ عضویت", headerKey: "adminCreateDate" },
+          { title: "نقش کاربر سیستم", headerKey: "adminPermissions" },
+          { title: "افزودن پروژه", headerKey: "assignProject" },
+          { title: "عملیات", headerKey: "adminAction" },
+        ]
+      : [
+          { title: "نام کاربر سیستم", headerKey: "adminName" },
+          { title: "شماره تماس", headerKey: "adminPhone" },
+          { title: "تاریخ عضویت", headerKey: "adminCreateDate" },
+          { title: "نقش کاربر سیستم", headerKey: "adminPermissions" },
+          { title: "عملیات", headerKey: "adminAction" },
+        ];
   const renderProjectSelect = (data: ProjectObject[]) => {
     let projectOptions: DynamicOption[] = [];
-    data.forEach((project) =>
+    data?.forEach((project) =>
       projectOptions.push({
         label: project.water_meter_project_name,
         value: project.water_meter_project_id,
@@ -284,12 +290,12 @@ const AdminsTable = () => {
   const tableData = () => {
     let projectTableData: AdminTableData = [];
     if (!adminsIsLoading && adminsStatus !== "pending") {
-      adminsData.data.forEach((obj: AdminsObject) =>
+      adminsData.data?.forEach((obj: AdminsObject) =>
         projectTableData.push({
           adminName: `${obj.admin_name} ${obj.admin_lastname}`,
           adminPhone: obj.admin_phone,
           adminCreateDate: toPersianDate(obj.admin_create_date),
-          adminPermissions: obj.admin_permissions.includes("SuperAdmin")
+          adminPermissions: obj.admin_permissions.includes("Admin")
             ? "مدیر سیستم"
             : "مدیر پروژه",
           assignProject: renderAssignBtn(obj),
@@ -348,7 +354,7 @@ const AdminsTable = () => {
                 onClose={onAssignProjectClose}
                 projectSelectData={renderProjectSelect(projectsData.data)}
                 middleId={adminId}
-                middleAdmins={middlesProject?.data}
+                ProjectManagers={middlesProject?.data}
                 middleProjectRefetch={middlesProjectRefetch}
                 middleProjectIds={middleProjectIds}
               />
@@ -398,13 +404,14 @@ const AdminsTable = () => {
             <div className="relative flex items-center justify-between p-4">
               <div className="text-xl font-bold text-navy-700 dark:text-white">
                 {`کاربران سیستم (${
-                  adminsIsLoading ? "loading..." : adminsData?.data.length
+                  adminsIsLoading ? "loading..." : adminsData?.data?.length
                 })`}
               </div>
               <div className=" moldal-btns flex items-center justify-end">
-                {!rolesIsLoading &&
-                rolesStatus === "success" &&
-                ADMINPERMISSIONS.includes("CreateMiddleAdmin") ? (
+                {(!rolesIsLoading &&
+                  rolesStatus === "success" &&
+                  ADMINPERMISSIONS.includes("CRUDAdmin")) ||
+                ADMINPERMISSIONS.includes("CRUDManager") ? (
                   <CustomButton
                     text="ایجاد کاربر سیستم"
                     onClick={() => addAdminClicked(rolesData.data)}

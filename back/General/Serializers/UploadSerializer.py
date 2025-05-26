@@ -49,8 +49,6 @@ class UploadSerializer:
     def admin_upload_file_serializer(token, file):
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
-            admin_id = token_result["data"]["user_id"]
-            # if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
             # generate uuid for dont save repetitive file .
             uuid_key = uuid.uuid4()
 

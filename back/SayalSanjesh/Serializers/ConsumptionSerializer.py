@@ -131,7 +131,7 @@ class ConsumptionSerializer:
                     consumptions_result.append(consumption_info)
                 return consumptions_result
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['ViewDevice']):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -158,8 +158,8 @@ class ConsumptionSerializer:
                     return True, cons_results
                 else:
                     return field_result
-
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
                 middle_admin = MiddleAdmins.objects.get(middle_admin_id=admin_id)
                 middle_admin_projects_list = middle_admin.project_ids
                 middle_admin_water_meters_values = WaterMeters.objects.filter(
@@ -225,7 +225,7 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
 
-            if AdminsSerializer.admin_check_permission(admin_id, 'Consumption'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'ViewDevice'):
                 try:
                     consumption = WaterMetersConsumptions.objects.get(consumption_id=consumption_id)
                 except:
@@ -316,7 +316,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Consumption'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Joker', 'ClearDeviceData']):
                 # check for deleting consumptions
                 valid_mode = ['all', 'single_consumption', 'time']
                 if mode not in valid_mode:
@@ -406,7 +406,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Consumption'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Joker'):
                 fields = {
                     "value": (value, str),
                     "information": (information, dict)
@@ -647,7 +647,7 @@ class ConsumptionSerializer:
                 else:
                     return True, []
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['Base', 'Admin']):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -759,7 +759,7 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['Base', 'Admin']):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
 
                 current_time = datetime.now()
                 one_day_before = current_time - timedelta(days=1)
@@ -919,7 +919,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Consumption'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'ViewDevice'):
                 try:
                     consumption = WaterMetersConsumptions.objects.filter(water_meters=water_meter_serial).order_by(
                         'create_time').last()
@@ -948,7 +948,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Consumption'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'ViewDevice'):
                 all_consumption_values = WaterMetersConsumptions.objects.all().values('value')
                 all_values = {}
                 number = 0
@@ -982,7 +982,7 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['ViewProject', 'ViewDevice', 'Reports']):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -1049,7 +1049,8 @@ class ConsumptionSerializer:
                 else:
                     return field_result
 
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
                 middle_admin = MiddleAdmins.objects.get(middle_admin_id=admin_id)
                 # middle_admin_water_meters = middle_admin.water_meter_ids
                 middle_admin_project_ids = middle_admin.project_ids
@@ -1154,7 +1155,7 @@ class ConsumptionSerializer:
                     consumptions_result.append(consumption_info)
                 return consumptions_result
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['ViewProject', 'ViewDevice']):
                 filters = {
                     'water_meters': water_meters,
                     'water_meters__water_meter_user': user_id,
@@ -1169,8 +1170,9 @@ class ConsumptionSerializer:
                 all_consumption_paginated = all_consumption.order_by('-create_time')
                 cons_results = consumption_results(all_consumption=all_consumption_paginated)
                 return True, cons_results
-
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin']):
+            
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
                 middle_admin = MiddleAdmins.objects.get(middle_admin_id=admin_id)
                 middle_admin_projects_list = middle_admin.project_ids
                 middle_admin_water_meters_values = WaterMeters.objects.filter(
@@ -1222,7 +1224,7 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['Admin']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Reports']):
                 result_data = {}
                 for meter_id in water_meters_list:
                     filters = {
@@ -1255,7 +1257,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin', 'Consumption']):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Reports'):
                 all_consumption = WaterMetersConsumptions.objects.all()
                 # .annotate(Sum('price'))
                 # .aggregate(Sum('price'))
@@ -1274,7 +1276,8 @@ class ConsumptionSerializer:
 
                     }
                 return True, result
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin', 'Consumption']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Consumption']):
                 middle_admin_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 all_consumption = WaterMetersConsumptions.objects.filter(
                     water_meters__water_meter_project__water_meter_project_id__in=middle_admin_projects)
@@ -1312,7 +1315,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 # get water_meters
                 try:
                     water_meters = WaterMeters.objects.filter(water_meter_project=water_meter_project,
@@ -1409,7 +1412,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 # get water_meters
                 try:
                     water_meters = WaterMeters.objects.filter(water_meter_project=water_meter_project,
@@ -1539,7 +1542,8 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            # TODO: Check again
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 # get water_meters
                 try:
                     filters = {
@@ -1607,7 +1611,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'ViewDevice'):
                 # consumptions
                 filters = {
                     "water_meters": water_meter_serial,
@@ -1677,7 +1681,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 # check for each meter serial in list .
                 meter_not_valid = []
                 res_dict = {}
@@ -1736,7 +1740,7 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['Base', 'Consumption']):
+            if AdminsSerializer.admin_check_permission(admin_id, 'ViewDevice'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -1805,7 +1809,7 @@ class ConsumptionSerializer:
                     return True, response
                 else:
                     return field_result
-
+            # TODO: Remove This Section
             elif AdminsSerializer.admin_check_permission(admin_id, ['Middle', 'Consumption']):
                 middle_admin = MiddleAdmins.objects.get(middle_admin_id=admin_id)
                 # middle_admin_water_meters = middle_admin.water_meter_ids
@@ -2041,7 +2045,7 @@ class ConsumptionSerializer:
 
                 return result
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin']):
+            if AdminsSerializer.admin_check_permission(admin_id, 'ViewProject'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -2065,7 +2069,8 @@ class ConsumptionSerializer:
                 else:
                     return field_result
 
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),

@@ -153,7 +153,10 @@ const ProjectCounters = (props: ProjectCountersProps) => {
     },
     { title: "آخرین صدور قبض", headerKey: "lastBillDate" },
   ];
-  if (AdminPermissions.includes("MeterDetail")) {
+  if (
+    AdminPermissions.includes("ViewDevice") ||
+    AdminPermissions.includes("CRUDDevice")
+  ) {
     tableHeader.push({ title: "عملیات", headerKey: "consumptionActions" });
   }
   const deviceNumberPerTag = (tag: DynamicOption) => {
@@ -174,7 +177,8 @@ const ProjectCounters = (props: ProjectCountersProps) => {
   const renderDeviceName = (name: string, serial: string) => {
     return (
       <>
-        {AdminPermissions.includes("MeterDetail") ? (
+        {AdminPermissions.includes("ViewDevice") ||
+        AdminPermissions.includes("CRUDDevice") ? (
           <Link to={`/admin/counters/${serial}`} rel="noopener noreferrer">
             <span>{name}</span>
           </Link>

@@ -291,8 +291,8 @@ const Dashboard = () => {
                   پروژه به تفکیک شهر
                 </div>
                 <PieChart
-                  chartOptions={renderChartOptions(citiesData.data)}
-                  chartData={renderChartData(citiesData.data)}
+                  chartOptions={renderChartOptions(citiesData?.data)}
+                  chartData={renderChartData(citiesData?.data)}
                 />
               </div>
             </div>
@@ -338,7 +338,7 @@ const Dashboard = () => {
         <div className="chart-container mx-auto h-[60vh] w-full min-w-[95%]">
           <MixChart
             chartData={renderComplexChartData(
-              consumptionsDatesData.data,
+              consumptionsDatesData?.data,
               fromDate,
               tillDate
             )}
@@ -354,7 +354,7 @@ const Dashboard = () => {
         // <div>chart is loading</div>
         <Loading />
       )}
-      {permissions.includes("SuperAdmin") ? (
+      {permissions.includes("Admin") ? (
         <>
           {!typesConditionIsLoading && typesConditionStatus === "success" ? (
             <>

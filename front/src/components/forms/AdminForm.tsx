@@ -100,7 +100,7 @@ const AdminForm = (props: AdminFormProps) => {
       let aPermissions = [
         ...selectedPermissions,
         ...defaultPermissions,
-        role.value === "SuperAdmin" ? "SuperAdmin" : "MiddleAdmin",
+        role.value === "Admin" ? "Admin" : "ProjectManager",
       ];
       let uniqPermissions = aPermissions.filter(
         (value, index) => aPermissions.indexOf(value) === index
@@ -142,7 +142,7 @@ const AdminForm = (props: AdminFormProps) => {
     let aPermissions = [
       ...selectedPermissions,
       ...defaultPermissions,
-      role.value === "SuperAdmin" ? "SuperAdmin" : "MiddleAdmin",
+      role.value === "Admin" ? "Admin" : "ProjectManager",
     ];
     let uniqPermissions = aPermissions.filter(
       (value, index) => aPermissions.indexOf(value) === index
@@ -191,7 +191,6 @@ const AdminForm = (props: AdminFormProps) => {
       Array.isArray(rolesData?.data) && rolesData.data.length > 0
         ? rolesData.data[0].permissions_with_this_category
         : [];
-
     let modifiedPermissions: PermissionObject[] = [];
     if (rolePermissions) {
       rolePermissions.forEach((p) => {
@@ -206,8 +205,8 @@ const AdminForm = (props: AdminFormProps) => {
           ? modifiedPermissions
               .filter(
                 (permissions) =>
-                  permissions.permission_english_name !== "SuperAdmin" &&
-                  permissions.permission_english_name !== "MiddleAdmin" &&
+                  permissions.permission_english_name !== "Admin" &&
+                  permissions.permission_english_name !== "ProjectManager" &&
                   !defaultPermissions.includes(
                     permissions.permission_english_name
                   )

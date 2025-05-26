@@ -26,6 +26,10 @@ import DeleteAllData from "./DeleteAllData";
 // import MqttClient from "components/MQTT";
 
 const ProjectDetailsView = () => {
+  const AdminPermissions: string[] = JSON.parse(
+    window.localStorage.getItem("permissions")
+  );
+
   const { projectId } = useParams();
   const [tag, setTag] = useState<DynamicOption>(counterTagSelect[0]);
   const [sortValue, setSortValue] = useState<DynamicOption>(sortValueSelect[0]);
@@ -135,7 +139,10 @@ const ProjectDetailsView = () => {
       content: <ProjectBuyers projectDevices={projectDeviceData?.data} />,
     },
   ];
-  if (projectId === "1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1") {
+  if (
+    projectId === "1f0dba9e-1ecd-48a0-b0b4-fa880f7985f1" &&
+    AdminPermissions.includes("ClearDeviceData")
+  ) {
     tabsData.push({
       label: "پاک کردن",
       content: (

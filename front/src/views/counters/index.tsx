@@ -155,7 +155,9 @@ const CountersView = () => {
         water_meter_module_create_date: "",
       }),
     queryKey: ["modulesList"],
+    enabled: AdminPermissions.includes("CRUDDevice"), // only runs if permission is present
   });
+
   const {
     data: usersData,
     isLoading: usersIsLoading,
@@ -176,33 +178,18 @@ const CountersView = () => {
     onOpen: onDeviceOpen,
     onClose: onDeviceClose,
   } = useDisclosure();
-  const devicesTableHeader =
-    AdminPermissions.includes("MeterEdit") ||
-    AdminPermissions.includes("MeterDelete") ||
-    AdminPermissions.includes("MeterDetail")
-      ? [
-          { title: "نام دستگاه", headerKey: "deviceName" },
-          { title: "سریال دستگاه", headerKey: "deviceSerial" },
-          { title: "نام پروژه", headerKey: "deviceProject" },
-          { title: "دسته بندی", headerKey: "deviceTag" },
-          { title: "نوع دستگاه", headerKey: "deviceType" },
-          { title: "وضعیت تایید(ماژول)", headerKey: "deviceValidation" },
-          { title: "فعال سازی(کاربر)", headerKey: "deviceActivation" },
-          { title: "بهره بردار", headerKey: "deviceOwner" },
-          { title: "ماژول دستگاه", headerKey: "deviceModuleName" },
-          { title: "عملیات", headerKey: "deviceActions" },
-        ]
-      : [
-          { title: "نام دستگاه", headerKey: "deviceName" },
-          { title: "سریال دستگاه", headerKey: "deviceSerial" },
-          { title: "نام پروژه", headerKey: "deviceProject" },
-          { title: "دسته بندی", headerKey: "deviceTag" },
-          { title: "نوع دستگاه", headerKey: "deviceType" },
-          { title: "وضعیت تایید(ماژول)", headerKey: "deviceValidation" },
-          { title: "فعال سازی(کاربر)", headerKey: "deviceActivation" },
-          { title: "بهره بردار", headerKey: "deviceOwner" },
-          { title: "ماژول دستگاه", headerKey: "deviceModuleName" },
-        ];
+  const devicesTableHeader = [
+    { title: "نام دستگاه", headerKey: "deviceName" },
+    { title: "سریال دستگاه", headerKey: "deviceSerial" },
+    { title: "نام پروژه", headerKey: "deviceProject" },
+    { title: "دسته بندی", headerKey: "deviceTag" },
+    { title: "نوع دستگاه", headerKey: "deviceType" },
+    { title: "وضعیت تایید(ماژول)", headerKey: "deviceValidation" },
+    { title: "فعال سازی(کاربر)", headerKey: "deviceActivation" },
+    { title: "بهره بردار", headerKey: "deviceOwner" },
+    { title: "ماژول دستگاه", headerKey: "deviceModuleName" },
+    { title: "عملیات", headerKey: "deviceActions" },
+  ];
   const renderTags = (renderType: "select" | "show", tagId: string) => {
     if (!tagsIsLoading && tagsStatus !== "pending") {
       const renderTag = (id: string) => {
@@ -257,7 +244,7 @@ const CountersView = () => {
   const renderTypesSelectData = () => {
     let selectedData: DynamicOption[] = [];
     if (!typesIsLoading && typesStatus !== "pending") {
-      typesData.data.forEach(
+      typesData?.data?.forEach(
         (type: {
           water_meter_type_name: string;
           water_meter_type_id: string;
@@ -275,7 +262,7 @@ const CountersView = () => {
   const renderProjectSelectData = () => {
     let selectedData: DynamicOption[] = [];
     if (!projectsIsLoading && projectsStatus !== "pending") {
-      projectsData.data.forEach(
+      projectsData?.data?.forEach(
         (project: {
           water_meter_project_name: string;
           water_meter_project_id: string;
@@ -370,7 +357,8 @@ const CountersView = () => {
   const renderDeviceName = (name: string, serial: string) => {
     return (
       <>
-        {AdminPermissions.includes("MeterDetail") ? (
+        {AdminPermissions.includes("ViewDevice") ||
+        AdminPermissions.includes("CRUDDevice") ? (
           <Link to={`/admin/counters/${serial}`} rel="noopener noreferrer">
             <span>{name}</span>
           </Link>
@@ -383,7 +371,8 @@ const CountersView = () => {
   const renderDeviceActions = (deviceSerial: string) => {
     return (
       <div className=" flex items-center justify-center">
-        {AdminPermissions.includes("MeterDetail") ? (
+        {AdminPermissions.includes("ViewDevice") ||
+        AdminPermissions.includes("CRUDDevice") ? (
           <Link
             to={`/admin/counters/${deviceSerial}`}
             rel="noopener noreferrer"
@@ -399,7 +388,7 @@ const CountersView = () => {
         ) : (
           <></>
         )}
-        {AdminPermissions.includes("MeterEdit") ? (
+        {AdminPermissions.includes("CRUDDevice") ? (
           <CustomButton
             onClick={() => editDeviceClick(deviceSerial)}
             icon={<MdEdit />}
@@ -409,7 +398,7 @@ const CountersView = () => {
         ) : (
           <></>
         )}
-        {AdminPermissions.includes("MeterDelete") ? (
+        {AdminPermissions.includes("CRUDDevice") ? (
           <CustomButton
             onClick={() => {
               if (window.confirm("غیر فعال")) {
@@ -429,7 +418,7 @@ const CountersView = () => {
   const tableData = () => {
     let deviceTableData: DeviceTableData = [];
     if (!devicesIsLoading && devicesStatus !== "pending") {
-      devicesData.data.forEach((device: DeviceObj) => {
+      devicesData?.data?.forEach((device: DeviceObj) => {
         deviceTableData.push({
           deviceName: renderDeviceName(
             device.water_meter_name,
@@ -521,13 +510,14 @@ const CountersView = () => {
             {`دستگاه ها (${
               devicesIsLoading
                 ? "loading..."
-                : devicesData?.data[0]?.all_water_meters
-                ? devicesData?.data[0]?.all_water_meters
+                : Array.isArray(devicesData?.data) &&
+                  devicesData.data.length > 0
+                ? devicesData.data[0].all_water_meters
                 : 0
             })`}
           </div>
           {/* <div className=" moldal-btns flex items-center justify-end">
-            {AdminPermissions.includes("MeterCreate") ? (
+            {AdminPermissions.includes("Store") ? (
               <CustomButton
                 text="افزودن کنتور"
                 onClick={() => {
@@ -556,7 +546,7 @@ const CountersView = () => {
             page={page}
             pageSize={count}
             totalData={
-              devicesData?.data.length > 0
+              devicesData?.data?.length > 0
                 ? devicesData.data[0].all_water_meters
                 : 0
             }

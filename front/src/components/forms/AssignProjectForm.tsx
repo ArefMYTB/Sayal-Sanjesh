@@ -6,7 +6,7 @@ import { reqFunction } from "utils/API";
 import { renderToast } from "utils/globalUtils";
 import { ProjectObject } from "views/projects";
 
-export type MiddleAdmins = {
+export type ProjectManagers = {
   admin_id: string;
   admin_name: string;
   admin_lastname: string;
@@ -17,7 +17,7 @@ interface AssignProjectFormProps {
   projectSelectData?: DynamicOption[] | null;
   onClose: Function;
   middleId: string;
-  middleAdmins: MiddleAdmins[];
+  ProjectManagers: ProjectManagers[];
   middleProjectRefetch: Function;
   middleProjectIds: string[];
   // updateTable: any;
@@ -29,12 +29,11 @@ const AssignProjectForm = (props: AssignProjectFormProps) => {
     projectSelectData,
     onClose,
     middleId,
-    middleAdmins,
+    ProjectManagers,
     middleProjectRefetch,
     middleProjectIds,
     // updateTable,
   } = props;
-  // //console.log(middleAdmins);
   const deleteMiddleProject = async (
     pid: string,
     middleProjects: ProjectObject[]
@@ -69,13 +68,13 @@ const AssignProjectForm = (props: AssignProjectFormProps) => {
     }
   };
   const renderMiddleInfo = () => {
-    let selectedMiddle = middleAdmins.filter(
+    let selectedMiddle = ProjectManagers?.filter(
       (admin) => admin.admin_id === middleId
     );
 
     return (
       <>
-        {selectedMiddle.length > 0 ? (
+        {selectedMiddle?.length > 0 ? (
           selectedMiddle[0].middel_admin_projects.map((p, i) => (
             <div
               key={p.water_meter_project_id}
@@ -84,16 +83,15 @@ const AssignProjectForm = (props: AssignProjectFormProps) => {
               <span className="">{p.water_meter_project_name}</span>{" "}
               <span className="">
                 <CustomButton
-                  onClick={() =>
-                    {
-                      if (window.confirm("آیا از حذف این مورد اطمینان دارید؟")) {
-                        deleteMiddleProject(
-                          p.water_meter_project_id,
-                          selectedMiddle[0].middel_admin_projects
-                        )
-                      }
+                  onClick={() => {
+                    // need to render delete confimation form
+                    if (window.confirm("آیا از حذف این مورد اطمینان دارید؟")) {
+                      deleteMiddleProject(
+                        p.water_meter_project_id,
+                        selectedMiddle[0].middel_admin_projects
+                      );
                     }
-                  }
+                  }}
                   icon={<MdDelete />}
                   color="red"
                   extra="!p-2"

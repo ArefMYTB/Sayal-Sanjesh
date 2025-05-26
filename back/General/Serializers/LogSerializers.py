@@ -56,17 +56,21 @@ class LogSerializers:
                 """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
-            offset = int((page - 1) * count)
-            limit = int(count)
-            filters = {
-                "message__icontains": message__icontains,
-                "topic_name__icontains": topic_name__icontains,
-            }
-            filters = {k: v for k, v in filters.items() if v is not None}
-            queryset = MqttLoger.objects.filter(**filters).order_by('-create_date')[offset:offset + limit]
+            admin_id = token_result["data"]["user_id"]
+            if LogSerializers.admin_check_permission(admin_id, 'LogSystem'):
+                offset = int((page - 1) * count)
+                limit = int(count)
+                filters = {
+                    "message__icontains": message__icontains,
+                    "topic_name__icontains": topic_name__icontains,
+                }
+                filters = {k: v for k, v in filters.items() if v is not None}
+                queryset = MqttLoger.objects.filter(**filters).order_by('-create_date')[offset:offset + limit]
 
-            response = MqttLoger.objects.serialize(queryset=queryset)
-            return True, response
+                response = MqttLoger.objects.serialize(queryset=queryset)
+                return True, response
+            else:
+                return False, wrong_token_result
         else:
             return False, wrong_token_result
 
@@ -114,7 +118,7 @@ class LogSerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if LogSerializers.admin_check_permission(admin_id, 'LogList'):
+            if LogSerializers.admin_check_permission(admin_id, 'LogSystem'):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 filters = {

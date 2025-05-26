@@ -165,7 +165,7 @@ const SimpleCounterStorage = () => {
   const renderDeviceActions = (deviceInfo: DeviceObj) => {
     return (
       <div className=" flex items-center justify-center">
-        {AdminPermissions.includes("MeterEdit") ? (
+        {AdminPermissions.includes("Store") ? (
           <CustomButton
             onClick={() => editDeviceClick(deviceInfo)}
             icon={<MdEdit />}
@@ -175,7 +175,7 @@ const SimpleCounterStorage = () => {
         ) : (
           <></>
         )}
-        {AdminPermissions.includes("MeterDelete") ? (
+        {AdminPermissions.includes("Store") ? (
           <CustomButton
             onClick={() => {
               deleteSimpleCounterClicked(deviceInfo);
@@ -228,7 +228,7 @@ const SimpleCounterStorage = () => {
   };
   const tableData = () => {
     let deviceTableData: SimpleCounterTableData[] = [];
-    simpleCounterData.data.forEach((device: DeviceObj) => {
+    simpleCounterData?.data?.forEach((device: DeviceObj) => {
       deviceTableData.push({
         counterName: device.water_meter_name,
         bodySerial: device.water_meter_serial,
@@ -313,8 +313,9 @@ const SimpleCounterStorage = () => {
           {`کنتورهای مکانیکی (${
             simpleCounterIsLoading
               ? "loading..."
-              : simpleCounterData?.data[0]?.all_water_meters
-              ? simpleCounterData?.data[0]?.all_water_meters
+              : Array.isArray(simpleCounterData?.data) &&
+                simpleCounterData.data.length > 0
+              ? simpleCounterData.data[0].all_water_meters
               : 0
           })`}
         </div>
@@ -349,7 +350,7 @@ const SimpleCounterStorage = () => {
           page={page}
           pageSize={count}
           totalData={
-            simpleCounterData?.data.length > 0
+            simpleCounterData?.data?.length > 0
               ? simpleCounterData.data[0].all_water_meters
               : 100
           }

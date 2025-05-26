@@ -21,7 +21,7 @@ class PermissionCategorySerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Permission'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     admin = Admins.objects.get(admin_id=admin_id)
                 except:
@@ -64,7 +64,7 @@ class PermissionCategorySerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Permission'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     admin = Admins.objects.get(admin_id=admin_id)
                 except:
@@ -104,7 +104,7 @@ class PermissionCategorySerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'PermissionCategory'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     permission_category = PermissionCategory.objects.get(permission_category_id=permission_category_id)
                     permission_category.delete()
@@ -131,7 +131,7 @@ class PermissionCategorySerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'PermissionCategory'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Settings', 'CRUDAdmin', 'CRUDManager']):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),

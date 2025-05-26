@@ -136,7 +136,7 @@ const ProjectsView = () => {
   const renderProjectName = (name: string, projectId: string) => {
     return (
       <>
-        {AdminPermissions.includes("ProjectDetail") ? (
+        {AdminPermissions.includes("ViewProject") ? (
           <Link to={`/admin/projects/${projectId}`} rel="noopener noreferrer">
             <span>{name}</span>
           </Link>
@@ -149,7 +149,7 @@ const ProjectsView = () => {
   const renderProjectLogo = (logo: string, projectId: string) => {
     return (
       <>
-        {AdminPermissions.includes("ProjectDetail") ? (
+        {AdminPermissions.includes("ViewProject") ? (
           <Link to={`/admin/projects/${projectId}`} rel="noopener noreferrer">
             <div className="mr-9 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-white">
               <Image
@@ -184,7 +184,7 @@ const ProjectsView = () => {
   const renderProjectActions = (projectId: string) => {
     return (
       <div className=" flex items-center justify-center">
-        {AdminPermissions.includes("ProjectDetail") ? (
+        {AdminPermissions.includes("ViewProject") ? (
           <Link to={`/admin/projects/${projectId}`} rel="noopener noreferrer">
             <CustomButton
               // onClick={() => routeChange(projectId)}
@@ -197,7 +197,7 @@ const ProjectsView = () => {
         ) : (
           <></>
         )}
-        {AdminPermissions.includes("ProjectEdit") ? (
+        {AdminPermissions.includes("CRUDProject") ? (
           <CustomButton
             onClick={() => editProjectClick(projectId)}
             icon={<MdEdit />}
@@ -207,11 +207,10 @@ const ProjectsView = () => {
         ) : (
           <></>
         )}
-        {AdminPermissions.includes("ProjectDelete") ? (
+        {AdminPermissions.includes("CRUDProject") ? (
           <CustomButton
             onClick={() => {
-              if (window.confirm("آیا از حذف این پروژه اطمینان دارید؟")) {
-                deleteProjectClicked(projectId)}
+              deleteProjectClicked(projectId);
             }}
             icon={<MdDelete />}
             color="red"
@@ -223,27 +222,24 @@ const ProjectsView = () => {
       </div>
     );
   };
-  const projectTableHeader =
-    AdminPermissions.includes("ProjectDelete") ||
-    AdminPermissions.includes("ProjectEdit") ||
-    AdminPermissions.includes("ProjectDetail")
-      ? [
-          { title: "تصویر پروژه", headerKey: "projectLogo" },
-          { title: "نام پروژه", headerKey: "projectName" },
-          { title: "شهر محل انجام", headerKey: "projectCity" },
-          { title: "تاریخ شروع پروژه", headerKey: "projectStartDate" },
-          { title: "مدیر پروژه", headerKey: "projectManager" },
-          { title: "تعداد دستگاه پروژه", headerKey: "projectDevices" },
-          { title: "عملیات", headerKey: "projectActions" },
-        ]
-      : [
-          { title: "تصویر پروژه", headerKey: "projectLogo" },
-          { title: "نام پروژه", headerKey: "projectName" },
-          { title: "شهر محل انجام", headerKey: "projectCity" },
-          { title: "تاریخ شروع پروژه", headerKey: "projectStartDate" },
-          { title: "مدیر پروژه", headerKey: "projectManager" },
-          { title: "تعداد دستگاه پروژه", headerKey: "projectDevices" },
-        ];
+  const projectTableHeader = AdminPermissions.includes("ViewProject")
+    ? [
+        { title: "تصویر پروژه", headerKey: "projectLogo" },
+        { title: "نام پروژه", headerKey: "projectName" },
+        { title: "شهر محل انجام", headerKey: "projectCity" },
+        { title: "تاریخ شروع پروژه", headerKey: "projectStartDate" },
+        { title: "مدیر پروژه", headerKey: "projectManager" },
+        { title: "تعداد دستگاه پروژه", headerKey: "projectDevices" },
+        { title: "عملیات", headerKey: "projectActions" },
+      ]
+    : [
+        { title: "تصویر پروژه", headerKey: "projectLogo" },
+        { title: "نام پروژه", headerKey: "projectName" },
+        { title: "شهر محل انجام", headerKey: "projectCity" },
+        { title: "تاریخ شروع پروژه", headerKey: "projectStartDate" },
+        { title: "مدیر پروژه", headerKey: "projectManager" },
+        { title: "تعداد دستگاه پروژه", headerKey: "projectDevices" },
+      ];
   const tableData = () => {
     let projectTableData: ProjectTableData = [];
     if (!isLoading && status !== "pending") {
@@ -312,7 +308,7 @@ const ProjectsView = () => {
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">
-            {AdminPermissions.includes("ProjectCreate") ? (
+            {AdminPermissions.includes("CRUDProject") ? (
               <CustomButton
                 text="افزودن پروژه"
                 onClick={() => addProjectClick()}

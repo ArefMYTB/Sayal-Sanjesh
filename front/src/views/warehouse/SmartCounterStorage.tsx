@@ -168,7 +168,8 @@ const SmartCounterStorage = () => {
       renderToast("کنتور هوشمند با موفقیت حذف شد.", "success");
       onDeletConfirmClose();
       smartCounterRefetch();
-      // clearForm();
+      simpleCounterRefetch();
+      counterlessModuleRefetch();
     } else {
       renderToast(
         response?.farsi_message
@@ -182,7 +183,7 @@ const SmartCounterStorage = () => {
     return (
       <>
         <div className=" flex items-center justify-center">
-          {/* {AdminPermissions.includes("MeterEdit") ? (
+          {/* {AdminPermissions.includes("CRUDDevice") ? (
           <CustomButton
             onClick={() => editDeviceClick(deviceInfo)}
             icon={<MdEdit />}
@@ -193,7 +194,7 @@ const SmartCounterStorage = () => {
           // <></>
           <></>
         )} */}
-          {AdminPermissions.includes("MeterDelete") ? (
+          {AdminPermissions.includes("CRUDDevice") ? (
             <CustomButton
               onClick={() => deleteSimpleCounterClicked(deviceInfo)}
               icon={<MdDelete />}
@@ -277,8 +278,9 @@ const SmartCounterStorage = () => {
           {`کنتورهای هوشمند (${
             smartCounterIsLoading
               ? "loading..."
-              : smartCounterData?.data[0]?.all_water_meters
-              ? smartCounterData?.data[0]?.all_water_meters
+              : Array.isArray(smartCounterData?.data) &&
+                smartCounterData.data.length > 0
+              ? smartCounterData.data[0].all_water_meters
               : 0
           })`}
         </div>
@@ -307,7 +309,7 @@ const SmartCounterStorage = () => {
           page={page}
           pageSize={count}
           totalData={
-            smartCounterData?.data.length > 0
+            smartCounterData?.data?.length > 0
               ? smartCounterData.data[0].all_water_meters
               : 100
           }

@@ -25,7 +25,7 @@ class ModuleTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleTypeCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
 
                 admin = Admins.objects.get(admin_id=admin_id)
 
@@ -62,7 +62,7 @@ class ModuleTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleTypeEdit'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 # admin = Admins.objects.get(admin_id=admin_id)
                 fields = {
                     "module_type_name": (module_type_name, str)
@@ -128,7 +128,7 @@ class ModuleTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleTypeDelete'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     deleted_item = ModuleTypes.objects.filter(module_type_id=module_type_id).delete()
                     # ------------ add to logger -------------
@@ -165,7 +165,7 @@ class ModuleTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleTypeList'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int)

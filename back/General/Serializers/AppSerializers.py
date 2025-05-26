@@ -56,7 +56,7 @@ class AppSerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
+            if AdminsSerializer.admin_check_permission(admin_id, ''):
                 try:
                     app_obj = App.objects.order_by('app_create_date').last()
                     result = {

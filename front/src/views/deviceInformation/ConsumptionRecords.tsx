@@ -170,7 +170,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
       { title: "مصرف در بازه ارسال", headerKey: "consumptionInPeriod" },
     ];
   }
-  if (AdminPermissions.includes("LogDetail")) {
+  if (AdminPermissions.includes("LogDevice")) {
     tableHeader.push({ title: "لاگ دستگاه", headerKey: "messageAction" });
   }
   if (AdminPermissions.includes("ConsumptionDelete")) {
@@ -235,6 +235,7 @@ const ConsumptionRecords = (props: ConsumptionRecordsProps) => {
         /> */}
         <CustomButton
           onClick={() => {
+            // need to render delete confimation form
             if (window.confirm("آیا از حذف این رکورد اطمینان دارید؟")) {
               deleteRecordClick(id);
             }

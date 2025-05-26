@@ -6,7 +6,7 @@ const LogsView = () => {
   const AdminPermissions: string[] = JSON.parse(
     window.localStorage.getItem("permissions")
   );
-  const tabsData = AdminPermissions.includes("SuperAdmin")
+  const tabsData = AdminPermissions.includes("LogSystem")
     ? [
         { label: "ارسال داده", content: <MqttLogs /> },
         { label: "تغییرات سیستم", content: <SystemLogs /> },

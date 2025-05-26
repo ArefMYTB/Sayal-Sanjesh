@@ -21,7 +21,7 @@ class WaterMeterTagsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TagCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 admin = Admins.objects.get(admin_id=admin_id)
                 water_meter_tag = WaterMetersTags()
                 fields = {
@@ -65,7 +65,7 @@ class WaterMeterTagsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TagDelete'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     deleted_item = WaterMetersTags.objects.filter(water_meter_tag_id=water_meter_tag_id).delete()
                     # ------- add to logger -------------
@@ -103,36 +103,33 @@ class WaterMeterTagsSerializer:
         """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
-            admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TagList'):
-                fields = {
-                    "page": (page, int),
-                    "count": (count, int)
-                }
-                field_result = wrong_result(fields)
-                if field_result == None:
-                    offset = int((page - 1) * count)
-                    limit = int(count)
-                    all_tags = WaterMetersTags.objects.filter(
-                        water_meter_tag_name__contains=water_meter_tag_name,
-                        water_meter_tag_create_date__contains=water_meter_type_create_date).order_by(
-                        '-water_meter_tag_create_date')[offset:offset + limit]
+            fields = {
+                "page": (page, int),
+                "count": (count, int)
+            }
+            field_result = wrong_result(fields)
+            if field_result == None:
+                offset = int((page - 1) * count)
+                limit = int(count)
+                all_tags = WaterMetersTags.objects.filter(
+                    water_meter_tag_name__contains=water_meter_tag_name,
+                    water_meter_tag_create_date__contains=water_meter_type_create_date).order_by(
+                    '-water_meter_tag_create_date')[offset:offset + limit]
 
-                    result = []
-                    for tag in all_tags:
-                        tag = tag.as_dict()
-                        tag.update(
-                            {
-                                "admin_info": tag['admin_info']['admin_id'],
-                                "all_tags": len(all_tags)
-                            }
-                        )
-                        result.append(tag)
-                    return True, result
-                else:
-                    return field_result
+                result = []
+                for tag in all_tags:
+                    tag = tag.as_dict()
+                    tag.update(
+                        {
+                            "admin_info": tag['admin_info']['admin_id'],
+                            "all_tags": len(all_tags)
+                        }
+                    )
+                    result.append(tag)
+                return True, result
             else:
-                return False, wrong_token_result
+                return field_result
+            
         else:
             return False, wrong_token_result
 
@@ -148,7 +145,7 @@ class WaterMeterTagsSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
             # ['Base', 'Consumption']Tag
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin', 'Tag']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['ViewProject', 'Reports']):
                 all_water_tags = WaterMetersTags.objects.all()
                 all_water_meters = WaterMeters.objects.filter(water_meter_type__water_meter_tag__in=all_water_tags)
                 all_water_meters_count = all_water_meters.count()
@@ -161,7 +158,8 @@ class WaterMeterTagsSerializer:
                     # if tag_count!= 0 :
                     result[tag.water_meter_tag_name] = tag_count
                 return True, result
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin', 'Tag']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Tag']):
                 all_water_tags = WaterMetersTags.objects.all()
                 middel_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 middel_meters = WaterMeters.objects.filter(water_meter_project__water_meter_project_id__in=middel_projects)

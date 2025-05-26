@@ -27,7 +27,7 @@ class WaterMeterTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TypeCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     tag = WaterMetersTags.objects.get(water_meter_tag_id=water_meter_tag)
                 except:
@@ -86,7 +86,7 @@ class WaterMeterTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TypeEdit'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 # admin = Admins.objects.get(admin_id=admin_id)
                 fields = {
                     "water_meter_type_new_name": (water_meter_type_new_name, str)
@@ -166,7 +166,7 @@ class WaterMeterTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TypeDelete'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     deleted_item = WaterMetersTypes.objects.filter(water_meter_type_id=water_meter_type_id).delete()
                     # update all type number in utils table
@@ -207,26 +207,22 @@ class WaterMeterTypesSerializer:
         """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
-            admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TypeList'):
-                fields = {
-                    "page": (page, int),
-                    "count": (count, int)
-                }
-                field_result = wrong_result(fields)
-                if field_result == None:
-                    offset = int((page - 1) * count)
-                    limit = int(count)
-                    queryset = WaterMetersTypes.objects.filter(
-                        water_meter_type_name__contains=water_meter_type_name,
-                        water_meter_type_create_date__contains=water_meter_type_create_date).order_by(
-                        '-water_meter_type_create_date')[offset:offset + limit]
-                    response = WaterMetersTypes.objects.serialize(queryset=queryset)
-                    return True, response
-                else:
-                    return field_result
+            fields = {
+                "page": (page, int),
+                "count": (count, int)
+            }
+            field_result = wrong_result(fields)
+            if field_result == None:
+                offset = int((page - 1) * count)
+                limit = int(count)
+                queryset = WaterMetersTypes.objects.filter(
+                    water_meter_type_name__contains=water_meter_type_name,
+                    water_meter_type_create_date__contains=water_meter_type_create_date).order_by(
+                    '-water_meter_type_create_date')[offset:offset + limit]
+                response = WaterMetersTypes.objects.serialize(queryset=queryset)
+                return True, response
             else:
-                return False, wrong_token_result
+                return field_result
         else:
             return False, wrong_token_result
 
@@ -241,7 +237,7 @@ class WaterMeterTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'TypeDetial'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     queryset = WaterMetersTypes.objects.filter(
                         water_meter_type_id=water_meter_type_id)
@@ -267,7 +263,7 @@ class WaterMeterTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin', 'Type']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['ViewProject', 'Reports']):
                 all_types_info = {}
                 all_types = WaterMetersTypes.objects.all()
                 for type in all_types:
@@ -304,7 +300,8 @@ class WaterMeterTypesSerializer:
                                         all_types_info[type_name]['all_water_meter'] = len(water_meters)
 
                 return True, all_types_info
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin', 'Type']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Type']):
                 middel_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 middel_meters = WaterMeters.objects.filter(
                     water_meter_project__water_meter_project_id__in=middel_projects)
@@ -361,7 +358,7 @@ class WaterMeterTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin', 'Type']):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Reports'):
                 all_types = WaterMetersTypes.objects.all()
                 all_water_meters = WaterMeters.objects.all()
                 all_tags = WaterMetersTags.objects.all()
@@ -396,7 +393,8 @@ class WaterMeterTypesSerializer:
                     "tags_info": tag_information,
                 }
                 return True, total_type_result
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin', 'Type']):
+            # TODO: Remove This Section
+            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Type']):
                 middle_admin_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 all_water_meters = WaterMeters.objects.filter(
                     water_meter_project__water_meter_project_id__in=middle_admin_projects)

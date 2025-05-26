@@ -555,6 +555,7 @@ class ConsumptionView:
             return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
                                   english_message=data["english_message"])
 
+    # TODO: Remove This Section
     @csrf_exempt
     def admin_create_csv_file_overall_view(self, request):
         try:
@@ -782,6 +783,7 @@ class ConsumptionView:
             return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
                                   english_message=data["english_message"])
 
+    # TODO: Remove This Section
     @csrf_exempt
     def v2_admin_get_cumulative_consumptions_view(self, request):
         try:

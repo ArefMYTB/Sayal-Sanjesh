@@ -731,9 +731,9 @@ class WaterMeters(models.Model):
 
 class Bills(models.Model):
     bill_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    bill_user = models.ForeignKey(Users, on_delete=models.DO_NOTHING)
-    bill_admin = models.ForeignKey(Admins, on_delete=models.DO_NOTHING)
-    bill_water_meter = models.ForeignKey(WaterMeters, on_delete=models.DO_NOTHING)
+    bill_user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
+    bill_admin = models.ForeignKey(Admins, on_delete=models.CASCADE, null=True)
+    bill_water_meter = models.ForeignKey(WaterMeters, on_delete=models.CASCADE)
     bill_serial = models.CharField(unique=True, null=True, max_length=200)
     bill_start_date = models.DateField(null=True)
     bill_end_date = models.DateField(null=True)

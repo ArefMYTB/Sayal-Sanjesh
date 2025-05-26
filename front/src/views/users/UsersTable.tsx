@@ -99,18 +99,14 @@ const UsersTable = () => {
   const renderUserActions = (userId: string) => {
     return (
       <div className=" flex items-center justify-center">
-        {AdminPermissions.includes("UserDelete") ? (
-          <CustomButton
-            onClick={() => {
-              deleteUserClick(userId);
-            }}
-            icon={<MdDelete />}
-            color="red"
-            extra="!p-2"
-          />
-        ) : (
-          <></>
-        )}
+        <CustomButton
+          onClick={() => {
+            deleteUserClick(userId);
+          }}
+          icon={<MdDelete />}
+          color="red"
+          extra="!p-2"
+        />
       </div>
     );
   };
@@ -121,8 +117,10 @@ const UsersTable = () => {
     { title: "تاریخ ثبت نام", headerKey: "userCreateDate" },
     { title: "ثبت کننده", headerKey: "userCreator" },
     { title: "شماره ثبت کننده", headerKey: "creatorPhone" },
-    { title: "عملیات", headerKey: "userAction" },
   ];
+  if (AdminPermissions.includes("CRUDUser")) {
+    usersTableHeader.push({ title: "عملیات", headerKey: "userAction" });
+  }
   const tableData = () => {
     let projectTableData: UserTableData = [];
     if (!usersIsLoading && usersStatus !== "pending" && newUsersData) {
@@ -189,7 +187,7 @@ const UsersTable = () => {
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">
-            {AdminPermissions.includes("UserCreate") ? (
+            {AdminPermissions.includes("CRUDUser") ? (
               <CustomButton
                 text="ایجاد بهره بردار"
                 onClick={onUsersOpen}

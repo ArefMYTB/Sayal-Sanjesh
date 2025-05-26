@@ -40,7 +40,8 @@ class UsersSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, ['SuperAdmin', 'UserList']):
+             # Admin can see all users
+            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -59,7 +60,8 @@ class UsersSerializer:
                     return True, response
                 else:
                     return field_result
-            elif AdminsSerializer.admin_check_permission(admin_id, ['MiddleAdmin', 'UserList']):
+
+            elif AdminsSerializer.admin_check_permission(admin_id, 'ViewUser'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -283,7 +285,7 @@ class UsersSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'UserCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'CRUDUser'):
                 try:
                     admin = Admins.objects.get(admin_id=admin_id)
                 except:
@@ -514,7 +516,7 @@ class UsersSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'UserDelete'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'CRUDUser'):
                 try:
                     user = Users.objects.get(user_id=user_id)
                 except:

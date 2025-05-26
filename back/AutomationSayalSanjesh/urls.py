@@ -58,3 +58,37 @@ urlpatterns = [
     path('Log/', include(LogURLs)),
     path('ModuleType/', include(ModuleType)),
 ]
+
+# New Permissions
+# Self: Everybody
+# Admin
+# ProjectManager
+# Joker: Edit other admins, Edit&Delete Projects&Devices
+# CRUDProject: Joker in back
+# ViewProject: View Project Details (like number/types of devices) - Admin&ProjectManager
+# ClearDeviceData: Clearing Device Consumption Data & Events - Admin
+# ViewUser: View End Users - Admin&ProjectManager&Financial (also a lower lever project manager)
+# CRUDUser: CreateReadUpdateDeleteUser - Admin&ProjectManager (also a lower lever project manager)
+# CRUDManager: CreateReadUpdateDeleteManager - Joker&ProjectManager
+# ViewAdmin: View All Admins - Admin
+# CRUDAdmin: CreateReadUpdateDeleteAdmin - Joker
+# Store: Store Management - Admin
+# ViewDevice: View Device Details & Consumption - Admin&ProjectManager&User
+# CRUDDevice: CreateReadUpdateDeleteDevice - Joker
+# BillManaging: View&Create Bills - ProjectManager (also a lower lever project manager like Financial)
+# Reports: View System Report Tab - Admin&ProjectManager (also a lower lever project manager)
+# LogDevice: View Device Data Logs - Admin
+# LogSystem: View System Logs - Joker
+# OrderManaging: Order Devices to Do Something - Joker&ProjectManager&User (also a lower lever project manager) - But They Must be prioritized.
+# Settings - Managing All System Settings - Admin
+# Verification - Managin Verification - Admin
+
+
+# New User Types
+# Joker: Developer&Ansari 
+# Admin: Sayal Sanjesh employees 
+# ProjectManager: Project Managers
+# User:
+# Financial:
+
+

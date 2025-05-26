@@ -17,7 +17,7 @@ class OrderTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderTypeList'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Settings', 'OrderManaging']):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 queryset = OrderType.objects.all().order_by('order_type_create_time')[offset:offset + limit]
@@ -40,7 +40,7 @@ class OrderTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderTypeDetail'):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Settings', 'OrderManaging']):
                 filters = {
                     "order_type_id": order_type_id,
                     "order_type_code": order_type_code,
@@ -70,7 +70,7 @@ class OrderTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderTypeRemove'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
 
                 try:
                     order_type = OrderType.objects.get(order_type_id=order_type_id)
@@ -96,7 +96,7 @@ class OrderTypeSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderTypeCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 admin = Admins.objects.get(admin_id=admin_id)
 
                 try:

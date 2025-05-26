@@ -5,7 +5,7 @@ import UsersView from "./views/users";
 import BillsView from "views/bills";
 import OrdersView from "views/orders";
 import SettingsView from "views/settings";
-import VerificationView from "views/verification"
+import VerificationView from "views/verification";
 import SystemReportsView from "views/systemReports";
 // Auth Imports
 import SignIn from "views/auth/SignIn";
@@ -38,8 +38,7 @@ const routes = [
     path: "dashboard",
     icon: <MdDashboard className="h-6 w-6" />,
     component: <Dashboard />,
-    // role: "SuperAdmin",
-    role: "Admin",
+    role: "Self",
   },
   {
     name: "پروژه ها",
@@ -47,7 +46,7 @@ const routes = [
     path: "projects",
     icon: <MdViewList className="h-6 w-6" />,
     component: <ProjectsView />,
-    role: "ProjectMenu",
+    role: "ViewProject",
   },
   {
     name: "مدیریت کاربران",
@@ -55,7 +54,7 @@ const routes = [
     path: "users",
     icon: <MdPeopleAlt className="h-6 w-6" />,
     component: <UsersView />,
-    role: "UserMenu",
+    role: "ViewUser",
   },
   {
     name: "انبار",
@@ -63,7 +62,7 @@ const routes = [
     path: "warehouse",
     icon: <MdWarehouse className="h-6 w-6" />,
     component: <Warehouse />,
-    role: "SuperAdmin",
+    role: "Store",
   },
   {
     name: "کنتورها",
@@ -71,7 +70,7 @@ const routes = [
     path: "counters",
     icon: <MdGasMeter className="h-6 w-6" />,
     component: <CountersView />,
-    role: "MeterMenu",
+    role: "ViewDevice",
   },
   {
     name: "مدیریت قبوض",
@@ -79,7 +78,7 @@ const routes = [
     path: "bills",
     icon: <MdReceiptLong className="h-6 w-6" />,
     component: <BillsView />,
-    role: "Bills",
+    role: "BillManaging",
   },
   {
     name: "گزارشات سیستم",
@@ -95,7 +94,7 @@ const routes = [
     path: "logs",
     icon: <MdOutlineFeed className="h-6 w-6" />,
     component: <LogsView />,
-    role: "LogDetail",
+    role: "LogDevice",
   },
   {
     name: "مدیریت دستورات",
@@ -103,7 +102,7 @@ const routes = [
     path: "orders",
     icon: <MdOutlineWifiTethering className="h-6 w-6" />,
     component: <OrdersView />,
-    role: "SuperAdmin",
+    role: "OrderManaging",
   },
   {
     name: "تنظیمات سیستم",
@@ -111,7 +110,7 @@ const routes = [
     path: "settings",
     icon: <MdOutlineSettings className="h-6 w-6" />,
     component: <SettingsView />,
-    role: "SuperAdmin",
+    role: "Settings",
   },
   {
     name: "صحت سنجی",
@@ -119,7 +118,7 @@ const routes = [
     path: "verification",
     icon: <MdVerified className="h-6 w-6" />,
     component: <VerificationView />,
-    role: "SuperAdmin",
+    role: "Verification",
   },
 
   {
@@ -128,7 +127,7 @@ const routes = [
     path: "login",
     icon: <MdOutlineLogout className="h-6 w-6" />,
     component: <SignIn />,
-    role: "Admin",
+    role: "Self",
   },
   {
     name: "جزئیات پروژه",

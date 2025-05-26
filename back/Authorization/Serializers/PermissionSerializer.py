@@ -20,7 +20,7 @@ class PermissionSerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Permission'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     admin = Admins.objects.get(admin_id=admin_id)
                 except:
@@ -63,7 +63,7 @@ class PermissionSerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Permission'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     admin = Admins.objects.get(admin_id=admin_id)
                 except:
@@ -99,7 +99,7 @@ class PermissionSerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Permission'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 try:
                     permission = Permissions.objects.get(permission_id=permission_id)
                     permission.delete()
@@ -126,7 +126,7 @@ class PermissionSerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Permission'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Settings'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),

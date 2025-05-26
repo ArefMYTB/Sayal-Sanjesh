@@ -19,7 +19,7 @@ class OrderSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderList'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'OrderManaging'):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 filters = {
@@ -51,7 +51,7 @@ class OrderSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderDetail'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'OrderManaging'):
 
                 try:
                     queryset = Order.objects.get(order_id=order_id)
@@ -78,7 +78,7 @@ class OrderSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderDelete'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'OrderManaging'):
 
                 try:
                     order = Order.objects.get(order_id=order_id)
@@ -104,7 +104,7 @@ class OrderSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'OrderManaging'):
                 try:
                     order_meter_obj = WaterMeters.objects.get(water_meter_serial=water_meter_serial)
                     response_publisher_class = ResponsePublisher()

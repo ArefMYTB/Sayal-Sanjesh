@@ -22,7 +22,7 @@ class WaterMeterModulesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleCreate'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Store'):
 
                 admin = Admins.objects.get(admin_id=admin_id)
 
@@ -73,7 +73,7 @@ class WaterMeterModulesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleEdit'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Store'):
                 fields = {
                     "water_meter_module_name": (water_meter_module_name, str)
                 }
@@ -147,7 +147,7 @@ class WaterMeterModulesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleRemove'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Store'):
                 try:
                     module = WaterMetersModules.objects.get(water_meter_module_id=water_meter_module_id)
                     module.delete()
@@ -178,7 +178,7 @@ class WaterMeterModulesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleList'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Store'):
                 valid_mood = ['all', 'modules_without_meter']
                 if mood not in valid_mood:
                     wrong_data_result["farsi_message"] = "مقادیر مجاز برای : ['all', 'modules_without_meter']"
@@ -235,7 +235,7 @@ class WaterMeterModulesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'ModuleDetail'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Store'):
                 if water_meter_module_id == None and water_meter_module_code == None:
                     wrong_data_result["farsi_message"] = "ای دی یا کد را وارد کنید"
                     wrong_data_result["english_message"] = "Enter ID or Code"
@@ -272,7 +272,7 @@ class WaterMeterModulesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Module'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Store'):
                 try:
                     request = WaterMetersRequests.objects.get(water_meter_request_id=water_meter_request_id)
                     all_modules = WaterMetersModules.objects.filter(water_meter_module_id=water_meter_module_id)
