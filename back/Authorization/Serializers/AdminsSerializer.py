@@ -61,20 +61,36 @@ class AdminsSerializer:
         try:
             admin = Admins.objects.get(admin_phone=admin_phone)
 
-            if not check_password(admin_password, admin.admin_password):
+            if check_password(admin_password, admin.admin_password):
+                admin_id = str(admin.admin_id)
+                permissions = admin.admin_permissions
+                admin_sms_code_start_time = admin.admin_sms_code_start_time
+                token = user_id_to_token(admin_id, True, token_level="Admin")
+                if admin_sms_code_start_time is not None:
+                    admin_sms_code_start_time = int(admin_sms_code_start_time.timestamp())
+                result = {
+                    "permissions": permissions,
+                    "admin_sms_code_start_time": admin_sms_code_start_time,
+                    "token": token,
+                    "ChangedPass": True 
+                }
+                return True, result
+            elif admin.admin_password == admin_password:  # User Didn't Change Their Pass Yet
+                admin_id = str(admin.admin_id)
+                permissions = admin.admin_permissions
+                admin_sms_code_start_time = admin.admin_sms_code_start_time
+                token = user_id_to_token(admin_id, True, token_level="Admin")
+                if admin_sms_code_start_time is not None:
+                    admin_sms_code_start_time = int(admin_sms_code_start_time.timestamp())
+                result = {
+                    "permissions": permissions,
+                    "admin_sms_code_start_time": admin_sms_code_start_time,
+                    "token": token,
+                    "ChangedPass": False 
+                }
+                return True, result
+            else:
                 return False, None
-            admin_id = str(admin.admin_id)
-            permissions = admin.admin_permissions
-            admin_sms_code_start_time = admin.admin_sms_code_start_time
-            token = user_id_to_token(admin_id, True, token_level="Admin")
-            if admin_sms_code_start_time is not None:
-                admin_sms_code_start_time = int(admin_sms_code_start_time.timestamp())
-            result = {
-                "permissions": permissions,
-                "admin_sms_code_start_time": admin_sms_code_start_time,
-                "token": token
-            }
-            return True, result
         except:
             return False, None
 
@@ -188,6 +204,17 @@ class AdminsSerializer:
             admin = Admins.objects.get(admin_id=admin_id)
             if check_password(admin_old_password, admin.admin_password):
                 
+                PASSWORD_REGEX = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$'
+                def is_valid_password(password):
+                    return re.match(PASSWORD_REGEX, password) is not None
+                
+                if not is_valid_password(new_password):
+                    wrong_data_result["farsi_message"] = 'رمز عبور باید حداقل ۸ کاراکتر، شامل حرف بزرگ، حرف کوچک، عدد و کاراکتر ویژه باشد.'
+                    return False, wrong_data_result
+                # Hash password
+                admin.admin_password = make_password(new_password)
+                admin.save()
+            elif admin.admin_password == admin_old_password:  # First Time before Hashing
                 PASSWORD_REGEX = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$'
                 def is_valid_password(password):
                     return re.match(PASSWORD_REGEX, password) is not None

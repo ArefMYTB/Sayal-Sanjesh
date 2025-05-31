@@ -14,13 +14,10 @@ const LoginForm = (props: LoginFormProps) => {
   const { phone, setPhone, password, setPassword } = props;
   const queryClient = useQueryClient();
   let path = `/admin/dashboard`;
-  let navigate = useNavigate();
   const [phoneBorder, setPhoneBorder] = useState<
     "err" | "success" | "dis" | "normal"
   >("normal");
-  const routeChange = () => {
-    navigate(path);
-  };
+
   const userLogin = async () => {
     if (phone && password) {
       if (isPhoneValid(phone)) {
@@ -42,8 +39,13 @@ const LoginForm = (props: LoginFormProps) => {
             "permissions",
             JSON.stringify(response.data.permissions)
           );
+          window.localStorage.setItem(
+            "ChangedPass",
+            JSON.stringify(response.data.ChangedPass)
+          );
+
           queryClient.removeQueries();
-          window.location.href = "/admin/dashboard";
+          window.location.href = path;
         } else {
           renderToast(response?.farsi_message, "err");
         }

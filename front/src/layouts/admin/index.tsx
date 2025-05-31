@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import Navbar from "components/navbar/RTL";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "components/sidebar/RTL";
 // import Footer from "components/footer/Footer";
 import routes from "routes";
@@ -11,12 +11,23 @@ export default function RTL() {
   const [open, setOpen] = React.useState(true);
   const [currentRoute, setCurrentRoute] = React.useState("داشبورد");
 
-  React.useEffect(() => {
+  const [showChangePassAlert, setShowChangePassAlert] = useState(false);
+
+  useEffect(() => {
+    const ChangePass = JSON.parse(
+      localStorage.getItem("ChangedPass") || "false"
+    );
+    if (ChangePass === false) {
+      setShowChangePassAlert(true);
+    }
+  }, []);
+
+  useEffect(() => {
     window.addEventListener("resize", () =>
       window.innerWidth < 1200 ? setOpen(false) : setOpen(true)
     );
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     getActiveRoute(routes);
   }, [location.pathname]);
 
@@ -58,6 +69,24 @@ export default function RTL() {
   document.documentElement.dir = "rtl";
   return (
     <div className="flex h-full w-full">
+      {showChangePassAlert && (
+        <div className="bg-black fixed inset-0 z-[9999] flex items-start justify-center bg-opacity-50 pt-24">
+          <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+            <h2 className="mb-4 text-center text-xl font-semibold text-red-600">
+              لطفا رمز خود را تغییر دهید.
+            </h2>
+            <div className="flex justify-center">
+              <button
+                onClick={() => setShowChangePassAlert(false)}
+                className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+              >
+                باشه
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Sidebar
         open={open}
         onClose={() => (open ? setOpen(false) : setOpen(true))}
@@ -82,10 +111,6 @@ export default function RTL() {
             <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh] p-2 md:pr-2">
               <Routes>
                 {getRoutes(routes)}
-                {/* <Route
-                  path="admin/projects/:projectId"
-                  element={<div>projext inside</div>}
-                /> */}
                 <Route
                   path="/"
                   element={<Navigate to="/admin/dashboard" replace />}
