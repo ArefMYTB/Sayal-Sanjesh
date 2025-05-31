@@ -13,6 +13,7 @@ from MQQTReceiver.publisher import publish_message_to_client
 from General.Serializers.LogSerializers import LogSerializers
 from Authorization.models.Token import Token
 from django.db.models import Q
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class AdminsSerializer:
@@ -57,10 +58,11 @@ class AdminsSerializer:
             A tuple containing a boolean indicating the success or failure of the operation, and a list of serialized data
             results.  it returns a false status along with an error message.
         """
-        password_hashing = Hashing()
-        password_hashing = password_hashing.get_password_string(admin_password)
         try:
-            admin = Admins.objects.get(admin_phone=admin_phone, admin_password=password_hashing)
+            admin = Admins.objects.get(admin_phone=admin_phone)
+
+            if not check_password(admin_password, admin.admin_password):
+                return False, None
             admin_id = str(admin.admin_id)
             permissions = admin.admin_permissions
             admin_sms_code_start_time = admin.admin_sms_code_start_time
@@ -184,7 +186,7 @@ class AdminsSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
             admin = Admins.objects.get(admin_id=admin_id)
-            if admin.admin_password == admin_old_password:
+            if check_password(admin_old_password, admin.admin_password):
                 
                 PASSWORD_REGEX = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$'
                 def is_valid_password(password):
@@ -193,8 +195,8 @@ class AdminsSerializer:
                 if not is_valid_password(new_password):
                     wrong_data_result["farsi_message"] = 'رمز عبور باید حداقل ۸ کاراکتر، شامل حرف بزرگ، حرف کوچک، عدد و کاراکتر ویژه باشد.'
                     return False, wrong_data_result
-                
-                admin.admin_password = new_password
+                # Hash password
+                admin.admin_password = make_password(new_password)
                 admin.save()
             else:
                 wrong_data_result["farsi_message"] = "پسورد اشتباه است"
