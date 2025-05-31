@@ -185,6 +185,15 @@ class AdminsSerializer:
             admin_id = token_result["data"]["user_id"]
             admin = Admins.objects.get(admin_id=admin_id)
             if admin.admin_password == admin_old_password:
+                
+                PASSWORD_REGEX = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$'
+                def is_valid_password(password):
+                    return re.match(PASSWORD_REGEX, password) is not None
+                
+                if not is_valid_password(new_password):
+                    wrong_data_result["farsi_message"] = 'رمز عبور باید حداقل ۸ کاراکتر، شامل حرف بزرگ، حرف کوچک، عدد و کاراکتر ویژه باشد.'
+                    return False, wrong_data_result
+                
                 admin.admin_password = new_password
                 admin.save()
             else:

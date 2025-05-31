@@ -21,6 +21,13 @@ const ChangePassForm = (props: ChangePassFormProps) => {
   const [userPassword, setUserPassword] = useState<string>("");
   const [userNewPassword, setUserNewPassword] = useState<string>("");
   const [userConfirmPassword, setUserConfirmPassword] = useState<string>("");
+
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*?&#]{8,}$/;
+  const validatePassword = (userConfirmPassword: string): boolean => {
+    return passwordRegex.test(userConfirmPassword);
+  };
+
   const changePassword = async () => {
     if (userPassword && userNewPassword && userConfirmPassword) {
       if (userNewPassword === userConfirmPassword) {
@@ -28,19 +35,26 @@ const ChangePassForm = (props: ChangePassFormProps) => {
           admin_password: userConfirmPassword,
           admin_old_password: userPassword,
         };
-        let response = await reqFunction("admins/admin/changePassword", json);
-        if (response.code === 200) {
-          setBorder("normal");
-          renderToast("تغییر پروفابل با موفقیت انجام شد", "success");
-          update();
-          onClose();
-        } else {
+        if (!validatePassword(userConfirmPassword)) {
           renderToast(
-            response?.farsi_message
-              ? response.farsi_message
-              : "در تغییرات پروفایل خطایی رخ داده",
+            "رمز عبور باید حداقل ۸ کاراکتر، شامل حرف بزرگ، حرف کوچک، عدد و کاراکتر ویژه باشد.",
             "err"
           );
+        } else {
+          let response = await reqFunction("admins/admin/changePassword", json);
+          if (response.code === 200) {
+            setBorder("normal");
+            renderToast("تغییر پروفابل با موفقیت انجام شد", "success");
+            update();
+            onClose();
+          } else {
+            renderToast(
+              response?.farsi_message
+                ? response.farsi_message
+                : "در تغییرات پروفایل خطایی رخ داده",
+              "err"
+            );
+          }
         }
       } else {
         renderToast("گذرواژه جدید و تکرار آن یکسان نیست", "warn");
