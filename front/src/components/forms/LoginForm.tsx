@@ -43,7 +43,7 @@ const LoginForm = (props: LoginFormProps) => {
             JSON.stringify(response.data.permissions)
           );
           queryClient.removeQueries();
-          routeChange();
+          window.location.href = "/admin/dashboard";
         } else {
           renderToast(response?.farsi_message, "err");
         }

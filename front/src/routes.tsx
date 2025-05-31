@@ -156,11 +156,13 @@ const rawRoutes = [
   // },
 ];
 
-const Permissions: string[] = JSON.parse(
-  window.localStorage.getItem("permissions") || "[]"
+const Permissions = JSON.parse(
+  localStorage.getItem("permissions") || '["Self"]'
 );
 
-const routes = rawRoutes.filter((route) => Permissions.includes(route.role));
+const routes = rawRoutes.filter(
+  (route) => !route.role || Permissions.includes(route.role)
+);
 
 // export default filteredRoutes;
 export default routes;
