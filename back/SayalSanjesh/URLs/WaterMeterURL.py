@@ -18,6 +18,7 @@ urlpatterns = [
     path('admin/getOne', water_meter_view.admin_get_one_water_meter_view),
     path('admin/countAll', water_meter_view.admin_count_all_water_meter_view),
     path('admin/getlocations', water_meter_view.admin_get_location_view),    
+    path('admin/assignUser', water_meter_view.admin_assign_user_view),    
     # End admin apies .
 
     # User apies

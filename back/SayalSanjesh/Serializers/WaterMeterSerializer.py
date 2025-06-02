@@ -445,6 +445,71 @@ class WaterMeterSerializer:
             return False, wrong_token_result
 
     @staticmethod
+    def admin_assign_user_serializer(token, water_meter_serial, water_meter_user_id):
+        """
+        Assign a water meter to a user.
+
+        param:
+            token: admin token
+            water_meter_serial: serial of the water meter
+            water_meter_user_id: ID of the user to assign
+
+        return:
+            Tuple (status: bool, result: dict)
+        """
+        token_result = token_to_user_id(token)
+        if token_result["status"] == "OK":
+            admin_id = token_result["data"]["user_id"]
+
+            if not AdminsSerializer.admin_check_permission(admin_id, ['CRUDDevice', 'CRUDUser']):
+                return False, wrong_token_result
+
+            try:
+                water_meter = WaterMeters.objects.get(water_meter_serial=water_meter_serial)
+            except:
+                wrong_data_result["farsi_message"] = "شماره سریال کنتور اشتباه است"
+                wrong_data_result["english_message"] = "Invalid water_meter_serial"
+                return False, wrong_data_result
+
+            try:
+                user = Users.objects.get(user_id=water_meter_user_id)
+            except:
+                wrong_data_result["farsi_message"] = "آیدی کاربر اشتباه است"
+                wrong_data_result["english_message"] = "Invalid water_meter_user_id"
+                return False, wrong_data_result
+
+            try:
+                water_meter.water_meter_user = user
+                water_meter.water_meter_activation = 1
+                water_meter.save()
+            except:
+                wrong_data_result["farsi_message"] = "خطا در ذخیره اطلاعات"
+                wrong_data_result["english_message"] = "Error saving assignment"
+                return False, wrong_data_result
+
+            # Optional: Notify user
+            # user_phone = user.user_phone
+            # publish_message_to_client(phone_number=user_phone, from_where='assign_device')
+
+            # Log
+            # admin_obj = Admins.objects.get(admin_id=admin_id)
+            # LogSerializers().system_log_create_serializer(
+            #     token=token,
+            #     system_log_admin=admin_obj,
+            #     system_log_user=user,
+            #     system_log_object_action_on=water_meter_serial,
+            #     system_log_action='Assign',
+            #     system_log_action_table='WaterMeters',
+            #     system_log_message=f"Assigned device to user ID {water_meter_user_id}",
+            #     system_log_field_changes={"water_meter_user": (None, water_meter_user_id)}
+            # )
+
+            return True, status_success_result
+        else:
+            return False, wrong_token_result
+
+
+    @staticmethod
     def admin_get_all_water_meters_serializer_by_filter(
             token, page, count, water_meter_validation, water_meter_activation, water_meter_condition,
             water_meter_location, water_meter_type, water_meter_project):
