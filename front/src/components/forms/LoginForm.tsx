@@ -13,7 +13,8 @@ interface LoginFormProps {
 const LoginForm = (props: LoginFormProps) => {
   const { phone, setPhone, password, setPassword } = props;
   const queryClient = useQueryClient();
-  let path = `/admin/dashboard`;
+  let adminPath = `/admin/dashboard`;
+  let userPath = `/user/dashboard`;
   const [phoneBorder, setPhoneBorder] = useState<
     "err" | "success" | "dis" | "normal"
   >("normal");
@@ -45,7 +46,7 @@ const LoginForm = (props: LoginFormProps) => {
           );
 
           queryClient.removeQueries();
-          window.location.href = path;
+          window.location.href = adminPath;
         } else {
           renderToast(response?.farsi_message, "err");
         }
@@ -57,10 +58,51 @@ const LoginForm = (props: LoginFormProps) => {
       renderToast("تمامی موارد را وارد کنید", "warn");
     }
   };
+
+  const endUserLogin = async () => {
+    if (phone && password) {
+      if (isPhoneValid(phone)) {
+        const json: {
+          user_phone: string;
+          user_password: string;
+        } = {
+          user_phone: phone,
+          user_password: password,
+        };
+        let response = await reqFunction("users/user/login", json);
+        if (response.code === 200) {
+          renderToast("ورود بهره بردار با موفقیت انجام شد", "info");
+          // window.localStorage.setItem(
+          //   "token",
+          //   JSON.stringify(response.data.token)
+          // );
+          // window.localStorage.setItem(
+          //   "permissions",
+          //   JSON.stringify(response.data.permissions)
+          // );
+          // window.localStorage.setItem(
+          //   "ChangedPass",
+          //   JSON.stringify(response.data.ChangedPass)
+          // );
+
+          // queryClient.removeQueries();
+          // window.location.href = userPath;
+        } else {
+          renderToast(response?.farsi_message, "err");
+        }
+      } else {
+        renderToast("شماره تماس 11 رقم بوده و با 0 شروع میگردد", "warn");
+        setPhoneBorder("err");
+      }
+    } else {
+      renderToast("تمامی موارد را وارد کنید", "warn");
+    }
+  };
+
   return (
     <div className="mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
       <h4 className="mb-2.5 text-4xl font-bold text-navy-700 dark:text-white">
-        ورود مدیر
+        ورود
       </h4>
       <p className="mb-9 ml-1 text-base text-gray-600">
         نام کاربری و رمز عبور را وارد کنید
@@ -86,12 +128,20 @@ const LoginForm = (props: LoginFormProps) => {
         state={password}
         setState={setPassword}
       />
-      <button
-        onClick={userLogin}
-        className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
-      >
-        ورود مدیر
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={userLogin}
+          className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+        >
+          ورود مدیر
+        </button>
+        <button
+          onClick={endUserLogin}
+          className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+        >
+          ورود بهره بردار
+        </button>
+      </div>
       <div className="mt-4">
         <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
           رمز خود را فراموش کرده اید؟

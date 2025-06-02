@@ -7,13 +7,17 @@ export const reqFunction = async (
   requestType: "get" | "post" = "post"
 ) => {
   const TOKEN = window.localStorage.getItem("token");
+  const noAuthNeeded = ["admins/admin/login", "users/user/login"];
+
   try {
-    if (TOKEN || URL === "admins/admin/login") {
-      const config = {
-        headers: {
-          token: URL === "admins/admin/login" ? null : JSON.parse(TOKEN!),
-        },
-      };
+    if (TOKEN || noAuthNeeded.includes(URL)) {
+      const headers: Record<string, string> = {};
+
+      if (!noAuthNeeded.includes(URL) && TOKEN) {
+        headers["token"] = JSON.parse(TOKEN);
+      }
+
+      const config = { headers };
 
       const response =
         requestType === "post"

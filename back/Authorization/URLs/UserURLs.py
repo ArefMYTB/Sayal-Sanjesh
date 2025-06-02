@@ -4,7 +4,7 @@ from Authorization.Views.UsersView import UsersView
 user_view = UsersView()
 
 urlpatterns = [
-    path('user/login', user_view.login_guest, name='guest'),
+    path('user/login', user_view.login_user),
     path('user/checkValidation', user_view.user_check_phone_number_validation_view),
     path('admin/add', user_view.admin_create_new_user, name='guest'),
     path('user/getProfile', user_view.user_get_profile),

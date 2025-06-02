@@ -25,6 +25,7 @@ from General.FileUploadHandler import FileManager
 from General.Serializers.UploadSerializer import UploadSerializer
 from MQQTReceiver.publisher import publish_message_to_client
 from General.Serializers.LogSerializers import LogSerializers
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class UsersSerializer:
@@ -224,52 +225,49 @@ class UsersSerializer:
                 return False, wrong_token_result
 
     @staticmethod
-    def guest_login_serializer(guest_phone, guest_password):
+    def user_login_serializer(user_phone, user_password):
         """
-           param : [guest_phone, guest_password]
+           param : [user_phone, user_password]
 
            return :
            A tuple containing a boolean indicating the success or failure of the operation, and a list of serialized data
            results.  it returns a false status along with an error message.
        """
         try:
-            fields = {
-                'guest_phone': (guest_phone, str),
-                'guest_password': (guest_password, str)
-            }
-            password_hashing = Hashing()
-            password_hashing = password_hashing.get_password_string(guest_password)
-            guest = Users.objects.get(user_phone=guest_phone, user_password=password_hashing)
-            guest_id = str(guest.user_id)
-            user_pass_change = str(guest.user_password_changed)
-            base_time = guest.as_dict()['user_sms_code_start_time']
-            if base_time is not None:
-                utc_time = base_time.replace(tzinfo=timezone.utc)
-            else:
-                utc_time = 0
-            user_sms_code_start_time = guest.as_dict()['user_sms_code_start_time']
+            user = Users.objects.get(user_phone=user_phone)
 
-            if user_sms_code_start_time is not None:
-                user_sms_code_start_time = int(user_sms_code_start_time.timestamp())
+            if check_password(user_password, user.user_password):
+                user_id = str(user.user_id)
+                permissions = ['User', 'ViewDevice', 'OrderManaging']
+                user_sms_code_start_time = user.user_sms_code_start_time
+                token = user_id_to_token(user_id, True, token_level="User")
+                if user_sms_code_start_time is not None:
+                    user_sms_code_start_time = int(user_sms_code_start_time.timestamp())
+                result = {
+                    "permissions": permissions,
+                    "user_sms_code_start_time": user_sms_code_start_time,
+                    "token": token,
+                    "ChangedPass": True 
+                }
+                return True, result
+            # elif user.admin_password == user_password:  # User Didn't Change Their Pass Yet
+            #     admin_id = str(admin.admin_id)
+            #     permissions = admin.admin_permissions
+            #     admin_sms_code_start_time = admin.admin_sms_code_start_time
+            #     token = user_id_to_token(admin_id, True, token_level="Admin")
+            #     if admin_sms_code_start_time is not None:
+            #         admin_sms_code_start_time = int(admin_sms_code_start_time.timestamp())
+            #     result = {
+            #         "permissions": permissions,
+            #         "admin_sms_code_start_time": admin_sms_code_start_time,
+            #         "token": token,
+            #         "ChangedPass": False 
+            #     }
+            #     return True, result
             else:
-                user_sms_code_start_time = 0
-            token = user_id_to_token(guest_id, True, token_level="User")
-            now = datetime.datetime.now()
-            dt = now.astimezone(pytz.UTC)
-            result = {
-                "token": token,
-                "user_pass_change": user_pass_change,
-                "user_sms_code_start_time": user_sms_code_start_time,
-                "base_time": base_time,
-                "utc_time": utc_time,
-                "dt": dt,
-                "now": now,
-            }
-            return True, result
+                return False, None
         except:
-            wrong_data_result["farsi_message"] = f" اشتباه است{fields}"
-            wrong_data_result["english_message"] = f"{fields}Wrong "
-            return False, wrong_data_result
+            return False, None
 
     @staticmethod
     def admin_create_new_user_serializer(token, user_name, user_phone, user_lastname, user_password, user_sms_code,

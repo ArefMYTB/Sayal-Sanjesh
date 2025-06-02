@@ -156,13 +156,19 @@ const rawRoutes = [
   // },
 ];
 
-const Permissions = JSON.parse(
-  localStorage.getItem("permissions") || '["Self"]'
-);
+let Permissions: string[];
+
+try {
+  const raw = localStorage.getItem("permissions");
+  Permissions = raw && raw !== "undefined" ? JSON.parse(raw) : ["Self"];
+} catch (e) {
+  console.warn("Invalid permissions in localStorage:", e);
+  Permissions = ["Self"];
+}
 
 const routes = rawRoutes.filter(
   (route) => !route.role || Permissions.includes(route.role)
 );
 
-// export default filteredRoutes;
+// if login section won't show, change this to rawRoutes and change it back to routes again
 export default routes;

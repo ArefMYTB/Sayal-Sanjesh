@@ -16,20 +16,20 @@ class UsersView:
         - post: Handles POST requests and returns a JSON response.
     """
     @csrf_exempt
-    def login_guest(self, request):
+    def login_user(self, request):
         try:
             input_data = json.loads(request.body)
         except:
             return result_creator(status="failure", code=406, farsi_message="وارد نشده است json",
                                   english_message="invalid JSON error")
-        fields = ["guest_phone", "guest_password"]
+        fields = ["user_phone", "user_password"]
         for field in fields:
             if field not in input_data:
                 return result_creator(status="failure", code=406, farsi_message=f".وارد نشده است {field}",
                                       english_message=f"{field} is Null.")
-        guest_phone = input_data["guest_phone"]
-        guest_password = input_data["guest_password"]
-        result, data = UsersSerializer.guest_login_serializer(guest_phone=guest_phone, guest_password=guest_password)
+        user_phone = input_data["user_phone"]
+        user_password = input_data["user_password"]
+        result, data = UsersSerializer.user_login_serializer(user_phone=user_phone, user_password=user_password)
         if result:
             return result_creator(data=data)
 
