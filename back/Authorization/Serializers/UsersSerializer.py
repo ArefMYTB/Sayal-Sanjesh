@@ -296,6 +296,7 @@ class UsersSerializer:
                     "user_phone": (user_phone, str),
                 }
                 result = wrong_result(fields)
+                data = {}
                 if result == None:
                     if len(user_phone) > 11 or len(user_phone) < 11:
                         wrong_data_result["farsi_message"] = "لطفا یازده رقم وارد کنید "
@@ -303,7 +304,6 @@ class UsersSerializer:
                         return False, wrong_data_result
                     if len(user_phone) == 11:
                         x = bool(re.search("^(\\+98|0)?9\\d{9}$", user_phone))
-                        print(x)
                         if x:
                             password_hashing = Hashing()
                             password_hashing = password_hashing.get_password_string(user_password)
@@ -318,6 +318,10 @@ class UsersSerializer:
                                 user.user_profile = user_profile
                                 user.other_information = other_information
                                 user.save()
+                                user_id = user.user_id
+                                data = {
+                                    'userID': user_id
+                                }
                                 if filepath != "":
                                     folder_name = str(user_phone)
                                     file_manager = FileManager()
@@ -329,7 +333,6 @@ class UsersSerializer:
                                     })
                                     user.other_information = other_information
                                     user.save()
-                                user.save()
                                 # update user number in utils table
                                 utils_object = Utils.objects.filter(name='all_record_count_in_system')
                                 information = list(utils_object.values())[0].get('information')
@@ -347,7 +350,7 @@ class UsersSerializer:
                                 wrong_data_result[
                                     "english_message"] = "phone number already exist."
                                 return False, wrong_data_result
-                            return True, status_success_result
+                            return True, data
                         else:
                             wrong_data_result["farsi_message"] = "شماره موبایل صحیح نیست "
                             wrong_data_result["english_message"] = "phone number not valid."

@@ -197,7 +197,7 @@ const ProjectsView = () => {
         ) : (
           <></>
         )}
-        {AdminPermissions.includes("CRUDProject") ? (
+        {AdminPermissions.includes("Admin") ? (
           <CustomButton
             onClick={() => editProjectClick(projectId)}
             icon={<MdEdit />}
@@ -207,7 +207,7 @@ const ProjectsView = () => {
         ) : (
           <></>
         )}
-        {AdminPermissions.includes("CRUDProject") ? (
+        {AdminPermissions.includes("Admin") ? (
           <CustomButton
             onClick={() => {
               deleteProjectClicked(projectId);
@@ -308,7 +308,7 @@ const ProjectsView = () => {
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">
-            {AdminPermissions.includes("CRUDProject") ? (
+            {AdminPermissions.includes("Admin") ? (
               <CustomButton
                 text="افزودن پروژه"
                 onClick={() => addProjectClick()}

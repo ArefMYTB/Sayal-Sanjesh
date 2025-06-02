@@ -135,7 +135,7 @@ const rawRoutes = [
     path: "projects/:projectId",
     icon: null,
     component: <ProjectDetailsView />,
-    role: "Admin",
+    role: "ViewProject",
   },
   {
     name: "جزئیات دستگاه",
@@ -143,7 +143,7 @@ const rawRoutes = [
     path: "counters/:deviceSerial",
     icon: null,
     component: <DeviceDetailsView />,
-    role: "Admin",
+    role: "ViewDevice",
   },
   // {
   //   name: "تست کنتور",

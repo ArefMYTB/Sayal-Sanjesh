@@ -57,7 +57,7 @@ class LogSerializers:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if LogSerializers.admin_check_permission(admin_id, 'LogSystem'):
+            if LogSerializers.admin_check_permission(admin_id, 'LogDevice'):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 filters = {

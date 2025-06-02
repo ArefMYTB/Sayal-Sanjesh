@@ -173,7 +173,6 @@ const DeviceForm = (props: DeviceFormProps) => {
     }
   };
   const editDevice = async () => {
-    console.log("edit");
     if (
       deviceName &&
       deviceSerial &&

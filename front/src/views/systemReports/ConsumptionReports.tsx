@@ -147,7 +147,7 @@ const ConsumptionReport = () => {
   };
   const renderUserSelect = (userList: UserObject[]) => {
     let usersSelect: DynamicOption[] = [];
-    userList.forEach((user) => {
+    userList?.forEach((user) => {
       usersSelect.push({
         value: user.user_id,
         label: `${user.user_name} ${user.user_lastname}`,

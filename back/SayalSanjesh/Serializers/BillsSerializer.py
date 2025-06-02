@@ -868,16 +868,15 @@ class BillsSerializer:
 
                         # elif calculate_method == 'from_project' : get project pattern
                         elif calculate_method == 'from_project':
-                            # try:
-                            print("project_id : " , project_id)
-                            patter_object = Pattern.objects.get(pattern_project=project_id , pattern_tag = tag_id)
-                            bill_structure = patter_object.pattern_list
-                            # except:
-                            #     wrong_data_result[
-                            #         "farsi_message"] = "هیچ الگوی مصرفی برای پروژه وجود ندارد"
-                            #     wrong_data_result["english_message"] = "There is no  pattern for the project"
-                            #     wrong_data_result["code"] = 444
-                            #     return False, wrong_data_result
+                            try:
+                                patter_object = Pattern.objects.get(pattern_project=project_id , pattern_tag = tag_id)
+                                bill_structure = patter_object.pattern_list
+                            except:
+                                wrong_data_result[
+                                    "farsi_message"] = "هیچ الگوی مصرفی برای پروژه وجود ندارد"
+                                wrong_data_result["english_message"] = "There is no  pattern for the project"
+                                wrong_data_result["code"] = 444
+                                return False, wrong_data_result
 
                         # elif calculate_method == 'project_priority' : first check project pattern if is null
                         # :: check meter other_information
@@ -968,7 +967,7 @@ class BillsSerializer:
                                                 start_period_sum = start_period_sum - consumption_difference
                                     days_difference = end - start
                                     other_information['period_days'] = days_difference.days
-                                    print(f"bill_price : {bill_price} - bill_factor : {bill_factor}")
+                                    # print(f"bill_price : {bill_price} - bill_factor : {bill_factor}")
                                     final_price = int(float(bill_price) * float(bill_factor))
                                     price_words = digits.to_word(final_price)
                                     other_information['price_words'] = price_words
@@ -1018,7 +1017,7 @@ class BillsSerializer:
                                 else:
                                     response_dict = {
                                         "meter_serial": f'{meter_serial}',
-                                        "farsi_message": "قبض تکراری (برای بازه ی انتخابی قبلا قبض صادر شده)",
+                                        "farsi_message": "برای این بازه قبلا قبض صادر شده است.",
                                         "english_message": "Duplicate bill (for the selected period, "
                                                            "the bill was previously issued)"
                                     }

@@ -143,7 +143,7 @@ const ShowBillView = (props: ShowBillsProps) => {
       }),
     queryKey: ["projectDevice", counter],
   });
-  if (billsData.code === 200) {
+  if (billsData?.code === 200) {
   } else {
     renderToast(
       billsData?.farsi_message

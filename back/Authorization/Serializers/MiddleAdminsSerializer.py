@@ -145,29 +145,31 @@ class MiddleAdminsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'ViewAdmin', 'CRUDManager']):
-                # TODO: This will list all project managers. we can change it so it only shows hight level managers (CRUDManager) to admins and all managers to Joker
-                list_of_middle_admins = Admins.objects.filter(admin_permissions__contains=['CRUDManager'])
-                middle_admin_data = MiddleAdmins.objects.filter(middle_admin_id__in=list_of_middle_admins)
-                result = []
-                for obj in middle_admin_data:
-                    # middle_admin_obj = Admins.objects.get(admin_id=obj.middle_admin_id)
-                    result_dict = {
-                        "admin_id": obj.middle_admin_id.admin_id,
-                        "admin_name": obj.middle_admin_id.admin_name,
-                        "admin_lastname": obj.middle_admin_id.admin_lastname,
-                        "admin_phone": obj.middle_admin_id.admin_phone,
-                    }
-                    middle_project_objects = WaterMetersProjects.objects.filter(
-                        water_meter_project_id__in=obj.project_ids)
-                    response = WaterMetersProjects.objects.serialize(
-                        queryset=middle_project_objects, modify_response=True,
-                        pop_item=['admin_info', 'water_meters_with_this_id', 'types'])
-                    result_dict['middel_admin_projects'] = response
-                    result.append(result_dict)
-                return True, result
             # TODO: Remove This Section
-            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
+            # if AdminsSerializer.admin_check_permission(admin_id, ['CRUDAdmin', 'ViewAdmin', 'CRUDManager']):
+            #     list_of_middle_admins = Admins.objects.filter(admin_permissions__contains=['CRUDManager'])
+            #     middle_admin_data = MiddleAdmins.objects.filter(middle_admin_id__in=list_of_middle_admins)
+            #     result = []
+            #     print(middle_admin_data)
+            #     for obj in middle_admin_data:
+            #         # middle_admin_obj = Admins.objects.get(admin_id=obj.middle_admin_id)
+            #         result_dict = {
+            #             "admin_id": obj.middle_admin_id.admin_id,
+            #             "admin_name": obj.middle_admin_id.admin_name,
+            #             "admin_lastname": obj.middle_admin_id.admin_lastname,
+            #             "admin_phone": obj.middle_admin_id.admin_phone,
+            #         }
+            #         middle_project_objects = WaterMetersProjects.objects.filter(
+            #             water_meter_project_id__in=obj.project_ids)
+            #         response = WaterMetersProjects.objects.serialize(
+            #             queryset=middle_project_objects, modify_response=True,
+            #             pop_item=['admin_info', 'water_meters_with_this_id', 'types'])
+            #         print("response: ", response)
+            #         result_dict['middel_admin_projects'] = response
+            #         result.append(result_dict)
+            #     return True, result
+            
+            if AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Admin']):
                 admin_obj = Admins.objects.get(admin_id=admin_id)
                 list_of_middle_admins = Admins.objects.filter(admin_permissions__contains=['ProjectManager'],
                                                               admin_creator_id=admin_id).exclude(

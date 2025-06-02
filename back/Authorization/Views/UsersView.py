@@ -72,7 +72,7 @@ class UsersView:
             user_password=user_password, user_sms_code=user_sms_code, user_profile=user_profile,
             other_information=other_information, filepath=filepath)
         if result:
-            return result_creator()
+            return result_creator(data=data)
         else:
             return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
                                   english_message=data["english_message"])
