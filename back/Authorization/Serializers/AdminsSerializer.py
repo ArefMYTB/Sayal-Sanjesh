@@ -1,5 +1,6 @@
 import requests, datetime, json, random, time, os, shutil, re
 from datetime import timedelta, timezone
+from django.utils import timezone
 from threading import Thread
 from Authorization.models.Admins import Admins
 from Authorization.models.PermissionCategory import PermissionCategory
@@ -61,38 +62,56 @@ class AdminsSerializer:
         try:
             admin = Admins.objects.get(admin_phone=admin_phone)
 
+            # Check if user is locked out
+            if admin.lockout_until and timezone.now() < admin.lockout_until:
+                lockout_remaining = int((admin.lockout_until - timezone.now()).total_seconds())
+                
+                return False, {"locked_out": True, "lockout_seconds": lockout_remaining}
+
             if check_password(admin_password, admin.admin_password):
-                admin_id = str(admin.admin_id)
-                permissions = admin.admin_permissions
-                admin_sms_code_start_time = admin.admin_sms_code_start_time
-                token = user_id_to_token(admin_id, True, token_level="Admin")
-                if admin_sms_code_start_time is not None:
-                    admin_sms_code_start_time = int(admin_sms_code_start_time.timestamp())
+
+                # Reset failed attempts on success
+                admin.failed_login_attempts = 0
+                admin.lockout_until = None
+                admin.save()
+                
+                token = user_id_to_token(str(admin.admin_id), True, token_level="Admin")
+
                 result = {
-                    "permissions": permissions,
-                    "admin_sms_code_start_time": admin_sms_code_start_time,
+                    "permissions": admin.admin_permissions,
+                    "admin_sms_code_start_time": admin.admin_sms_code_start_time,
                     "token": token,
                     "ChangedPass": True 
                 }
                 return True, result
             elif admin.admin_password == admin_password:  # User Didn't Change Their Pass Yet
-                admin_id = str(admin.admin_id)
-                permissions = admin.admin_permissions
-                admin_sms_code_start_time = admin.admin_sms_code_start_time
-                token = user_id_to_token(admin_id, True, token_level="Admin")
-                if admin_sms_code_start_time is not None:
-                    admin_sms_code_start_time = int(admin_sms_code_start_time.timestamp())
+                # Reset failed attempts on success
+                admin.failed_login_attempts = 0
+                admin.lockout_until = None
+                admin.save()
+
+                token = user_id_to_token(str(admin.admin_id), True, token_level="Admin")
+
                 result = {
-                    "permissions": permissions,
-                    "admin_sms_code_start_time": admin_sms_code_start_time,
+                    "permissions": admin.admin_permissions,
+                    "admin_sms_code_start_time":  admin.admin_sms_code_start_time,
                     "token": token,
                     "ChangedPass": False 
                 }
                 return True, result
             else:
-                return False, None
-        except:
-            return False, None
+                # Increment failed attempts
+                admin.failed_login_attempts += 1
+                admin.last_failed_attempt = timezone.now()
+
+                if admin.failed_login_attempts >= 5:
+                    admin.lockout_until = timezone.now() + timedelta(seconds=30)
+                    admin.failed_login_attempts = 0  # Reset to avoid permanent lock
+                admin.save()
+
+                return False, {"locked_out": False, "error": "Invalid credentials"}
+        except Admins.DoesNotExist:
+            return False, {"locked_out": False, "error": "Admin not found"}
 
     @staticmethod
     def admin_set_profile_serializer(token, admin_name, admin_lastname, other_information, filepath, admin_password):

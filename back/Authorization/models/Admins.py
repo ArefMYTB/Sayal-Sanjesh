@@ -47,6 +47,10 @@ class Admins(models.Model):
     admin_sms_code_start_time = models.DateTimeField(null=True)
     admin_images = ArrayField(models.CharField(max_length=400), default=list, null=True)
     admin_creator_id = models.CharField(max_length=200, null=True)
+    # Session Policy 
+    failed_login_attempts = models.IntegerField(default=0)
+    last_failed_attempt = models.DateTimeField(null=True, blank=True)
+    lockout_until = models.DateTimeField(null=True, blank=True)
     objects = CustomAdminManager()
 
     class Meta:

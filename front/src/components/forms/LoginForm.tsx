@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import InputField from "components/fields/InputField";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { reqFunction } from "utils/API";
 import { isPhoneValid, renderToast } from "utils/globalUtils";
@@ -12,6 +12,8 @@ interface LoginFormProps {
 }
 const LoginForm = (props: LoginFormProps) => {
   const { phone, setPhone, password, setPassword } = props;
+  const [lockoutTime, setLockoutTime] = useState<number | null>(null);
+
   const queryClient = useQueryClient();
   let adminPath = `/admin/dashboard`;
   let userPath = `/user/dashboard`;
@@ -22,33 +24,38 @@ const LoginForm = (props: LoginFormProps) => {
   const userLogin = async () => {
     if (phone && password) {
       if (isPhoneValid(phone)) {
-        const json: {
-          admin_phone: string;
-          admin_password: string;
-        } = {
-          admin_phone: phone,
-          admin_password: password,
-        };
+        const json = { admin_phone: phone, admin_password: password };
         let response = await reqFunction("admins/admin/login", json);
+
         if (response.code === 200) {
           renderToast("ورود مدیر با موفقیت انجام شد", "info");
-          window.localStorage.setItem(
-            "token",
-            JSON.stringify(response.data.token)
-          );
-          window.localStorage.setItem(
+          localStorage.setItem("token", JSON.stringify(response.data.token));
+          localStorage.setItem(
             "permissions",
             JSON.stringify(response.data.permissions)
           );
-          window.localStorage.setItem(
+          localStorage.setItem(
             "ChangedPass",
             JSON.stringify(response.data.ChangedPass)
           );
-
           queryClient.removeQueries();
           window.location.href = adminPath;
         } else {
-          renderToast(response?.farsi_message, "err");
+          const resData = response?.data;
+          if (resData?.locked_out) {
+            console.log("Locked out");
+            const seconds = resData?.lockout_seconds || 30;
+            setLockoutTime(seconds);
+            renderToast(
+              `دسترسی مسدود شد. لطفاً ${seconds} ثانیه صبر کنید`,
+              "err"
+            );
+          } else {
+            renderToast(
+              response?.farsi_message || "رمز یا شماره اشتباه است",
+              "err"
+            );
+          }
         }
       } else {
         renderToast("شماره تماس 11 رقم بوده و با 0 شروع میگردد", "warn");
@@ -99,6 +106,15 @@ const LoginForm = (props: LoginFormProps) => {
     }
   };
 
+  useEffect(() => {
+    if (lockoutTime && lockoutTime > 0) {
+      const timer = setInterval(() => {
+        setLockoutTime((prev) => (prev ? prev - 1 : null));
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [lockoutTime]);
+
   return (
     <div className="mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
       <h4 className="mb-2.5 text-4xl font-bold text-navy-700 dark:text-white">
@@ -131,16 +147,24 @@ const LoginForm = (props: LoginFormProps) => {
       <div className="flex gap-2">
         <button
           onClick={userLogin}
-          className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+          disabled={!!lockoutTime}
+          className={`linear mt-2 w-full rounded-xl py-[12px] text-base font-medium transition duration-200
+    ${
+      lockoutTime
+        ? "cursor-not-allowed bg-gray-400"
+        : "bg-brand-500 text-white hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+    }
+  `}
         >
-          ورود مدیر
+          {lockoutTime ? `صبر کنید (${lockoutTime} ثانیه)` : "ورود مدیر"}
         </button>
-        <button
+
+        {/* <button
           onClick={endUserLogin}
           className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
         >
           ورود بهره بردار
-        </button>
+        </button> */}
       </div>
       <div className="mt-4">
         <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
