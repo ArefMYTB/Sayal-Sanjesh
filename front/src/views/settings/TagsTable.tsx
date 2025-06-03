@@ -49,7 +49,7 @@ const TagsTable = () => {
         <CustomButton
           onClick={() => {
             if (window.confirm("غیر فعال")) {
-              editProjectClick(adminId)
+              editProjectClick(adminId);
             }
           }}
           icon={<MdEdit />}
@@ -67,7 +67,7 @@ const TagsTable = () => {
   const tableData = () => {
     let tagsTableData: TagsTableData = [];
     if (!tagsIsLoading && tagsStatus !== "pending") {
-      tagsData.data.forEach((obj: TagObject) =>
+      tagsData.data?.forEach((obj: TagObject) =>
         tagsTableData.push({
           tagName: obj.water_meter_tag_name,
           tagCreateDate: toPersianDate(obj.water_meter_tag_create_date),
@@ -98,7 +98,7 @@ const TagsTable = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`دسته ها (${
-              tagsIsLoading ? "loading..." : tagsData?.data.length
+              tagsIsLoading ? "loading..." : tagsData?.data?.length
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">

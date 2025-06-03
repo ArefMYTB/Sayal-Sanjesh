@@ -169,16 +169,18 @@ const ConsumptionReport = () => {
     let typeSelect: DynamicOption[] = [];
     let typeInProject: string[] = [];
     if (project) {
-      let fP: ProjectObject[] = projectsData.data.filter(
+      let fP: ProjectObject[] = projectsData.data?.filter(
         (p: ProjectObject) => p.water_meter_project_id === project.value
       );
-      fP[0].types.forEach((type) =>
+      fP[0].types?.forEach((type) =>
         typeInProject.push(type.water_meter_type_id)
       );
     }
     typeList
-      .filter((types) => types.water_meter_tag.water_meter_tag_id === tag.value)
-      .forEach((type) => {
+      ?.filter(
+        (types) => types.water_meter_tag.water_meter_tag_id === tag.value
+      )
+      ?.forEach((type) => {
         typeSelect.push({
           value: type.water_meter_type_id,
           label: type.water_meter_type_name,

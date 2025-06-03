@@ -63,8 +63,8 @@ const CreateBillView = (props: CreateBillProps) => {
   };
   const renderTagSelectData = () => {
     let selectData: DynamicOption[] = [];
-    tags.length > 0
-      ? tags.forEach((tag) =>
+    tags?.length > 0
+      ? tags?.forEach((tag) =>
           selectData.push({
             label: tag.water_meter_tag_name,
             value: tag.water_meter_tag_id,

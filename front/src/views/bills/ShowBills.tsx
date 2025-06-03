@@ -190,7 +190,7 @@ const ShowBillView = (props: ShowBillsProps) => {
   const renderProjectSelectData = () => {
     let selectData: DynamicOption[] = [];
     projects?.length > 0
-      ? projects.forEach((project) =>
+      ? projects?.forEach((project) =>
           selectData.push({
             label: project.water_meter_project_name,
             value: project.water_meter_project_id,
@@ -201,8 +201,8 @@ const ShowBillView = (props: ShowBillsProps) => {
   };
   const renderTagSelectData = () => {
     let selectData: DynamicOption[] = [];
-    tags.length > 0
-      ? tags.forEach((tag) =>
+    tags?.length > 0
+      ? tags?.forEach((tag) =>
           selectData.push({
             label: tag.water_meter_tag_name,
             value: tag.water_meter_tag_id,

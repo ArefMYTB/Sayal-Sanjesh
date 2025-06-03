@@ -131,7 +131,7 @@ const Permissions = () => {
   const tableData = () => {
     let permissionTableData: PermissionTableData = [];
     if (!permissionsIsLoading && permissionsStatus === "success") {
-      permissionsData.data.forEach((obj: PermissionObj) =>
+      permissionsData.data?.forEach((obj: PermissionObj) =>
         permissionTableData.push({
           permissionName: obj.permission_persian_name,
           permissionEnglishName: obj.permission_english_name,
@@ -169,7 +169,9 @@ const Permissions = () => {
         <div className="relative flex items-center justify-between p-4">
           <div className="text-xl font-bold text-navy-700 dark:text-white">
             {`دسترسی ها (${
-              permissionsIsLoading ? "loading..." : permissionsData?.data.length
+              permissionsIsLoading
+                ? "loading..."
+                : permissionsData?.data?.length
             })`}
           </div>
           <div className=" moldal-btns flex items-center justify-end">

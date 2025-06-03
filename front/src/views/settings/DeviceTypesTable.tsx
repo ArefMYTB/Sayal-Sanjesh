@@ -152,7 +152,7 @@ const DeviceTypesTable = () => {
   const renderTagSelectData = () => {
     let selectData: DynamicOption[] = [];
     if (!tagsIsLoading && tagsStatus !== "pending") {
-      tagsData.data.forEach((tag: TagObject) =>
+      tagsData.data?.forEach((tag: TagObject) =>
         selectData.push({
           label: tag.water_meter_tag_name,
           value: tag.water_meter_tag_id,
