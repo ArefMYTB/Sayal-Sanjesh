@@ -38,6 +38,20 @@ const LoginForm = (props: LoginFormProps) => {
             "ChangedPass",
             JSON.stringify(response.data.ChangedPass)
           );
+          // Show login history if available
+          if (response.data.last_successful_login) {
+            const lastSuccess = new Date(
+              response.data.last_successful_login
+            ).toLocaleString("fa-IR");
+            renderToast(`آخرین ورود موفق: ${lastSuccess}`, "info");
+          }
+
+          if (response.data?.last_failed_attempt) {
+            const lastFail = new Date(
+              response.data?.last_failed_attempt
+            ).toLocaleString("fa-IR");
+            renderToast(`آخرین تلاش ناموفق: ${lastFail}`, "warn");
+          }
           queryClient.removeQueries();
           window.location.href = adminPath;
         } else {

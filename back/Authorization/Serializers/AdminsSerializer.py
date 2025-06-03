@@ -52,67 +52,68 @@ class AdminsSerializer:
 
     @staticmethod
     def admin_login_serializer(admin_phone, admin_password):
-        """
-            param : [admin_phone, admin_password]
-
-            return :
-            A tuple containing a boolean indicating the success or failure of the operation, and a list of serialized data
-            results.  it returns a false status along with an error message.
-        """
         try:
             admin = Admins.objects.get(admin_phone=admin_phone)
 
             # Check if user is locked out
             if admin.lockout_until and timezone.now() < admin.lockout_until:
                 lockout_remaining = int((admin.lockout_until - timezone.now()).total_seconds())
-                
                 return False, {"locked_out": True, "lockout_seconds": lockout_remaining}
 
-            if check_password(admin_password, admin.admin_password):
+            now = timezone.now()
 
-                # Reset failed attempts on success
+            if check_password(admin_password, admin.admin_password):
+                # ✅ Success: update login info
                 admin.failed_login_attempts = 0
                 admin.lockout_until = None
+                admin.last_successful_login = now
                 admin.save()
-                
+
                 token = user_id_to_token(str(admin.admin_id), True, token_level="Admin")
 
                 result = {
                     "permissions": admin.admin_permissions,
                     "admin_sms_code_start_time": admin.admin_sms_code_start_time,
                     "token": token,
-                    "ChangedPass": True 
+                    "ChangedPass": True,
+                    "last_successful_login": admin.last_successful_login,
+                    "last_failed_attempt": admin.last_failed_attempt
                 }
                 return True, result
-            elif admin.admin_password == admin_password:  # User Didn't Change Their Pass Yet
-                # Reset failed attempts on success
+
+            elif admin.admin_password == admin_password:  # Password not hashed yet
                 admin.failed_login_attempts = 0
                 admin.lockout_until = None
+                admin.last_successful_login = now
                 admin.save()
 
                 token = user_id_to_token(str(admin.admin_id), True, token_level="Admin")
 
                 result = {
                     "permissions": admin.admin_permissions,
-                    "admin_sms_code_start_time":  admin.admin_sms_code_start_time,
+                    "admin_sms_code_start_time": admin.admin_sms_code_start_time,
                     "token": token,
-                    "ChangedPass": False 
+                    "ChangedPass": False,
+                    "last_successful_login": admin.last_successful_login,
+                    "last_failed_attempt": admin.last_failed_attempt
                 }
                 return True, result
+
             else:
-                # Increment failed attempts
+                # Failure: increment attempts and update timestamp
                 admin.failed_login_attempts += 1
-                admin.last_failed_attempt = timezone.now()
+                admin.last_failed_attempt = now
 
                 if admin.failed_login_attempts >= 5:
-                    admin.lockout_until = timezone.now() + timedelta(seconds=30)
-                    admin.failed_login_attempts = 0  # Reset to avoid permanent lock
-                admin.save()
+                    admin.lockout_until = now + timedelta(seconds=30)
+                    admin.failed_login_attempts = 0  # prevent permanent lock
 
+                admin.save()
                 return False, {"locked_out": False, "error": "Invalid credentials"}
+
         except Admins.DoesNotExist:
             return False, {"locked_out": False, "error": "Admin not found"}
-
+    
     @staticmethod
     def admin_set_profile_serializer(token, admin_name, admin_lastname, other_information, filepath, admin_password):
         """

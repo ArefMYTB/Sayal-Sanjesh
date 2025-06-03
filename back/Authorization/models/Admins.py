@@ -48,6 +48,7 @@ class Admins(models.Model):
     admin_images = ArrayField(models.CharField(max_length=400), default=list, null=True)
     admin_creator_id = models.CharField(max_length=200, null=True)
     # Session Policy 
+    last_successful_login = models.DateTimeField(null=True, blank=True)
     failed_login_attempts = models.IntegerField(default=0)
     last_failed_attempt = models.DateTimeField(null=True, blank=True)
     lockout_until = models.DateTimeField(null=True, blank=True)
