@@ -1,10 +1,11 @@
 import jwt
 from datetime import datetime, timedelta
 from Authorization.models.Token import Token
+from django.conf import settings
 
 
 def user_id_to_token(user_id, activation, token_level="User"):
-    JWT_SECRET = "This is my secret key in this project."
+    JWT_SECRET = settings.JWT_SECRET
     JWT_ALGORITHM = "HS256"
     now_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     token_version = 1.0
@@ -34,7 +35,7 @@ def user_id_to_token(user_id, activation, token_level="User"):
 
 
 def token_to_user_id(token):
-    JWT_SECRET = "This is my secret key in this project."
+    JWT_SECRET = settings.JWT_SECRET
     JWT_ALGORITHM = "HS256"
     try:
         if Token.objects.get(token=token):

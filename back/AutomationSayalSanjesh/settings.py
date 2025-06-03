@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -160,3 +161,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # media directory in the root dire
 MEDIA_URL = '/media/'
 
 ENCODE_DATA = False
+
+# Load environment variables from .env
+load_dotenv()
+# Use the JWT secret from environment
+JWT_SECRET = os.environ.get("JWT_SECRET", "fallback-insecure-dev-secret")
