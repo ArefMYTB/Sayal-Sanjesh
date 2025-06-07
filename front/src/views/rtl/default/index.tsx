@@ -25,10 +25,23 @@ import Loading from "components/loading";
 import {
   renderComplexChartData,
   renderComplexChartOptions,
+  renderToast,
 } from "utils/globalUtils";
 import { renderSelectData } from "utils/CommonFunctions";
 
 const Dashboard = () => {
+  const lastSuccess = localStorage.getItem("lastSuccess");
+  if (lastSuccess) {
+    renderToast(`آخرین ورود موفق: ${lastSuccess}`, "info");
+    localStorage.removeItem("lastSuccess");
+  }
+
+  const lastFail = localStorage.getItem("lastFail");
+  if (lastFail) {
+    renderToast(`آخرین تلاش ناموفق: ${lastFail}`, "warn");
+    localStorage.removeItem("lastFail");
+  }
+
   const [tag, setTag] = useState<DynamicOption>(counterTagSelect[0]);
   const [user, setUser] = useState<DynamicOption>(null);
   const [project, setProject] = useState<DynamicOption>(null);
