@@ -340,3 +340,49 @@ class AdminsView:
         else:
             return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
                                   english_message=data["english_message"])
+
+    @csrf_exempt
+    def suspend_admin(self, request):
+
+        if request.method.lower() == "options":
+            return result_creator()
+        input_data = json.loads(request.body)
+        if "Token" in request.headers:
+            token = request.headers["Token"]
+        else:
+            token = ''
+        fields = ["other_admin_id", "suspend_time"]
+        for field in fields:
+            if field not in input_data:
+                return result_creator(status="failure", code=406, farsi_message=f".وارد نشده است {field}")
+        other_admin_id = input_data['other_admin_id']
+        suspend_time = input_data['suspend_time']
+        result, data = AdminsSerializer.admin_suspend_serializer(token, other_admin_id, suspend_time)
+        if result:
+            return result_creator(data=data)
+        else:
+            return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
+                                  english_message=data["english_message"])
+        
+    @csrf_exempt
+    def remove_suspension(self, request):
+        if request.method.lower() == "options":
+            return result_creator()
+
+        input_data = json.loads(request.body)
+        if "Token" in request.headers:
+            token = request.headers["Token"]
+        else:
+            token = ''
+
+        if "other_admin_id" not in input_data:
+            return result_creator(status="failure", code=406, farsi_message="شناسه کاربر وارد نشده است")
+
+        other_admin_id = input_data["other_admin_id"]
+        result, data = AdminsSerializer.remove_suspension_serializer(token, other_admin_id)
+
+        if result:
+            return result_creator(data=data)
+        else:
+            return result_creator(status="failure", code=403, farsi_message=data["farsi_message"],
+                                english_message=data["english_message"])

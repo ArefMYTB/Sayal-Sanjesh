@@ -26,7 +26,8 @@ class CustomAdminManager(models.Manager):
                 "admin_create_date": obj.admin_create_date,
                 "admin_phone_number_validation": obj.admin_phone_number_validation,
                 "admin_images": obj.admin_images,
-                "admin_creator_id": obj.admin_creator_id
+                "admin_creator_id": obj.admin_creator_id,
+                "lockout_until": obj.lockout_until,
             }
             serialized_data.append(serialized_obj)
         return serialized_data

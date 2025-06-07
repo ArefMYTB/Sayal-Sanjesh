@@ -1,5 +1,6 @@
 import Card from "components/card";
 import { MdAdd, MdAddCircleOutline, MdDelete, MdEdit } from "react-icons/md";
+import { RiUserForbidFill } from "react-icons/ri";
 import { useDisclosure } from "@chakra-ui/hooks";
 import CustomModal from "components/modals";
 import CustomButton from "components/button";
@@ -8,6 +9,7 @@ import { reqFunction } from "utils/API";
 import SimpleTable from "components/tables/SimpleTable";
 import { toPersianDate } from "utils/TimeUtiles";
 import AdminForm from "components/forms/AdminForm";
+import SuspendAdminForm from "components/forms/AdminSuspendForm";
 import { useState } from "react";
 import { DynamicOption } from "components/fields/SelectInput";
 import { PermissionCategory } from "views/settings/PermissionsCategory";
@@ -25,6 +27,7 @@ export type AdminsObject = {
   admin_phone: string;
   admin_create_date: Date;
   admin_permissions: string[];
+  lockout_until: string;
 };
 type AdminTableData = Array<{
   adminName: string;
@@ -43,14 +46,14 @@ const AdminsTable = () => {
   const [adminPhoneNumber, setAdminPhoneNumber] = useState<string>("");
   const [adminPermissions, setAdminPermissions] = useState<string[]>([]);
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
-  // const [defaultPermissions, setdefaultPermissions] = useState<string[]>([]);
   const [adminPassword, setAdminPassword] = useState<string>("");
   const [role, setRole] = useState<DynamicOption>(null);
   const [adminId, setAdminId] = useState<string>("");
   const [isEditForm, setIsEditForm] = useState<boolean>(false);
   const [middleProjectIds, setMiddleProjectIds] = useState<string[]>([]);
   const [adminInfo, setAdminInfo] = useState<AdminsObject>(null);
-  // const[projects , setProjects]=useState<DynamicOption[]>([]);
+  const [lockoutUntil, setLockoutUntil] = useState<string | null>(null);
+
   const {
     data: adminsData,
     isLoading: adminsIsLoading,
@@ -103,10 +106,16 @@ const AdminsTable = () => {
       }),
     queryKey: ["projectList"],
   });
+  // Edit
   const {
     isOpen: isAdminOpen,
     onOpen: onAdminOpen,
     onClose: onAdminClose,
+  } = useDisclosure();
+  const {
+    isOpen: isAdminSuspendOpen,
+    onOpen: onAdminSuspendOpen,
+    onClose: onAdminSuspendClose,
   } = useDisclosure();
   const {
     isOpen: isAssignProjectOpen,
@@ -175,6 +184,17 @@ const AdminsTable = () => {
     setSelectedPermissions(selectedAdmin[0].admin_permissions);
     onAdminOpen();
   };
+  const suspendAdminClick = (id: string) => {
+    let selectedAdmin: AdminsObject[] = adminsData.data.filter(
+      (admin: AdminsObject) => id === admin.admin_id
+    );
+    setAdminId(selectedAdmin[0].admin_id);
+    setAdminName(selectedAdmin[0].admin_name);
+    setAdminLastname(selectedAdmin[0].admin_lastname);
+    setAdminPhoneNumber(selectedAdmin[0].admin_phone);
+    setLockoutUntil(selectedAdmin[0].lockout_until);
+    onAdminSuspendOpen();
+  };
   const deleteAdminClick = (id: string) => {
     let admin: AdminsObject[] = adminsData.data.filter(
       (adminData: AdminsObject) => adminData.admin_id === id
@@ -200,31 +220,34 @@ const AdminsTable = () => {
       );
     }
   };
-  const renderAdminActions = (adminId: string) => {
+  const renderAdminActions = (admin: AdminsObject) => {
+    const isSuspended = admin.lockout_until !== null;
     return (
       <div className=" flex items-center justify-center">
         {ADMINPERMISSIONS.includes("CRUDAdmin") ||
         ADMINPERMISSIONS.includes("CRUDManager") ? (
-          <CustomButton
-            onClick={() => editAdminClick(adminId)}
-            icon={<MdEdit />}
-            color="orange"
-            extra="!p-2"
-          />
-        ) : (
-          <></>
-        )}
-        {ADMINPERMISSIONS.includes("CRUDAdmin") ||
-        ADMINPERMISSIONS.includes("CRUDManager") ? (
-          <CustomButton
-            onClick={() => {
-              // need to render delete confimation form !!! This one is done
-              deleteAdminClick(adminId);
-            }}
-            icon={<MdDelete />}
-            color="red"
-            extra="!p-2"
-          />
+          <div className="flex">
+            <CustomButton
+              onClick={() => editAdminClick(admin.admin_id)}
+              icon={<MdEdit />}
+              color="orange"
+              extra="!p-2"
+            />
+            <CustomButton
+              onClick={() => suspendAdminClick(admin.admin_id)}
+              icon={<RiUserForbidFill />}
+              color={isSuspended ? "blue" : "yellow"}
+              extra="!p-2"
+            />
+            <CustomButton
+              onClick={() => {
+                deleteAdminClick(admin.admin_id);
+              }}
+              icon={<MdDelete />}
+              color="red"
+              extra="!p-2"
+            />
+          </div>
         ) : (
           <></>
         )}
@@ -299,7 +322,7 @@ const AdminsTable = () => {
             ? "مدیر سیستم"
             : "مدیر پروژه",
           assignProject: renderAssignBtn(obj),
-          adminAction: renderAdminActions(obj.admin_id),
+          adminAction: renderAdminActions(obj),
         })
       );
     }
@@ -360,6 +383,7 @@ const AdminsTable = () => {
               />
             }
           />
+          {/* Edit Admin */}
           <CustomModal
             isOpen={isAdminOpen}
             onClose={onAdminClose}
@@ -395,6 +419,27 @@ const AdminsTable = () => {
                 setSelectedPermissions={setSelectedPermissions}
                 setIsEditForm={setIsEditForm}
                 onClose={onAdminClose}
+                clearForm={clearData}
+                updateTable={adminsRefetch}
+              />
+            }
+          />
+          {/* Suspend Admin */}
+          <CustomModal
+            isOpen={isAdminSuspendOpen}
+            onClose={onAdminSuspendClose}
+            title={"کاربر سیستم"}
+            modalType="form"
+            information={null}
+            modalForm={
+              <SuspendAdminForm
+                adminName={adminName}
+                adminLastname={adminLastname}
+                adminPhoneNumber={adminPhoneNumber}
+                adminId={adminId}
+                setAdminId={setAdminId}
+                lockoutUntil={lockoutUntil}
+                onClose={onAdminSuspendClose}
                 clearForm={clearData}
                 updateTable={adminsRefetch}
               />

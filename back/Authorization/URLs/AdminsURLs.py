@@ -19,5 +19,7 @@ urlpatterns = [
     path('admin/set/categoty/permissions', admins_view.admin_set_category_permission_view),
     path('admin/set/permissions', admins_view.admin_set_permission_view),
     path('admin/logout', admins_view.logout_admin),
+    path('admin/suspend', admins_view.suspend_admin),
+    path('admin/removeSuspension', admins_view.remove_suspension),
 
 ]

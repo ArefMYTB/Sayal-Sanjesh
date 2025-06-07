@@ -774,8 +774,6 @@ class AdminsSerializer:
        """
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
-            admin_self_id = token_result["data"]["user_id"]
-            # if AdminsSerializer.admin_check_permission(admin_self_id, 'Admin'):
             try:
                 token_object = Token.objects.get(token=token)
                 token_object.delete()
@@ -785,7 +783,72 @@ class AdminsSerializer:
                 wrong_data_result["english_message"] = "Invalid data"
                 return False, wrong_data_result
             return True, status_success_result
-            # else:
-            #     return False, wrong_token_result
+        else:
+            return False, wrong_token_result
+
+    @staticmethod
+    def admin_suspend_serializer(token, other_admin_id, suspend_time):
+        token_result = token_to_user_id(token)
+        if token_result["status"] == "OK":
+            admin_self_id = token_result["data"]["user_id"]
+            if AdminsSerializer.admin_check_permission(admin_self_id, 'Joker'):
+
+                try:
+                    admin = Admins.objects.get(admin_id=other_admin_id)
+
+                    # Parse suspend_time (e.g., "3 days" or "12 hours")
+                    time_parts = suspend_time.strip().split()
+                    if len(time_parts) != 2:
+                        return False, {
+                            "farsi_message": "فرمت زمان تعلیق نامعتبر است",
+                            "english_message": "Invalid suspend_time format"
+                        }
+
+                    value, unit = time_parts
+                    value = int(value)
+
+                    if unit.lower() not in ['hours', 'days']:
+                        return False, {
+                            "farsi_message": "واحد زمان تعلیق نامعتبر است",
+                            "english_message": "Invalid suspend_time unit"
+                        }
+
+                    delta = timedelta(hours=value) if unit.lower() == 'hours' else timedelta(days=value)
+                    admin.lockout_until = timezone.now() + delta
+                    admin.save()
+
+                    # Delete their tokens
+                    Token.objects.filter(owner_id=other_admin_id).delete()
+
+                    return True, {"message": "User suspended successfully"}
+                except Admins.DoesNotExist:
+                    return False, {
+                        "farsi_message": "کاربر یافت نشد",
+                        "english_message": "Admin not found"
+                    }
+            else:
+                return False, wrong_token_result
+        else:
+            return False, wrong_token_result
+
+
+    @staticmethod
+    def remove_suspension_serializer(token, other_admin_id):
+        token_result = token_to_user_id(token)
+        if token_result["status"] == "OK":
+            admin_self_id = token_result["data"]["user_id"]
+            if AdminsSerializer.admin_check_permission(admin_self_id, 'Joker'):
+                try:
+                    admin = Admins.objects.get(admin_id=other_admin_id)
+                    admin.lockout_until = None
+                    admin.save()
+                    return True, {"message": "Suspension removed successfully"}
+                except Admins.DoesNotExist:
+                    return False, {
+                        "farsi_message": "کاربر یافت نشد",
+                        "english_message": "Admin not found"
+                    }
+            else:
+                return False, wrong_token_result
         else:
             return False, wrong_token_result
