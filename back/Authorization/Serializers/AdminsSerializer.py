@@ -65,11 +65,13 @@ class AdminsSerializer:
             if check_password(admin_password, admin.admin_password):
 
                 last_successful_login = admin.last_successful_login
-                # Ensure it's timezone-aware
-                if not is_aware(last_successful_login):
-                    last_successful_login = make_aware(last_successful_login, timezone=utc)
-                # Format with timezone info
-                formatted_last_successful_login_time = last_successful_login.isoformat()
+                formatted_last_successful_login_time = None
+                if last_successful_login != None:
+                    # Ensure it's timezone-aware
+                    if not is_aware(last_successful_login):
+                        last_successful_login = make_aware(last_successful_login, timezone=utc)
+                    # Format with timezone info
+                    formatted_last_successful_login_time = last_successful_login.isoformat()
 
                 # Success: update login info
                 admin.failed_login_attempts = 0
@@ -92,11 +94,13 @@ class AdminsSerializer:
             elif admin.admin_password == admin_password:  # Password not hashed yet
 
                 last_successful_login = admin.last_successful_login
-                # Ensure it's timezone-aware
-                if not is_aware(last_successful_login):
-                    last_successful_login = make_aware(last_successful_login, timezone=utc)
-                # Format with timezone info
-                formatted_last_successful_login_time = last_successful_login.isoformat()
+                formatted_last_successful_login_time = None
+                if last_successful_login != None:
+                    # Ensure it's timezone-aware
+                    if not is_aware(last_successful_login):
+                        last_successful_login = make_aware(last_successful_login, timezone=utc)
+                    # Format with timezone info
+                    formatted_last_successful_login_time = last_successful_login.isoformat()
 
                 admin.failed_login_attempts = 0
                 admin.lockout_until = None
