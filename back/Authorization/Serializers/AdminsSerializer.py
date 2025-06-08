@@ -15,7 +15,7 @@ from General.Serializers.LogSerializers import LogSerializers
 from Authorization.models.Token import Token
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password, check_password
-
+from django.utils.timezone import is_aware, make_aware, utc
 
 class AdminsSerializer:
     """
@@ -63,7 +63,15 @@ class AdminsSerializer:
             now = timezone.now()
 
             if check_password(admin_password, admin.admin_password):
-                # ✅ Success: update login info
+
+                last_successful_login = admin.last_successful_login
+                # Ensure it's timezone-aware
+                if not is_aware(last_successful_login):
+                    last_successful_login = make_aware(last_successful_login, timezone=utc)
+                # Format with timezone info
+                formatted_last_successful_login_time = last_successful_login.isoformat()
+
+                # Success: update login info
                 admin.failed_login_attempts = 0
                 admin.lockout_until = None
                 admin.last_successful_login = now
@@ -76,12 +84,20 @@ class AdminsSerializer:
                     "admin_sms_code_start_time": admin.admin_sms_code_start_time,
                     "token": token,
                     "ChangedPass": True,
-                    "last_successful_login": admin.last_successful_login,
+                    "last_successful_login": formatted_last_successful_login_time,
                     "last_failed_attempt": admin.last_failed_attempt
                 }
                 return True, result
 
             elif admin.admin_password == admin_password:  # Password not hashed yet
+
+                last_successful_login = admin.last_successful_login
+                # Ensure it's timezone-aware
+                if not is_aware(last_successful_login):
+                    last_successful_login = make_aware(last_successful_login, timezone=utc)
+                # Format with timezone info
+                formatted_last_successful_login_time = last_successful_login.isoformat()
+
                 admin.failed_login_attempts = 0
                 admin.lockout_until = None
                 admin.last_successful_login = now
@@ -94,7 +110,7 @@ class AdminsSerializer:
                     "admin_sms_code_start_time": admin.admin_sms_code_start_time,
                     "token": token,
                     "ChangedPass": False,
-                    "last_successful_login": admin.last_successful_login,
+                    "last_successful_login": formatted_last_successful_login_time,
                     "last_failed_attempt": admin.last_failed_attempt
                 }
                 return True, result
