@@ -838,9 +838,8 @@ class WaterMeterSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            # TODO: Check IF It's True
-            if AdminsSerializer.admin_check_permission(admin_id, 'ViewProject'):
-                # result = Utils.objects.get(name='all_record_count_in_system').information
+            # Admin can see all
+            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
                 result = {
                     "all_users": Users.objects.count(),
                     "all_water_meter": WaterMeters.objects.count(),
@@ -852,8 +851,7 @@ class WaterMeterSerializer:
                     "all_consumption_records": 266421
                 }
                 return True, result
-            # TODO: Remove This Section
-            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Meter']):
+            elif AdminsSerializer.admin_check_permission(admin_id, 'ProjectManager'):
                 middle_admin = MiddleAdmins.objects.get(middle_admin_id=admin_id)
                 # middle_admin_water_meters = middle_admin.water_meter_ids
                 middle_admin_projects = middle_admin.project_ids

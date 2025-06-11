@@ -982,7 +982,7 @@ class ConsumptionSerializer:
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['ViewProject', 'ViewDevice', 'Reports']):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
                 fields = {
                     "page": (page, int),
                     "count": (count, int),
@@ -1049,7 +1049,6 @@ class ConsumptionSerializer:
                 else:
                     return field_result
 
-            # TODO: Remove This Section
             elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager']):
                 middle_admin = MiddleAdmins.objects.get(middle_admin_id=admin_id)
                 # middle_admin_water_meters = middle_admin.water_meter_ids

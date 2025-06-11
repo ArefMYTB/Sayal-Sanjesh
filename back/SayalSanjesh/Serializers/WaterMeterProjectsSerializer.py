@@ -425,7 +425,7 @@ class WaterMeterProjectsSerializer:
                         all_cities[project_city] += 1
                 return all_cities
 
-            if AdminsSerializer.admin_check_permission(admin_id, ['ViewProject', 'Reports']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Admin']):
                 projects = WaterMetersProjects.objects.all()
                 all_cities = {}
                 for project in projects:
@@ -435,8 +435,7 @@ class WaterMeterProjectsSerializer:
                     else:
                         all_cities[project_city] += 1
                 return True, all_cities
-            # TODO: Remove This Section
-            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Project']):
+            elif AdminsSerializer.admin_check_permission(admin_id, 'ProjectManager'):
                 middle_admin = MiddleAdmins.objects.get(middle_admin_id=admin_id)
                 middle_admin_project = middle_admin.project_ids
                 all_cities = {}

@@ -144,8 +144,7 @@ class WaterMeterTagsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            # ['Base', 'Consumption']Tag
-            if AdminsSerializer.admin_check_permission(admin_id, ['ViewProject', 'Reports']):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
                 all_water_tags = WaterMetersTags.objects.all()
                 all_water_meters = WaterMeters.objects.filter(water_meter_type__water_meter_tag__in=all_water_tags)
                 all_water_meters_count = all_water_meters.count()
@@ -158,8 +157,7 @@ class WaterMeterTagsSerializer:
                     # if tag_count!= 0 :
                     result[tag.water_meter_tag_name] = tag_count
                 return True, result
-            # TODO: Remove This Section
-            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Tag']):
+            elif AdminsSerializer.admin_check_permission(admin_id, 'ProjectManager'):
                 all_water_tags = WaterMetersTags.objects.all()
                 middel_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 middel_meters = WaterMeters.objects.filter(water_meter_project__water_meter_project_id__in=middel_projects)

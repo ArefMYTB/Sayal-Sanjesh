@@ -367,12 +367,15 @@ const Dashboard = () => {
         // <div>chart is loading</div>
         <Loading />
       )}
-      {permissions.includes("Admin") ? (
+      {permissions.includes("Store") ? (
         <>
+          <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
+            بازرگانی
+          </div>
           {!typesConditionIsLoading && typesConditionStatus === "success" ? (
             <>
               <div className="mt-5 grid !grid-cols-1 gap-5 lg:!grid-cols-6">
-                <div className="chart-container sales-chart-wrapper col-span-1 h-[500px] w-full min-w-[60%] lg:col-span-4">
+                <div className="chart-container sales-chart-wrapper col-span-1 h-[50vh] w-full min-w-[60%] lg:col-span-4">
                   <MultiColumnsChart
                     chartOptions={renderSaleChartOptions(
                       typesConditionData.data
