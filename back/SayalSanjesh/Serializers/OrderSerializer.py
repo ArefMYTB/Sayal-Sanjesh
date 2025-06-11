@@ -5,6 +5,8 @@ from SayalSanjesh.Serializers import wrong_token_result, status_success_result, 
 from Authorization.Serializers.AdminsSerializer import AdminsSerializer
 from SayalSanjesh.models import OrderType, Order, WaterMeters
 from MQQTReceiver.publisher import ResponsePublisher
+from Authorization.models.MiddleAdmins import MiddleAdmins
+from django.db.models import Q
 
 
 class OrderSerializer:
@@ -19,7 +21,8 @@ class OrderSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'OrderManaging'):
+            # Admin can see all devices
+            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
                 offset = int((page - 1) * count)
                 limit = int(count)
                 filters = {
@@ -29,10 +32,23 @@ class OrderSerializer:
                 }
                 filters = {k: v for k, v in filters.items() if v is not None}
                 queryset = Order.objects.filter(**filters).order_by('-order_create_time')[offset:offset + limit]
-                # all_orders = queryset.count()
                 response = Order.objects.serialize(queryset=queryset)
-                # for order in queryset:
-                #     order['all_orders_number'] = all_orders
+                return True, response
+            elif AdminsSerializer.admin_check_permission(admin_id, 'OrderManaging'):
+                middel_admin_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
+                middel_water_meters = WaterMeters.objects.filter(Q(water_meter_admin__admin_id=admin_id) |
+                                                                    Q(water_meter_project__water_meter_project_id__in=middel_admin_projects))
+                print(middel_water_meters)
+                offset = int((page - 1) * count)
+                limit = int(count)
+                filters = {
+                    "order_type__order_type_id": order_type_id,
+                    "order_type__order_type_code": order_type_code,
+                    "order_meter_id__in": middel_water_meters,
+                }
+                filters = {k: v for k, v in filters.items() if v is not None}
+                queryset = Order.objects.filter(**filters).order_by('-order_create_time')[offset:offset + limit]
+                response = Order.objects.serialize(queryset=queryset)
                 return True, response
             else:
                 return False, wrong_token_result
