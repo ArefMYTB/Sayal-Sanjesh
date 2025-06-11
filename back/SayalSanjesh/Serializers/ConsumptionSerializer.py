@@ -1256,7 +1256,7 @@ class ConsumptionSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Reports'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
                 all_consumption = WaterMetersConsumptions.objects.all()
                 # .annotate(Sum('price'))
                 # .aggregate(Sum('price'))
@@ -1275,8 +1275,8 @@ class ConsumptionSerializer:
 
                     }
                 return True, result
-            # TODO: Remove This Section
-            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Consumption']):
+
+            elif AdminsSerializer.admin_check_permission(admin_id, 'ProjectManager'):
                 middle_admin_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 all_consumption = WaterMetersConsumptions.objects.filter(
                     water_meters__water_meter_project__water_meter_project_id__in=middle_admin_projects)

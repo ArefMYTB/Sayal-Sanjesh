@@ -358,7 +358,7 @@ class WaterMeterTypesSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, 'Reports'):
+            if AdminsSerializer.admin_check_permission(admin_id, 'Admin'):
                 all_types = WaterMetersTypes.objects.all()
                 all_water_meters = WaterMeters.objects.all()
                 all_tags = WaterMetersTags.objects.all()
@@ -393,8 +393,8 @@ class WaterMeterTypesSerializer:
                     "tags_info": tag_information,
                 }
                 return True, total_type_result
-            # TODO: Remove This Section
-            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Type']):
+
+            elif AdminsSerializer.admin_check_permission(admin_id, 'ProjectManager'):
                 middle_admin_projects = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 all_water_meters = WaterMeters.objects.filter(
                     water_meter_project__water_meter_project_id__in=middle_admin_projects)

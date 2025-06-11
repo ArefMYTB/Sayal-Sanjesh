@@ -464,7 +464,7 @@ class WaterMeterProjectsSerializer:
         token_result = token_to_user_id(token)
         if token_result["status"] == "OK":
             admin_id = token_result["data"]["user_id"]
-            if AdminsSerializer.admin_check_permission(admin_id, ['Reports']):
+            if AdminsSerializer.admin_check_permission(admin_id, ['Admin']):
                 all_water_meters = WaterMeters.objects.all()
                 project_with_max_counters = all_water_meters.values_list('water_meter_project_id').annotate(
                     max_count=Count('water_meter_project_id')).order_by('-max_count')
@@ -498,8 +498,8 @@ class WaterMeterProjectsSerializer:
                 }
 
                 return True, result
-            # TODO: Remove This Section
-            elif AdminsSerializer.admin_check_permission(admin_id, ['ProjectManager', 'Project']):
+
+            elif AdminsSerializer.admin_check_permission(admin_id, 'ProjectManager'):
                 # get middel admin project
                 middel_admin_project = MiddleAdmins.objects.get(middle_admin_id=admin_id).project_ids
                 all_water_meters = WaterMeters.objects.filter(

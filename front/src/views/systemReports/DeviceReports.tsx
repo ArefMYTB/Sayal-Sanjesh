@@ -8,6 +8,10 @@ import MultiColumnsChart from "components/charts/MultiColumnsChart";
 import Loading from "components/loading";
 
 const DevicesReport = () => {
+  let permissions: string[] = JSON.parse(
+    window.localStorage.getItem("permissions")
+  );
+
   const id = useId();
   const {
     data: devicesData,
@@ -91,23 +95,31 @@ const DevicesReport = () => {
           <div className=" mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {renderWidgets(devicesData.data)}
           </div>
-          <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
-            آمار دستگاه ها به تفکیک دسته و فروش
-          </div>
-          <div className="chart-statistics flex flex-col items-center justify-center py-2 md:flex-row md:justify-between ">
-            <div className="chart-container h-[400px] w-full min-w-[60%]">
-              <MultiColumnsChart
-                chartOptions={renderSaleChartOptions(typesConditionData.data)}
-                chartData={renderSaleCharData(typesConditionData.data)}
-              />
-            </div>
-            <div className="chart-container h-[400px] min-w-[35%]">
-              <DonutChart
-                chartOptions={renderDonutOptions(devicesData.data)}
-                chartData={renderDonutData(devicesData.data)}
-              />
-            </div>
-          </div>
+          {permissions.includes("Store") ? (
+            <>
+              <div className="mt-2 py-4 text-xl font-bold text-navy-700 dark:text-white">
+                آمار دستگاه ها به تفکیک دسته و فروش
+              </div>
+              <div className="chart-statistics flex flex-col items-center justify-center py-2 md:flex-row md:justify-between ">
+                <div className="chart-container h-[400px] w-full min-w-[60%]">
+                  <MultiColumnsChart
+                    chartOptions={renderSaleChartOptions(
+                      typesConditionData.data
+                    )}
+                    chartData={renderSaleCharData(typesConditionData.data)}
+                  />
+                </div>
+                <div className="chart-container h-[400px] min-w-[35%]">
+                  <DonutChart
+                    chartOptions={renderDonutOptions(devicesData.data)}
+                    chartData={renderDonutData(devicesData.data)}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       ) : (
         // <div>loading or err</div>
