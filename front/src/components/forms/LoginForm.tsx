@@ -1,7 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import InputField from "components/fields/InputField";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { reqFunction } from "utils/API";
 import { isPhoneValid, renderToast } from "utils/globalUtils";
 interface LoginFormProps {
