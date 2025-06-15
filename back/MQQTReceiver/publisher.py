@@ -64,6 +64,8 @@ class Publisher:
     def publish(self, topic, message, qos=0, retain=False):
         # print(self.client.is_connected())
         if self.connected:
+            from Handler import Logger
+            Logger(status='response', message=message, topic=topic)
             print(colored('publishing message "{}" on topic "{}"'
                           .format(message, topic)))
             self.client.publish(topic=topic, payload=message, qos=qos, retain=retain)
@@ -176,6 +178,6 @@ class ResponsePublisher:
 
     def add_event_response(self, topic_name, message):
         p.publish(topic=topic_name, message=message)
-
+    # TODO: write it in another log
     def send_commands(self, topic_name, message):
         p.publish(topic=topic_name, message=message, retain=True)
